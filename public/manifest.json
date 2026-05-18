@@ -1,0 +1,41 @@
+{
+  "name": "Matrix Energy & Automation",
+  "short_name": "Matrix EA",
+  "description": "Industrial automation, system integration and training courses",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2A2F3A",
+  "theme_color": "#1B6FCC",
+  "orientation": "portrait-primary",
+  "categories": ["education", "business"],
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Courses",
+      "url": "/courses",
+      "description": "Browse training courses"
+    },
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Live monitoring dashboard"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ──────────────────────────────────────────── */
+:root {
+  --blue: #1B6FCC;
+  --blue-dark: #155AA8;
+  --navy: #2A2F3A;
+  --navy-mid: #363C49;
+  --slate: #2A2F3A;
+  --red: #DC2626;
+  --red-dark: #B91C1C;
+  --amber-warn: #FFB200;
+  --success: #22C55E;
+  --wa: #25D366;
+  --white: #FFFFFF;
+  --off: #F8F9FB;
+  --ink: #1F2330;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --topbar-bg: #F4F6FA;
+}
+
+/* ── Tailwind v4 Theme ─────────────────────────────────────── */
+@theme inline {
+  --color-matrix-blue: #1B6FCC;
+  --color-matrix-blue-dark: #155AA8;
+  --color-matrix-navy: #2A2F3A;
+  --color-matrix-navy-mid: #363C49;
+  --color-matrix-red: #DC2626;
+  --color-matrix-red-dark: #B91C1C;
+  --color-matrix-amber: #FFB200;
+  --color-matrix-success: #22C55E;
+  --color-matrix-wa: #25D366;
+  --color-matrix-off: #F8F9FB;
+  --color-matrix-ink: #1F2330;
+  --color-matrix-muted: #64748B;
+  --color-matrix-border: #E2E8F0;
+  --color-matrix-topbar: #F4F6FA;
+
+  --font-barlow: var(--font-barlow-condensed), "Barlow Condensed", sans-serif;
+  --font-dm: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+}
+
+/* ── Base Resets ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-dm), "DM Sans", system-ui, sans-serif;
+  color: var(--ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-barlow), "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+  line-height: 1.05;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ── Animations ────────────────────────────────────────────── */
+@keyframes pulse-red {
+  0%   { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+@keyframes pulse-green {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes pulse-blue {
+  0%   { box-shadow: 0 0 0 0 rgba(27, 111, 204, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(27, 111, 204, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(27, 111, 204, 0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Utility Classes ───────────────────────────────────────── */
+.animate-pulse-red   { animation: pulse-red   2.2s infinite; }
+.animate-pulse-green { animation: pulse-green 2.2s infinite; }
+.animate-pulse-blue  { animation: pulse-blue  2.2s infinite; }
+.animate-fade-in-up  { animation: fade-in-up 0.6s ease forwards; }
+.animate-fade-in     { animation: fade-in    0.4s ease forwards; }
+
+/* Circuit grid overlay — used in hero, why, footer */
+.circuit-grid {
+  background-image:
+    linear-gradient(rgba(27, 111, 204, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 111, 204, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.circuit-grid-subtle {
+  background-image:
+    linear-gradient(rgba(27, 111, 204, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 111, 204, 0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Section padding */
+.section-pad  { padding: 110px 0; }
+.section-pad-sm { padding: 72px 0; }
+
+@media (max-width: 768px) {
+  .section-pad    { padding: 72px 0; }
+  .section-pad-sm { padding: 48px 0; }
+}
+
+/* Scroll animation helpers */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
