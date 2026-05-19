@@ -8,7 +8,6 @@ export const metadata: Metadata = { title: 'About' }
 
 const TIMELINE = [
   { year: '2003', title: 'Founded in Beirut', desc: 'Matrix EA established as a system integration firm focused on PLC and SCADA automation for Lebanese industry.' },
-  { year: '2007', title: 'Siemens Authorised Partner', desc: 'Became an authorised Siemens automation distributor and service provider for Lebanon and the region.' },
   { year: '2011', title: 'Regional Expansion', desc: 'Opened project offices in Iraq and Saudi Arabia, completing major water and industrial automation projects.' },
   { year: '2015', title: 'Training Division Launched', desc: 'Established the Matrix EA Training Centre, delivering accredited PLC, SCADA and EPLAN courses.' },
   { year: '2019', title: 'Energy Division', desc: "Added solar and battery storage design to our portfolio, responding to Lebanon's energy crisis." },
