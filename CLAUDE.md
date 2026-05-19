@@ -12,6 +12,30 @@
 
 ---
 
+## GITHUB — PUSHING CHANGES
+
+Repository: `https://github.com/rawad-matrix/Matrix-Website.git`  
+Account: `rawad-matrix`
+
+The GitHub Personal Access Token is stored in `.env.local` as `GITHUB_PAT`.  
+To push, run:
+
+```bash
+git remote set-url origin "https://rawad-matrix:$(grep GITHUB_PAT .env.local | cut -d= -f2)@github.com/rawad-matrix/Matrix-Website.git"
+git push origin main
+```
+
+Or manually read the token from `.env.local` and substitute it:
+
+```bash
+git remote set-url origin "https://rawad-matrix:<token-from-env.local>@github.com/rawad-matrix/Matrix-Website.git"
+git push origin main
+```
+
+> If the token has expired, generate a new one at github.com → Settings → Developer settings → Personal access tokens, then update `GITHUB_PAT` in `.env.local`.
+
+---
+
 ## CURRENT BUILD STATUS (as of 2026-05-16)
 
 The project is **substantially complete**. Below is the definitive status of every feature:
