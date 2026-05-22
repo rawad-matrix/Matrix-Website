@@ -75,9 +75,11 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section className="bg-white py-[110px] max-[768px]:py-[72px]">
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
-        <SectionHeader label="What We Do" title="Engineering Solutions That Work." />
+    <section className="bg-white" style={{ height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-[clamp(24px,4vh,56px)]">
+        <div className="mb-[clamp(20px,3vh,48px)]">
+          <SectionHeader label="What We Do" title="Engineering Solutions That Work." className="mb-0" />
+        </div>
         <div className="grid grid-cols-3 gap-6 max-[980px]:grid-cols-2 max-[600px]:grid-cols-1">
           {SERVICES.map((svc, i) => {
             const isComing = svc.comingSoon
@@ -85,7 +87,7 @@ export function ServicesGrid() {
             const cardInner = (
               <div
                 key={svc.title}
-                className={`group relative bg-white rounded-[2px] flex flex-col gap-[14px] p-[32px_28px_30px] transition-all duration-200 ease-out ${isComing ? 'cursor-default' : 'hover:-translate-y-1'}`}
+                className={`group relative bg-white rounded-[2px] flex flex-col gap-[clamp(10px,1.2vh,16px)] p-[clamp(20px,2.5vh,32px)_24px] transition-all duration-200 ease-out ${isComing ? 'cursor-default' : 'hover:-translate-y-1'}`}
                 style={{
                   border: '1px solid #E2E8F0',
                   borderLeft: isComing ? '3px solid #DC2626' : '3px solid #1B6FCC',
@@ -106,11 +108,11 @@ export function ServicesGrid() {
                     Coming Soon
                   </span>
                 )}
-                <span className="absolute top-[18px] right-[22px] font-mono text-[11px] tracking-[0.1em] text-[rgba(10,10,18,.25)]">
+                <span className="absolute top-[14px] right-[18px] font-mono text-[11px] tracking-[0.1em] text-[rgba(10,10,18,.25)]">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <div
-                  className="w-12 h-12 grid place-items-center rounded-[2px] mb-[6px]"
+                  className="w-10 h-10 grid place-items-center rounded-[2px]"
                   style={{
                     background: isComing ? 'rgba(220,38,38,.10)' : 'rgba(27,111,204,.12)',
                     color: isComing ? '#DC2626' : '#1B6FCC',
@@ -146,3 +148,4 @@ export function ServicesGrid() {
     </section>
   )
 }
+

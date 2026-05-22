@@ -46,7 +46,7 @@ export function Hero() {
 
   return (
     <header
-      className="relative min-h-[90vh] flex items-center overflow-hidden"
+      className="relative min-h-screen flex items-center"
       style={{ background: '#0A0A12' }}
     >
       {/* Base gradient layers */}
@@ -147,7 +147,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-8 max-[640px]:px-5 w-full py-24">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-8 max-[640px]:px-5 w-full py-[clamp(48px,6vh,96px)]">
         {/* Tag pill */}
         <div
           className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-[2px]"
@@ -164,7 +164,7 @@ export function Hero() {
 
         {/* H1 */}
         <h1
-          className="font-barlow font-extrabold uppercase text-white mb-14 max-w-[780px]"
+          className="font-barlow font-extrabold uppercase text-white mb-8 max-w-[780px]"
           style={{
             fontSize: 'clamp(44px, 7.2vw, 86px)',
             lineHeight: '0.95',
@@ -187,7 +187,7 @@ export function Hero() {
 
         {/* Lead */}
         <p
-          className="font-dm text-[18px] mb-10 max-w-[560px]"
+          className="font-dm text-[18px] mb-6 max-w-[560px]"
           style={{ color: 'rgba(255,255,255,.78)', lineHeight: '1.6' }}
         >
           21 years of SCADA, PLC, and system integration experience across Lebanon,
@@ -196,7 +196,7 @@ export function Hero() {
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap gap-[14px] mb-16">
+        <div className="flex flex-wrap gap-[14px] mb-8">
           <Link
             href="/system-integrator"
             className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[28px] py-[16px] font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
@@ -209,8 +209,7 @@ export function Hero() {
           </Link>
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 bg-transparent px-[28px] py-[16px] font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-[2px] border border-white hover:bg-white hover:text-[#2A2F3A] transition-all duration-150"
-            style={{ color: '#ffffff' }}
+            className="inline-flex items-center gap-2 bg-transparent text-white px-[28px] py-[16px] font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-[2px] border border-white hover:bg-white hover:text-[#1F2330] transition-all duration-150"
           >
             Our Case Studies
           </Link>

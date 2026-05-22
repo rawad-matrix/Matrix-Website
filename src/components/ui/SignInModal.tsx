@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 interface SignInModalProps {
@@ -74,9 +75,15 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
 
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="font-barlow font-extrabold text-[26px] italic text-[#2A2F3A]">Matrix</span>
-            <span className="font-dm text-[11px] uppercase tracking-[0.18em] text-[#64748B]">EA</span>
+          <div className="mb-4">
+            <Image
+              src="/images/logo.jpg"
+              alt="Matrix Energy & Automation"
+              width={180}
+              height={60}
+              style={{ objectFit: 'contain', height: '52px', width: 'auto' }}
+              priority
+            />
           </div>
           <h2
             className="font-barlow font-extrabold uppercase text-[#1F2330] m-0"

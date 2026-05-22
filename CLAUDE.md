@@ -59,7 +59,7 @@ The project is **substantially complete**. Below is the definitive status of eve
 
 ### ⚠️ PENDING / INCOMPLETE
 - **PWA service worker:** `@ducanh2912/next-pwa` is installed but NOT wired in `next.config.ts` — Next.js 16 uses Turbopack by default which is incompatible. Wire it at Vercel deploy time by switching to webpack mode, or use a standalone service worker file.
-- **Admin case studies page:** `/admin/case-studies/page.tsx` is referenced in the admin sidebar but the file does not exist yet.
+- **Admin case studies page:** `/admin/case-studies/page.tsx` — full CRUD with image upload to Supabase Storage, slide-in drawer form, required/optional fields, publish/featured toggles.
 - **Course detail from Supabase:** Currently all 7 courses are hardcoded. The DB seed exists but the detail page reads from a static dict. If you want dynamic courses, refactor to read from Supabase.
 - **Image assets:** `/public/images/logo.jpg`, `icon-192.png`, `icon-512.png` need to be placed (logo source is at `/design-reference/matrix-logo.jpg`).
 - **Vercel deployment:** Not yet deployed. Step 12 in the original plan.
@@ -407,7 +407,7 @@ Full-width dark-theme layout (bg: #F4F6FA outer, white panels). Header with "LIV
 
 **Enrollments page (`/admin/enrollments/page.tsx`):** Full table with status update capability.
 
-**Case Studies page (`/admin/case-studies/page.tsx`):** ⚠️ NOT YET IMPLEMENTED — file does not exist.
+**Case Studies page (`/admin/case-studies/page.tsx`):** Full CRUD — table with publish/featured toggles, slide-in drawer form with required fields (title, tag, client, sector, year, description, systems_used) and optional fields (summary, photo upload to Supabase Storage, YouTube embed URL). Slug auto-generated from title.
 
 ---
 
@@ -496,7 +496,7 @@ Seed file: `src/lib/seed-courses.ts` — run once to populate courses table.
     /admin/layout.tsx                     ← ✅
     /admin/courses/page.tsx               ← ✅
     /admin/enrollments/page.tsx           ← ✅
-    /admin/case-studies/page.tsx          ← ❌ NOT BUILT
+    /admin/case-studies/page.tsx          ← ✅
     /auth/sign-in/page.tsx                ← ✅
     /auth/register/page.tsx               ← ✅
     /auth/callback/route.ts               ← ✅
@@ -730,7 +730,7 @@ In priority order:
 
 1. **Copy logo image:** `cp design-reference/matrix-logo.jpg public/images/logo.jpg` — fixes broken logo across entire site
 2. **Create PWA icons:** Generate `icon-192.png` and `icon-512.png` from the logo, place in `public/images/`
-3. **Admin case studies page:** Create `/admin/case-studies/page.tsx` — CRUD table for `case_studies` table, following the same pattern as `/admin/enrollments/page.tsx`
+3. ~~**Admin case studies page:**~~ ✅ Built — `/admin/case-studies/page.tsx`
 4. **Wire PWA service worker:** Add `withPWA` wrapper to `next.config.ts` when switching to webpack mode for production build
 5. **Deploy to Vercel:** Connect repo, set all env vars, connect Supabase project via Vercel integration
 6. **Real case study data:** Seed `case_studies` table and make the listing/detail pages fetch from Supabase instead of using static mock data

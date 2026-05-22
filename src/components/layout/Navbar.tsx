@@ -34,14 +34,14 @@ export function Navbar() {
   return (
     <>
       <nav
-        className="sticky top-0 z-50 bg-[#2A2F3A] text-white border-b border-white/5 transition-shadow duration-200"
+        className="sticky top-0 z-50 bg-matrix-navy text-white border-b border-white/5 transition-shadow duration-200"
         style={scrolled ? { boxShadow: '0 6px 24px rgba(0,0,0,.35)' } : {}}
       >
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5 h-[72px] flex items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 h-18 flex items-center justify-between gap-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-            <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,.18)] flex-shrink-0">
-              <Image src="/images/logo.jpg" alt="Matrix Energy & Automation" width={44} height={44} className="w-full h-full object-cover" priority />
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,.18)] shrink-0">
+              <Image src="/images/logo.jpg" alt="Matrix Energy & Automation" width={44} height={44} className="w-full h-full object-contain" priority />
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-barlow font-extrabold text-[22px] italic text-white">Matrix</span>
@@ -57,17 +57,17 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-[14px] py-[10px] font-dm text-[13px] font-medium uppercase tracking-[0.08em] transition-colors duration-150 group ${
+                  className={`relative px-3.5 py-2.5 font-dm text-[13px] font-medium uppercase tracking-[0.08em] transition-colors duration-150 group ${
                     isActive ? 'text-white' : 'text-white/78 hover:text-white'
                   }`}
                 >
                   {link.label}
                   {/* Animated underline */}
                   <span
-                    className="absolute bottom-0 left-[14px] right-[14px] h-[2px] bg-[#1B6FCC] transition-all duration-200 ease-out origin-left"
+                    className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-matrix-blue transition-all duration-200 ease-out origin-left"
                     style={{ transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }}
                   />
-                  <span className="absolute bottom-0 left-[14px] right-[14px] h-[2px] bg-[#1B6FCC] scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-out origin-left" />
+                  <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-matrix-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-out origin-left" />
                 </Link>
               )
             })}
@@ -79,14 +79,14 @@ export function Navbar() {
               user ? (
                 <Link
                   href="/user/dashboard"
-                  className="hidden lg:inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[18px] py-[10px] font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+                  className="hidden lg:inline-flex items-center gap-2 bg-matrix-blue text-white px-4.5 py-2.5 font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
                 >
                   My Account
                 </Link>
               ) : (
                 <button
                   onClick={() => setShowSignIn(true)}
-                  className="hidden lg:inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[18px] py-[10px] font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+                  className="hidden lg:inline-flex items-center gap-2 bg-matrix-blue text-white px-4.5 py-2.5 font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
                 >
                   Sign In
                 </button>

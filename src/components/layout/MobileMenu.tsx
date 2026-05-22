@@ -34,15 +34,15 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
 
   return (
     <div
-      className={`fixed inset-0 bg-[#2A2F3A] z-[100] flex flex-col transition-all duration-300 ${
+      className={`fixed inset-0 bg-matrix-navy z-100 flex flex-col transition-all duration-300 ${
         open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-6 h-[72px] border-b border-white/10">
+      <div className="flex items-center justify-between px-6 h-18 border-b border-white/10">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden flex-shrink-0">
-            <Image src="/images/logo.jpg" alt="Matrix" width={44} height={44} className="w-full h-full object-cover" />
+          <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden shrink-0">
+            <Image src="/images/logo.jpg" alt="Matrix" width={44} height={44} className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-barlow font-extrabold text-[22px] text-white italic">Matrix</span>
@@ -70,7 +70,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               href={link.href}
               onClick={onClose}
               className={`font-barlow font-bold text-[28px] uppercase tracking-wide py-3 border-b border-white/08 transition-all ${
-                isActive ? 'text-[#1B6FCC]' : 'text-white hover:text-[#1B6FCC]'
+                isActive ? 'text-matrix-blue' : 'text-white hover:text-matrix-blue'
               }`}
               style={{
                 opacity: open ? 1 : 0,
@@ -96,7 +96,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         <Link
           href="/auth/sign-in"
           onClick={onClose}
-          className="block w-full bg-[#1B6FCC] text-white text-center py-4 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] transition-colors"
+          className="block w-full bg-matrix-blue text-white text-center py-4 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark transition-colors"
         >
           Sign In
         </Link>

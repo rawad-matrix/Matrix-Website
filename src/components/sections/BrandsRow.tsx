@@ -1,84 +1,87 @@
 'use client'
 
 import Image from 'next/image'
+import { SectionHeader } from '@/components/ui/SectionHeader'
 
 const BRANDS = [
-  { name: 'Siemens', sub: 'Automation', imageSrc: '/images/brands/logo_siemens.png' },
-  { name: 'ABB', sub: 'Drives & Robots', imageSrc: '/images/brands/ABB_logo.png' },
-  { name: 'Delta', sub: 'Drives & PLC', imageSrc: '/images/brands/delta_logo.png' },
-  { name: 'Veichi', sub: 'VFD & Servo', imageSrc: '/images/brands/veichi_logo.png' },
-  { name: 'Danfoss', sub: 'Drives', imageSrc: '/images/brands/Danfoss-Logo.jpg' },
-  { name: 'Festo', sub: 'Pneumatics', imageSrc: '/images/brands/festo_logo.png' },
-  { name: 'Mitsubishi', sub: 'Automation', imageSrc: '/images/brands/Mitsubishi_Electric_logo.png' },
-  { name: 'Omron', sub: 'Automation', imageSrc: '/images/brands/omron_logo.jpg' },
-  { name: 'Schneider', sub: 'Energy Mgmt', imageSrc: '/images/brands/schneider_logo.png' },
+  { name: 'Siemens', imageSrc: '/images/brands/logo_siemens.png' },
+  { name: 'ABB', imageSrc: '/images/brands/ABB_logo.png' },
+  { name: 'Delta', imageSrc: '/images/brands/delta_logo.png' },
+  { name: 'Veichi', imageSrc: '/images/brands/veichi_logo.png' },
+  { name: 'Danfoss', imageSrc: '/images/brands/Danfoss-Logo.jpg' },
+  { name: 'Festo', imageSrc: '/images/brands/festo_logo.png' },
+  { name: 'Mitsubishi', imageSrc: '/images/brands/Mitsubishi_Electric_logo.png' },
+  { name: 'Omron', imageSrc: '/images/brands/omron_logo.jpg' },
+  { name: 'Schneider', imageSrc: '/images/brands/schneider_logo.png' },
 ]
+
+function BrandGrid({ cols, cellHeight, logoHeight, padding }: {
+  cols: number
+  cellHeight: string
+  logoHeight: string
+  padding: string
+}) {
+  const totalRows = Math.ceil(BRANDS.length / cols)
+  return (
+    <div
+      className="grid overflow-hidden rounded-[2px]"
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, border: '1px solid #E2E8F0' }}
+    >
+      {BRANDS.map(({ name, imageSrc }, i) => {
+        const col = i % cols
+        const row = Math.floor(i / cols)
+        const hasNextInRow = i + 1 < BRANDS.length && Math.floor((i + 1) / cols) === row
+        return (
+          <div
+            key={name}
+            className="group grid place-items-center cursor-default transition-colors duration-200"
+            style={{
+              height: cellHeight,
+              padding: `0 ${padding}`,
+              borderRight: hasNextInRow ? '1px solid #E2E8F0' : undefined,
+              borderBottom: row < totalRows - 1 ? '1px solid #E2E8F0' : undefined,
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#F8F9FB' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '' }}
+          >
+            <div className="relative w-full" style={{ height: logoHeight }}>
+              <Image
+                src={imageSrc}
+                alt={name}
+                fill
+                className="object-contain"
+                sizes={cols === 5 ? '(max-width: 1280px) 20vw, 256px' : '33vw'}
+              />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export function BrandsRow() {
   return (
     <section
-      className="bg-white py-20"
-      style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
+      className="bg-white"
+      style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
     >
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
-        <div className="flex justify-between items-end flex-wrap gap-6 mb-12">
-          <h3
-            className="font-barlow font-bold uppercase text-[#2A2F3A] m-0"
-            style={{ fontSize: 'clamp(24px, 2.6vw, 32px)' }}
-          >
-            Trusted by Industry
-          </h3>
-          <p className="font-dm text-[14.5px] text-[#64748B] max-w-[380px] m-0">
-            Authorised partner and integrator for the world's leading industrial automation brands.
-          </p>
+      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-[clamp(32px,4vh,56px)]">
+        <SectionHeader
+          label="Our Partners"
+          title="Trusted by Industry"
+          subtitle="Authorised partner and integrator for the world's leading industrial automation brands."
+          className="mb-10"
+        />
+
+        {/* Desktop: 5 columns → 2 rows */}
+        <div className="max-[640px]:hidden">
+          <BrandGrid cols={5} cellHeight="clamp(180px,22vh,250px)" logoHeight="clamp(150px,18vh,210px)" padding="clamp(8px,1vw,16px)" />
         </div>
 
-        <div
-          className="grid overflow-hidden rounded-[2px]"
-          style={{
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-            border: '1px solid #E2E8F0',
-          }}
-        >
-          {BRANDS.map(({ name, sub, imageSrc }, i) => {
-            const col = i % 3
-            const row = Math.floor(i / 3)
-            const totalRows = Math.ceil(BRANDS.length / 3)
-            return (
-              <div
-                key={name}
-                className="group h-[120px] grid place-items-center px-6 cursor-default transition-all duration-250 ease-out"
-                style={{
-                  borderRight: col < 2 ? '1px solid #E2E8F0' : undefined,
-                  borderBottom: row < totalRows - 1 ? '1px solid #E2E8F0' : undefined,
-                  filter: 'grayscale(1)',
-                  opacity: 0.55,
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.filter = 'grayscale(0)'
-                  el.style.opacity = '1'
-                  el.style.background = '#F8F9FB'
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.filter = 'grayscale(1)'
-                  el.style.opacity = '0.55'
-                  el.style.background = ''
-                }}
-              >
-                <div className="relative w-full h-14 flex items-center justify-center">
-                  <Image
-                    src={imageSrc}
-                    alt={name}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 640px) 33vw, 426px"
-                  />
-                </div>
-              </div>
-            )
-          })}
+        {/* Mobile: 3 columns → 3 rows */}
+        <div className="min-[641px]:hidden">
+          <BrandGrid cols={3} cellHeight="clamp(110px,15vh,160px)" logoHeight="clamp(80px,12vh,130px)" padding="8px" />
         </div>
       </div>
     </section>

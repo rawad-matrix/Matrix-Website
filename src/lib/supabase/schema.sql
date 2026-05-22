@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS case_studies (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
+  tag TEXT,
   client TEXT,
   sector TEXT,
   year INTEGER,
@@ -65,10 +66,17 @@ CREATE TABLE IF NOT EXISTS case_studies (
   description TEXT,
   systems_used TEXT[],
   image_url TEXT,
+  image_urls TEXT[],
+  video_url TEXT,
   is_featured BOOLEAN DEFAULT FALSE,
   is_published BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Run this if the table already exists:
+-- ALTER TABLE case_studies ADD COLUMN IF NOT EXISTS tag TEXT;
+-- ALTER TABLE case_studies ADD COLUMN IF NOT EXISTS image_urls TEXT[];
+-- ALTER TABLE case_studies ADD COLUMN IF NOT EXISTS video_url TEXT;
 
 -- Contact Submissions
 CREATE TABLE IF NOT EXISTS contact_submissions (
@@ -104,6 +112,14 @@ ALTER TABLE monitoring_data ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE case_studies ENABLE ROW LEVEL SECURITY;
 
+-- Helper: check admin role without triggering RLS recursion
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean LANGUAGE sql SECURITY DEFINER STABLE AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'
+  );
+$$;
+
 -- Profiles
 CREATE POLICY "Users read own profile"
   ON profiles FOR SELECT USING (auth.uid() = id);
@@ -112,9 +128,7 @@ CREATE POLICY "Users update own profile"
   ON profiles FOR UPDATE USING (auth.uid() = id);
 
 CREATE POLICY "Admins read all profiles"
-  ON profiles FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  ON profiles FOR ALL USING (public.is_admin());
 
 -- Enrollments
 CREATE POLICY "Users see own enrollments"
@@ -124,18 +138,14 @@ CREATE POLICY "Users create own enrollments"
   ON enrollments FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Admins manage enrollments"
-  ON enrollments FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  ON enrollments FOR ALL USING (public.is_admin());
 
 -- Courses (public read for published)
 CREATE POLICY "Public read published courses"
   ON courses FOR SELECT USING (is_published = TRUE);
 
 CREATE POLICY "Admins manage courses"
-  ON courses FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  ON courses FOR ALL USING (public.is_admin());
 
 -- Monitoring
 CREATE POLICY "Auth users read monitoring"
@@ -146,18 +156,14 @@ CREATE POLICY "Anyone can submit contact form"
   ON contact_submissions FOR INSERT WITH CHECK (TRUE);
 
 CREATE POLICY "Admins read contact submissions"
-  ON contact_submissions FOR SELECT USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  ON contact_submissions FOR SELECT USING (public.is_admin());
 
 -- Case studies (public read for published)
 CREATE POLICY "Public read published case studies"
   ON case_studies FOR SELECT USING (is_published = TRUE);
 
 CREATE POLICY "Admins manage case studies"
-  ON case_studies FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  ON case_studies FOR ALL USING (public.is_admin());
 
 -- ── Auto-create profile on signup ──────────────────────────
 

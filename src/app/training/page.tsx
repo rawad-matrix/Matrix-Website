@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { PageHero } from '@/components/sections/PageHero'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { ContactStrip } from '@/components/sections/ContactStrip'
@@ -72,14 +73,23 @@ export default function TrainingPage() {
       />
 
       {/* Track cards */}
-      <section className="bg-white py-[110px] max-[768px]:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <section className="bg-white py-27.5 max-[768px]:py-18">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label="Learning Tracks" title="Three Ways to Learn." />
+          <div className="flex justify-center mb-12">
+            <Image
+              src="/images/logo-academy.jpeg"
+              alt="MatrixEA Automation Academy"
+              width={160}
+              height={160}
+              className="object-contain"
+            />
+          </div>
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
             {TRACKS.map(({ n, title, desc, meta, alt }) => (
               <div
                 key={n}
-                className="relative flex flex-col min-h-[480px] p-12 rounded-[2px] overflow-hidden"
+                className="relative flex flex-col min-h-120 p-12 rounded-xs overflow-hidden"
                 style={
                   alt
                     ? { background: '#fff', borderTop: '4px solid #1B6FCC', border: '1px solid #E2E8F0' }
@@ -108,7 +118,7 @@ export default function TrainingPage() {
                 </span>
                 <div className="relative flex flex-col flex-1">
                   <h3
-                    className="font-barlow font-extrabold text-[36px] uppercase mb-4 leading-[1]"
+                    className="font-barlow font-extrabold text-[36px] uppercase mb-4 leading-none"
                     style={{ color: alt ? '#2A2F3A' : '#fff' }}
                   >
                     {title}
@@ -143,7 +153,7 @@ export default function TrainingPage() {
                   </div>
                   <Link
                     href="/courses"
-                    className="mt-6 inline-flex items-center gap-2 font-dm font-semibold text-[12px] uppercase tracking-[0.16em] text-[#1B6FCC] hover:gap-3 transition-all"
+                    className="mt-6 inline-flex items-center gap-2 font-dm font-semibold text-[12px] uppercase tracking-[0.16em] text-matrix-blue hover:gap-3 transition-all"
                   >
                     Explore Track →
                   </Link>
@@ -155,43 +165,43 @@ export default function TrainingPage() {
       </section>
 
       {/* Curriculum grid */}
-      <section id="courses-catalog" className="bg-[#F8F9FB] py-[110px] max-[768px]:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <section id="courses-catalog" className="bg-matrix-off py-27.5 max-[768px]:py-18">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label="Course Catalog" title="Available Courses." />
           <div
-            className="grid overflow-hidden rounded-[2px]"
+            className="grid overflow-hidden rounded-xs"
             style={{ gridTemplateColumns: 'repeat(2, 1fr)', border: '1px solid #E2E8F0', background: '#E2E8F0', gap: '1px' }}
           >
             {COURSES.map(({ slug, num, title, level, hours, category }) => (
               <Link
                 key={slug}
                 href={`/courses/${slug}`}
-                className="group bg-white flex items-start gap-5 p-[18px_20px] hover:bg-[#F8F9FB] transition-colors"
+                className="group bg-white flex items-start gap-5 p-[18px_20px] hover:bg-matrix-off transition-colors"
               >
-                <span className="font-mono text-[13px] text-[#1B6FCC] font-medium flex-shrink-0 pt-[2px]">{num}</span>
+                <span className="font-mono text-[13px] text-matrix-blue font-medium shrink-0 pt-0.5">{num}</span>
                 <div className="flex-1 min-w-0">
-                  <span className="font-dm font-semibold text-[15px] text-[#1F2330] uppercase tracking-[0.02em] block mb-1 group-hover:text-[#1B6FCC] transition-colors">
+                  <span className="font-dm font-semibold text-[15px] text-matrix-ink uppercase tracking-[0.02em] block mb-1 group-hover:text-matrix-blue transition-colors">
                     {title}
                   </span>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span
-                      className="font-mono text-[10.5px] uppercase tracking-[0.12em] px-[8px] py-[3px] rounded-[2px]"
+                      className="font-mono text-[10.5px] uppercase tracking-[0.12em] px-2 py-0.75 rounded-xs"
                       style={{ border: `1px solid ${LEVEL_COLOR[level]}`, color: LEVEL_COLOR[level] }}
                     >
                       {level}
                     </span>
-                    <span className="font-mono text-[11px] text-[#64748B]">{hours}h</span>
-                    <span className="font-mono text-[11px] text-[#64748B]">{category}</span>
+                    <span className="font-mono text-[11px] text-matrix-muted">{hours}h</span>
+                    <span className="font-mono text-[11px] text-matrix-muted">{category}</span>
                   </div>
                 </div>
-                <span className="text-[#1B6FCC] font-bold text-[18px] group-hover:translate-x-1 transition-transform shrink-0">→</span>
+                <span className="text-matrix-blue font-bold text-[18px] group-hover:translate-x-1 transition-transform shrink-0">→</span>
               </Link>
             ))}
           </div>
           <div className="mt-8 text-center">
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+              className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
             >
               Browse All Courses
             </Link>

@@ -13,7 +13,7 @@ export function WhyMatrix() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: '#2A2F3A', color: '#fff', minHeight: 'calc(100vh - 108px)', display: 'flex', alignItems: 'center' }}
+      style={{ background: '#2A2F3A', color: '#fff', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', alignItems: 'center' }}
     >
       {/* Circuit overlay */}
       <div
@@ -26,10 +26,10 @@ export function WhyMatrix() {
           backgroundSize: '60px 60px',
         }}
       />
-      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-20">
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-[clamp(16px,2.5vh,48px)]">
         <div className="grid grid-cols-2 gap-20 items-center max-[900px]:grid-cols-1 max-[900px]:gap-12">
           {/* Photo side */}
-          <div className="relative aspect-[4/5] max-[900px]:hidden">
+          <div className="relative max-[900px]:hidden" style={{ height: 'clamp(280px, 52vh, 480px)' }}>
             <div
               className="absolute inset-0 rounded-[2px] overflow-hidden"
               style={{
@@ -60,12 +60,12 @@ export function WhyMatrix() {
 
           {/* Text side */}
           <div>
-            <SectionHeader label="Our Edge" title="Why Choose Matrix EA" light />
-            <ul className="list-none p-0 m-0 mt-8 flex flex-col gap-[18px]">
+            <SectionHeader label="Our Edge" title="Why Choose Matrix EA" light className="mb-4" />
+            <ul className="list-none p-0 m-0 mt-3 flex flex-col gap-[6px]">
               {CHECKLIST.map((item) => (
                 <li
                   key={item.t}
-                  className="flex gap-[14px] items-start py-[14px]"
+                  className="flex gap-[14px] items-start py-[9px]"
                   style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}
                 >
                   <div
@@ -83,7 +83,7 @@ export function WhyMatrix() {
                 </li>
               ))}
             </ul>
-            <div className="mt-9 flex flex-wrap gap-[14px]">
+            <div className="mt-5 flex flex-wrap gap-[14px]">
               <Link
                 href="/system-integrator"
                 className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"

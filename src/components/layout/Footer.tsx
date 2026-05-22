@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export function Footer() {
   return (
-    <footer className="bg-[#363C49] text-white/70 pt-20 relative overflow-hidden">
+    <footer className="bg-matrix-navy-mid text-white/70 pt-20 relative overflow-hidden">
       {/* Circuit grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -16,20 +16,20 @@ export function Footer() {
         }}
       />
 
-      <div className="relative max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.5fr_1fr_1.3fr] md:gap-[60px]">
+      <div className="relative max-w-7xl mx-auto px-8 max-[640px]:px-5">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.5fr_1fr_1.3fr] md:gap-15">
           {/* Col 1: Brand */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden flex-shrink-0">
-                <Image src="/images/logo.jpg" alt="Matrix" width={44} height={44} className="w-full h-full object-cover" />
+              <div className="w-11 h-11 bg-white rounded-[3px] overflow-hidden shrink-0">
+                <Image src="/images/logo.jpg" alt="Matrix" width={44} height={44} className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="font-barlow font-extrabold text-[26px] text-white italic">Matrix</span>
                 <span className="text-[9.5px] uppercase tracking-[0.18em] text-white/55 font-medium">Energy & Automation sarl</span>
               </div>
             </div>
-            <p className="text-[14px] leading-[1.7] max-w-[340px] mb-6">
+            <p className="text-[14px] leading-[1.7] max-w-85 mb-6">
               Industrial automation, system integration and energy solutions across Lebanon, Iraq, Saudi Arabia and Africa. Two decades of field-tested engineering.
             </p>
             {/* Socials */}
@@ -45,7 +45,7 @@ export function Footer() {
                   target={href === '#' ? undefined : '_blank'}
                   rel={href === '#' ? undefined : 'noopener noreferrer'}
                   aria-label={label}
-                  className="w-9 h-9 grid place-items-center bg-white/6 border border-white/10 text-white/70 hover:bg-[#1B6FCC] hover:text-white hover:border-[#1B6FCC] transition-all duration-150 rounded-[2px]"
+                  className="w-9 h-9 grid place-items-center bg-white/6 border border-white/10 text-white/70 hover:bg-matrix-blue hover:text-white hover:border-matrix-blue transition-all duration-150 rounded-xs"
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill={fill ? 'currentColor' : 'none'} stroke={fill ? undefined : 'currentColor'} strokeWidth={fill ? undefined : 2}>
                     {svg}
@@ -57,7 +57,7 @@ export function Footer() {
 
           {/* Col 2: Quick Links */}
           <div>
-            <h5 className="text-[14px] uppercase tracking-[0.22em] text-white font-dm font-semibold mb-[22px] relative pb-[14px] after:absolute after:left-0 after:bottom-0 after:w-8 after:h-[2px] after:bg-[#1B6FCC]">
+            <h5 className="text-[14px] uppercase tracking-[0.22em] text-white font-dm font-semibold mb-5.5 relative pb-3.5 after:absolute after:left-0 after:bottom-0 after:w-8 after:h-0.5 after:bg-matrix-blue">
               Quick Links
             </h5>
             <ul className="flex flex-col gap-3">
@@ -71,7 +71,7 @@ export function Footer() {
                 { href: '/contact', label: 'Contact' },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="text-[14px] inline-flex items-center gap-2 hover:text-white transition-colors before:content-['›'] before:text-[#1B6FCC]">
+                  <Link href={href} className="text-[14px] inline-flex items-center gap-2 hover:text-white transition-colors before:content-['›'] before:text-matrix-blue">
                     {label}
                   </Link>
                 </li>
@@ -81,7 +81,7 @@ export function Footer() {
 
           {/* Col 3: Contact */}
           <div>
-            <h5 className="text-[14px] uppercase tracking-[0.22em] text-white font-dm font-semibold mb-[22px] relative pb-[14px] after:absolute after:left-0 after:bottom-0 after:w-8 after:h-[2px] after:bg-[#1B6FCC]">
+            <h5 className="text-[14px] uppercase tracking-[0.22em] text-white font-dm font-semibold mb-5.5 relative pb-3.5 after:absolute after:left-0 after:bottom-0 after:w-8 after:h-0.5 after:bg-matrix-blue">
               Contact
             </h5>
             <div className="flex flex-col gap-4 text-[14px]">
@@ -111,12 +111,12 @@ export function Footer() {
                   href: undefined,
                 },
               ].map(({ icon, label, value, href }) => (
-                <div key={label} className="flex gap-[14px] items-start">
-                  <div className="flex-shrink-0 w-8 h-8 grid place-items-center bg-[rgba(27,111,204,.12)] rounded-[2px] text-[#1B6FCC]">
+                <div key={label} className="flex gap-3.5 items-start">
+                  <div className="shrink-0 w-8 h-8 grid place-items-center bg-[rgba(27,111,204,.12)] rounded-xs text-matrix-blue">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">{icon}</svg>
                   </div>
                   <div>
-                    <strong className="text-white block font-semibold text-[13px] tracking-[0.04em] mb-[2px]">{label}</strong>
+                    <strong className="text-white block font-semibold text-[13px] tracking-[0.04em] mb-0.5">{label}</strong>
                     {href ? (
                       <a href={href} className="hover:text-white transition-colors">{value}</a>
                     ) : (
@@ -130,7 +130,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-[72px] border-t border-white/8 py-6 flex flex-wrap justify-between gap-6 text-[12.5px] text-white/50 relative">
+        <div className="mt-18 border-t border-white/8 py-6 flex flex-wrap justify-between gap-6 text-[12.5px] text-white/50 relative">
           <span>© 2026 Matrix Energy & Automation sarl. All rights reserved.</span>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>

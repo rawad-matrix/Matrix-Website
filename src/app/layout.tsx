@@ -32,10 +32,6 @@ export const metadata: Metadata = {
   },
   description: 'Industrial automation, system integration and energy solutions across Lebanon, Iraq, Saudi Arabia and Africa.',
   manifest: '/manifest.json',
-  icons: {
-    icon: '/images/logo.jpg',
-    apple: '/images/logo.jpg',
-  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

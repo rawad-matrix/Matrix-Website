@@ -33,8 +33,8 @@ const TRACKS = [
 export function TrainingCTABanner() {
   return (
     <section
-      className="relative overflow-hidden py-[110px] max-[768px]:py-[72px]"
-      style={{ background: '#F8F9FB', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
+      className="relative overflow-hidden py-[clamp(36px,5vh,72px)]"
+      style={{ background: '#F8F9FB', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
     >
       <div className="relative max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
         <div className="grid grid-cols-2 gap-16 items-center max-[900px]:grid-cols-1 max-[900px]:gap-10">
@@ -65,11 +65,11 @@ export function TrainingCTABanner() {
           </div>
 
           {/* Right: track types */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             {TRACKS.map((t) => (
               <div
                 key={t.label}
-                className="flex items-start gap-4 p-5 rounded-[2px]"
+                className="flex items-start gap-5 p-7 rounded-[2px]"
                 style={{
                   background: '#fff',
                   border: '1px solid #E2E8F0',
@@ -77,14 +77,14 @@ export function TrainingCTABanner() {
                 }}
               >
                 <div
-                  className="flex-shrink-0 w-10 h-10 grid place-items-center rounded-[2px] text-[#1B6FCC]"
+                  className="flex-shrink-0 w-12 h-12 grid place-items-center rounded-[2px] text-[#1B6FCC]"
                   style={{ background: 'rgba(27,111,204,.10)' }}
                 >
                   {t.icon}
                 </div>
                 <div>
-                  <span className="font-barlow font-bold text-[18px] uppercase text-[#2A2F3A] block mb-1">{t.label}</span>
-                  <span className="font-dm text-[14px] text-[#64748B]">{t.desc}</span>
+                  <span className="font-barlow font-bold text-[20px] uppercase text-[#2A2F3A] block mb-1">{t.label}</span>
+                  <span className="font-dm text-[15px] text-[#64748B]">{t.desc}</span>
                 </div>
               </div>
             ))}

@@ -50,6 +50,7 @@ export type CaseStudy = {
   id: string
   title: string
   slug: string
+  tag: string | null
   client: string | null
   sector: string | null
   year: number | null
@@ -57,6 +58,8 @@ export type CaseStudy = {
   description: string | null
   systems_used: string[] | null
   image_url: string | null
+  image_urls: string[] | null
+  video_url: string | null
   is_featured: boolean
   is_published: boolean
   created_at: string
