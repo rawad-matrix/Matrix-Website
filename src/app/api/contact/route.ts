@@ -45,8 +45,9 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'noreply@matrixea.co',
+          from: 'Matrix EA Website <noreply@matrixea.co>',
           to: process.env.CONTACT_EMAIL_TO ?? 'info@matrixea.co',
+          reply_to: email || undefined,
           subject: `New Contact Form: ${subject}`,
           html: `
             <h2>New Contact Form Submission</h2>

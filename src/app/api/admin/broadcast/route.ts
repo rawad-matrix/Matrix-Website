@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Matrix EA <noreply@matrixea.co>',
+          from: 'Matrix EA <info@matrixea.co>',
           to: recipient.email,
           subject,
           html: `
