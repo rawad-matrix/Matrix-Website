@@ -48,7 +48,6 @@ function RegisterPage() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/user/dashboard'
   const [serverError, setServerError] = useState('')
-  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -77,44 +76,8 @@ function RegisterPage() {
       return
     }
 
-    setSuccess(true)
-    setLoading(false)
-  }
-
-  if (success) {
-    return (
-      <div
-        style={{ minHeight: 'calc(100vh - 108px)', background: '#F8F9FB' }}
-        className="flex items-center justify-center p-6"
-      >
-        <div
-          className="text-center"
-          style={{ maxWidth: '480px', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '2px', padding: '48px', boxShadow: '0 4px 24px rgba(0,0,0,.06)' }}
-        >
-          <div
-            className="w-16 h-16 mx-auto mb-6 flex items-center justify-center"
-            style={{ background: 'rgba(34,197,94,.1)', borderRadius: '2px', border: '1px solid rgba(34,197,94,.25)' }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2" width="32" height="32">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </div>
-          <h2 className="font-barlow font-bold uppercase text-[32px] mb-3" style={{ color: '#1F2330' }}>
-            Check Your Email
-          </h2>
-          <p style={{ color: '#64748B', fontSize: '15px', lineHeight: 1.6 }}>
-            We&apos;ve sent a confirmation link to your email. Click it to activate your account and get started.
-          </p>
-          <Link
-            href="/auth/sign-in"
-            className="inline-flex items-center gap-2 mt-8 font-dm font-semibold uppercase"
-            style={{ padding: '14px 28px', background: '#1B6FCC', color: '#fff', borderRadius: '2px', fontSize: '13.5px', letterSpacing: '.04em' }}
-          >
-            Back to Sign In
-          </Link>
-        </div>
-      </div>
-    )
+    router.push(redirect)
+    router.refresh()
   }
 
   return (
