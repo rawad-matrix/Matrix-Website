@@ -9,24 +9,35 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
+    async function resolveAdmin(u: User | null) {
+      if (!u) { setIsAdmin(false); return }
+      const { data } = await supabase.from('profiles').select('role').eq('id', u.id).single()
+      setIsAdmin(data?.role === 'admin')
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
-      setUser(session?.user ?? null)
+      const u = session?.user ?? null
+      setUser(u)
+      resolveAdmin(u)
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
-      setUser(session?.user ?? null)
+      const u = session?.user ?? null
+      setUser(u)
+      resolveAdmin(u)
       setLoading(false)
     })
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const signOut = async () => {
     await supabase.auth.signOut()
@@ -34,5 +45,5 @@ export function useAuth() {
     router.refresh()
   }
 
-  return { user, session, loading, signOut }
+  return { user, session, loading, isAdmin, signOut }
 }
