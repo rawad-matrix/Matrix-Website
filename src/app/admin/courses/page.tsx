@@ -45,55 +45,55 @@ export default function AdminCoursesPage() {
   }
 
   return (
-    <div className="bg-[#F4F6FA] min-h-screen py-8 pb-20">
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+    <div className="bg-matrix-topbar min-h-screen py-8 pb-20">
+      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
         <div className="mb-7">
-          <h1 className="font-barlow font-bold uppercase text-[42px] text-[#1F2330] leading-none">Admin Panel</h1>
+          <h1 className="font-barlow font-bold uppercase text-[42px] text-matrix-ink leading-none">Admin Panel</h1>
         </div>
 
         <div className="grid max-[900px]:grid-cols-1 gap-6" style={{ gridTemplateColumns: '240px 1fr', alignItems: 'start' }}>
           <AdminSidebar />
 
-          <div className="bg-white border border-[#E2E8F0] rounded-[2px] overflow-hidden">
-            <div className="flex justify-between items-center px-6 py-4 border-b border-[#E2E8F0]">
-              <h3 className="font-barlow font-bold uppercase text-[22px] tracking-[.04em] text-[#1F2330]">
+          <div className="bg-white border border-matrix-border rounded-xs overflow-hidden">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-matrix-border">
+              <h3 className="font-barlow font-bold uppercase text-[22px] tracking-[.04em] text-matrix-ink">
                 Courses ({courses.length})
               </h3>
-              <div className="text-[12px] text-[#64748B]">Toggle to publish / unpublish</div>
+              <div className="text-[12px] text-matrix-muted">Toggle to publish / unpublish</div>
             </div>
 
             {loading ? (
-              <div className="p-8 text-center font-mono text-[12px] text-[#64748B] tracking-[.1em]">LOADING…</div>
+              <div className="p-8 text-center font-mono text-[12px] text-matrix-muted tracking-widest">LOADING…</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-[13.5px]">
                   <thead>
                     <tr>
                       {['Title', 'Level', 'Duration', 'Price', 'Status', 'Published', ''].map(h => (
-                        <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-[#64748B] font-semibold bg-[#F8F9FB]">{h}</th>
+                        <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-matrix-muted font-semibold bg-matrix-off">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {courses.map(course => (
-                      <tr key={course.id} className="border-t border-[#E2E8F0] hover:bg-[#F8F9FB]">
+                      <tr key={course.id} className="border-t border-matrix-border hover:bg-matrix-off">
                         <td className="px-6 py-3">
-                          <div className="font-medium text-[#1F2330]">{course.title}</div>
-                          <div className="font-mono text-[11px] text-[#64748B] mt-0.5">{course.slug}</div>
+                          <div className="font-medium text-matrix-ink">{course.title}</div>
+                          <div className="font-mono text-[11px] text-matrix-muted mt-0.5">{course.slug}</div>
                         </td>
                         <td className="px-6 py-3">
                           <span
-                            className="inline-block font-mono text-[10.5px] px-2 py-1 uppercase tracking-[.1em]"
+                            className="inline-block font-mono text-[10.5px] px-2 py-1 uppercase tracking-widest"
                             style={{ border: `1px solid ${LEVEL_COLORS[course.level] ?? '#E2E8F0'}`, color: LEVEL_COLORS[course.level] ?? '#64748B', borderRadius: '2px' }}
                           >
                             {course.level}
                           </span>
                         </td>
-                        <td className="px-6 py-3 font-mono text-[12.5px] text-[#64748B]">{course.duration_hours}h</td>
-                        <td className="px-6 py-3 font-mono text-[13px] text-[#1F2330] font-medium">${course.price}</td>
+                        <td className="px-6 py-3 font-mono text-[12.5px] text-matrix-muted">{course.duration_hours}h</td>
+                        <td className="px-6 py-3 font-mono text-[13px] text-matrix-ink font-medium">${course.price}</td>
                         <td className="px-6 py-3">
                           <span
-                            className="inline-block text-[10.5px] px-2 py-1 font-semibold tracking-[.1em] uppercase rounded-[2px]"
+                            className="inline-block text-[10.5px] px-2 py-1 font-semibold tracking-widest uppercase rounded-xs"
                             style={{
                               background: course.is_published ? 'rgba(34,197,94,.12)' : 'rgba(100,116,139,.1)',
                               color: course.is_published ? '#16A34A' : '#64748B',
@@ -130,7 +130,7 @@ export default function AdminCoursesPage() {
                               href={`/courses/${course.slug}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="font-dm font-semibold uppercase text-[11px] px-[10px] py-[6px] text-[#64748B]"
+                              className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-muted"
                               style={{ border: '1px solid #E2E8F0', borderRadius: '2px' }}
                             >
                               View

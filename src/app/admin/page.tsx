@@ -34,7 +34,7 @@ export function AdminSidebar() {
   const { signOut } = useAuth()
 
   return (
-    <aside className="bg-white border border-[#E2E8F0] rounded-[2px] p-2" style={{ position: 'sticky', top: '96px' }}>
+    <aside className="bg-white border border-matrix-border rounded-xs p-2" style={{ position: 'sticky', top: '96px' }}>
       {NAV_ITEMS.map(item => {
         const active = pathname === item.href
         return (
@@ -53,10 +53,10 @@ export function AdminSidebar() {
           </Link>
         )
       })}
-      <div className="border-t border-[#E2E8F0] mt-2 pt-2">
+      <div className="border-t border-matrix-border mt-2 pt-2">
         <button
           onClick={signOut}
-          className="flex items-center gap-3 px-3 py-3 w-full text-left text-[13.5px] font-medium text-[#64748B]"
+          className="flex items-center gap-3 px-3 py-3 w-full text-left text-[13.5px] font-medium text-matrix-muted"
           style={{ background: 'transparent', border: 'none', cursor: 'pointer', borderRadius: '2px' }}
           onMouseEnter={(e) => (e.currentTarget.style.background = '#F8F9FB')}
           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
@@ -119,21 +119,21 @@ export default function AdminOverviewPage() {
   }
 
   return (
-    <div className="bg-[#F4F6FA] min-h-screen py-8 pb-20">
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+    <div className="bg-matrix-topbar min-h-screen py-8 pb-20">
+      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
         {/* Page header */}
         <div className="flex justify-between items-end flex-wrap gap-4 mb-7">
           <div>
             <h1 className="font-barlow font-bold uppercase leading-none" style={{ fontSize: '42px', color: '#1F2330' }}>
               Admin Panel{' '}
               <span
-                className="inline-block text-[11px] font-dm font-semibold tracking-[.18em] px-[10px] py-[4px] align-middle ml-2"
+                className="inline-block text-[11px] font-dm font-semibold tracking-[.18em] px-2.5 py-1 align-middle ml-2"
                 style={{ background: '#DC2626', color: '#fff', letterSpacing: '.18em' }}
               >
                 RESTRICTED
               </span>
             </h1>
-            <div className="text-[14px] text-[#64748B] mt-1.5">
+            <div className="text-[14px] text-matrix-muted mt-1.5">
               Signed in as <b>{user?.email ?? '…'}</b> · Full privileges
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function AdminOverviewPage() {
             {loading ? (
               <div className="grid grid-cols-4 max-[760px]:grid-cols-2 gap-3">
                 {[0, 1, 2, 3].map(i => (
-                  <div key={i} className="bg-white border border-[#E2E8F0] rounded-[2px] p-4 h-20 animate-pulse" />
+                  <div key={i} className="bg-white border border-matrix-border rounded-xs p-4 h-20 animate-pulse" />
                 ))}
               </div>
             ) : (
@@ -159,21 +159,21 @@ export default function AdminOverviewPage() {
                   { label: 'Published Courses', val: stats?.activeCourses ?? 0 },
                   { label: 'Registered Users', val: stats?.totalUsers ?? 0 },
                 ].map(kpi => (
-                  <div key={kpi.label} className="bg-white border border-[#E2E8F0] rounded-[2px] p-4" style={{ borderLeft: '3px solid #1B6FCC' }}>
-                    <div className="text-[10.5px] tracking-[.18em] uppercase text-[#64748B]">{kpi.label}</div>
-                    <div className="font-mono text-[26px] text-[#1F2330] font-medium mt-1.5 leading-none">{kpi.val}</div>
+                  <div key={kpi.label} className="bg-white border border-matrix-border rounded-xs p-4" style={{ borderLeft: '3px solid #1B6FCC' }}>
+                    <div className="text-[10.5px] tracking-[.18em] uppercase text-matrix-muted">{kpi.label}</div>
+                    <div className="font-mono text-[26px] text-matrix-ink font-medium mt-1.5 leading-none">{kpi.val}</div>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Recent Enrollments table */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] overflow-hidden">
-              <div className="flex justify-between items-center px-6 py-4 border-b border-[#E2E8F0]">
-                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-[#1F2330]">Recent Enrollments</h3>
+            <div className="bg-white border border-matrix-border rounded-xs overflow-hidden">
+              <div className="flex justify-between items-center px-6 py-4 border-b border-matrix-border">
+                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-matrix-ink">Recent Enrollments</h3>
                 <Link
                   href="/admin/enrollments"
-                  className="font-dm font-semibold uppercase text-[11px] tracking-[.1em] text-[#1B6FCC]"
+                  className="font-dm font-semibold uppercase text-[11px] tracking-widest text-matrix-blue"
                 >
                   View All →
                 </Link>
@@ -183,7 +183,7 @@ export default function AdminOverviewPage() {
                   <thead>
                     <tr>
                       {['Student', 'Course', 'Date', 'Status', ''].map(h => (
-                        <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-[#64748B] font-semibold bg-[#F8F9FB]">{h}</th>
+                        <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-matrix-muted font-semibold bg-matrix-off">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -191,17 +191,17 @@ export default function AdminOverviewPage() {
                     {recent.map(e => {
                       const pill = STATUS_PILL[e.status] ?? STATUS_PILL.pending
                       return (
-                        <tr key={e.id} className="border-t border-[#E2E8F0] hover:bg-[#F8F9FB]">
-                          <td className="px-6 py-3 text-[#1F2330] font-medium">
+                        <tr key={e.id} className="border-t border-matrix-border hover:bg-matrix-off">
+                          <td className="px-6 py-3 text-matrix-ink font-medium">
                             {e.profiles?.full_name ?? '—'}
                           </td>
-                          <td className="px-6 py-3 text-[#64748B]">{e.courses?.title ?? '—'}</td>
-                          <td className="px-6 py-3 font-mono text-[12px] text-[#64748B]">
+                          <td className="px-6 py-3 text-matrix-muted">{e.courses?.title ?? '—'}</td>
+                          <td className="px-6 py-3 font-mono text-[12px] text-matrix-muted">
                             {new Date(e.enrolled_at).toLocaleDateString()}
                           </td>
                           <td className="px-6 py-3">
                             <span
-                              className="inline-block text-[10.5px] px-2 py-1 font-semibold tracking-[.1em] uppercase rounded-[2px]"
+                              className="inline-block text-[10.5px] px-2 py-1 font-semibold tracking-widest uppercase rounded-xs"
                               style={{ background: pill.bg, color: pill.color }}
                             >
                               {pill.label}
@@ -210,7 +210,7 @@ export default function AdminOverviewPage() {
                           <td className="px-6 py-3">
                             <Link
                               href="/admin/enrollments"
-                              className="font-dm font-semibold uppercase text-[11px] px-[10px] py-[6px] text-[#1F2330]"
+                              className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-ink"
                               style={{ border: '1px solid #E2E8F0', borderRadius: '2px' }}
                             >
                               Manage
@@ -221,7 +221,7 @@ export default function AdminOverviewPage() {
                     })}
                     {recent.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-[#64748B] text-[14px]">No enrollments yet</td>
+                        <td colSpan={5} className="px-6 py-8 text-center text-matrix-muted text-[14px]">No enrollments yet</td>
                       </tr>
                     )}
                   </tbody>
