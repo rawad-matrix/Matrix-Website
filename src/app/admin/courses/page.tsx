@@ -38,7 +38,7 @@ const EMPTY_FORM: FormData = {
   short_description: '',
   description: '',
   outcomes: '',
-  level: 'Beginner',
+  level: 'Basic',
   duration_hours: '',
   price: '',
   category: '',
@@ -51,7 +51,7 @@ function toSlug(s: string) {
 }
 
 const LEVEL_COLORS: Record<string, string> = {
-  Beginner: '#22C55E', Intermediate: '#1B6FCC', Advanced: '#DC2626',
+  All: '#8B5CF6', Basic: '#22C55E', Pro: '#1B6FCC', Advanced: '#DC2626',
 }
 
 const inputCls = 'w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue bg-white'
@@ -479,9 +479,10 @@ export default function AdminCoursesPage() {
                     onChange={e => handleField('level', e.target.value)}
                     className={inputCls}
                   >
-                    <option>Beginner</option>
-                    <option>Intermediate</option>
+                    <option>Basic</option>
+                    <option>Pro</option>
                     <option>Advanced</option>
+                    <option>All</option>
                   </select>
                 </label>
                 <label className="flex flex-col gap-1.5">

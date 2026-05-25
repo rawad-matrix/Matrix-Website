@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS courses (
   description TEXT,
   price DECIMAL(10,2) NOT NULL DEFAULT 0,
   currency TEXT DEFAULT 'USD',
-  level TEXT CHECK (level IN ('Beginner', 'Intermediate', 'Advanced')),
+  level TEXT CHECK (level IN ('Basic', 'Pro', 'Advanced', 'All')),
   duration_hours INTEGER,
   format TEXT DEFAULT 'In-person + lab',
   language TEXT DEFAULT 'English / Arabic',
