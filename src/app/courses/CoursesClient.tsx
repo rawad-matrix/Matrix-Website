@@ -14,16 +14,10 @@ type Course = {
   featured_image: string | null
 }
 
-// ── Badge colour by level ────────────────────────────────────────────────────
 // All levels share the brand blue — clean, consistent look
-const LEVEL_COLOR: Record<string, string> = {
-  All:      '#1B6FCC',
-  Basic:    '#1B6FCC',
-  Pro:      '#1B6FCC',
-  Advanced: '#1B6FCC',
-}
+const LEVEL_COLOR = '#1B6FCC'
 
-// ── Category-based card gradient when no image ───────────────────────────────
+// Category-based card gradient when no image
 const CATEGORY_GRADIENT: Record<string, string> = {
   'Siemens PLC': 'linear-gradient(160deg,#1a3a70 0%,#102050 90%)',
   'Delta PLC':   'linear-gradient(160deg,#1a4a1a 0%,#0e300e 90%)',
@@ -37,28 +31,22 @@ const CATEGORY_GRADIENT: Record<string, string> = {
 const DEFAULT_GRADIENT = 'linear-gradient(160deg,#1a2a3a 0%,#0a1a28 90%)'
 
 // ── Filter definitions ────────────────────────────────────────────────────────
-//   Levels filter by course.level; brand filters filter by slug/category.
-const FILTERS = [
-  { key: 'All',      label: 'All',      type: 'all'   },
-  { key: 'Basic',    label: 'Basic',    type: 'level' },
-  { key: 'Pro',      label: 'Pro',      type: 'level' },
-  { key: 'Advanced', label: 'Advanced', type: 'level' },
-  { key: 'Siemens',  label: 'Siemens',  type: 'brand' },
-  { key: 'Delta',    label: 'Delta',    type: 'brand' },
-  { key: 'IoT',      label: 'IoT',      type: 'brand' },
-  { key: 'SCADA',    label: 'SCADA',    type: 'brand' },
-] as const
+const LEVEL_FILTERS = ['Bundle', 'Basic', 'Pro', 'Advanced'] as const
+const BRAND_FILTERS = ['ALL', 'Siemens', 'Delta', 'IoT', 'SCADA'] as const
 
-function matchesCourse(course: Course, filter: string): boolean {
-  if (filter === 'All') return true
-
-  // Level filters — exact match on course.level
-  if (filter === 'Basic' || filter === 'Pro' || filter === 'Advanced') {
-    return course.level === filter
+function matchesCourse(course: Course, level: string | null, brand: string): boolean {
+  // Level check — null means show all levels
+  if (level !== null) {
+    if (level === 'Bundle') {
+      if (course.level !== 'All') return false
+    } else {
+      if (course.level !== level) return false
+    }
   }
 
-  // Brand / topic filters
-  if (filter === 'Siemens') {
+  // Brand check — 'ALL' means no brand filter
+  if (brand === 'ALL') return true
+  if (brand === 'Siemens') {
     return (
       course.slug.startsWith('s7-') ||
       course.slug.startsWith('si-') ||
@@ -67,47 +55,61 @@ function matchesCourse(course: Course, filter: string): boolean {
       course.slug === 'par-c'
     )
   }
-  if (filter === 'Delta') {
-    return course.slug.startsWith('delta-')
-  }
-  if (filter === 'IoT') {
-    return (course.category ?? '') === 'IoT'
-  }
-  if (filter === 'SCADA') {
-    return (course.category ?? '') === 'SCADA'
-  }
-
+  if (brand === 'Delta') return course.slug.startsWith('delta-')
+  if (brand === 'IoT') return (course.category ?? '') === 'IoT'
+  if (brand === 'SCADA') return (course.category ?? '') === 'SCADA'
   return false
 }
 
 export default function CoursesClient({ courses }: { courses: Course[] }) {
-  const [active, setActive] = useState('All')
+  const [levelFilter, setLevelFilter] = useState<string | null>(null)
+  const [brandFilter, setBrandFilter] = useState<string>('ALL')
 
-  const filtered = courses.filter(c => matchesCourse(c, active))
+  const filtered = courses.filter(c => matchesCourse(c, levelFilter, brandFilter))
+
+  const btnBase = 'font-dm font-semibold text-[12px] uppercase tracking-[0.08em] px-4 py-2 rounded-xs transition-all duration-150'
+  const btnActive = 'bg-matrix-blue text-white'
+  const btnInactive = 'bg-white text-matrix-muted border border-matrix-border hover:border-matrix-blue hover:text-matrix-blue'
 
   return (
     <section className="bg-matrix-off py-27.5 max-[768px]:py-18">
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
 
-        {/* ── Filter bar ────────────────────────────────────────────────── */}
+        {/* ── Dual filter bar ─────────────────────────────────────────────── */}
         {courses.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-10">
-            {FILTERS.map(f => {
-              const isActive = active === f.key
-              return (
-                <button
-                  key={f.key}
-                  onClick={() => setActive(f.key)}
-                  className={`font-dm font-semibold text-[12px] uppercase tracking-[0.08em] px-4 py-2 rounded-xs transition-all duration-150 ${
-                    isActive
-                      ? 'bg-matrix-blue text-white'
-                      : 'bg-white text-matrix-muted border border-matrix-border hover:border-matrix-blue hover:text-matrix-blue'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              )
-            })}
+          <div className="flex flex-col gap-3 mb-10">
+
+            {/* Row 1 — Level */}
+            <div className="flex flex-wrap gap-2">
+              {LEVEL_FILTERS.map(lv => {
+                const isActive = levelFilter === lv
+                return (
+                  <button
+                    key={lv}
+                    onClick={() => setLevelFilter(isActive ? null : lv)}
+                    className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
+                  >
+                    {lv}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Row 2 — Brand / Topic */}
+            <div className="flex flex-wrap gap-2">
+              {BRAND_FILTERS.map(br => {
+                const isActive = brandFilter === br
+                return (
+                  <button
+                    key={br}
+                    onClick={() => setBrandFilter(br)}
+                    className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
+                  >
+                    {br}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         )}
 
@@ -136,7 +138,7 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
           <div className="grid grid-cols-3 gap-6 max-[980px]:grid-cols-2 max-[600px]:grid-cols-1">
             {filtered.map(course => {
               const gradient = CATEGORY_GRADIENT[course.category ?? ''] ?? DEFAULT_GRADIENT
-              const levelColor = LEVEL_COLOR[course.level] ?? '#64748B'
+              const displayLevel = course.level === 'All' ? 'Bundle' : course.level
               return (
                 <Link
                   key={course.slug}
@@ -164,12 +166,12 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                   </div>
 
                   <div className="p-6 flex flex-col gap-3 flex-1">
-                    {/* Level badge */}
+                    {/* Level badge — always blue */}
                     <span
                       className="inline-block font-mono text-[10.5px] uppercase tracking-[0.12em] px-2 py-0.5 rounded-xs self-start"
-                      style={{ border: `1px solid ${levelColor}`, color: levelColor }}
+                      style={{ border: `1px solid ${LEVEL_COLOR}`, color: LEVEL_COLOR }}
                     >
-                      {course.level}
+                      {displayLevel}
                     </span>
 
                     <h3 className="font-barlow font-bold text-[22px] uppercase text-white leading-[1.1]">
@@ -189,7 +191,7 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                           <span className="font-mono text-[11px] text-white/50">{course.category}</span>
                         )}
                       </div>
-                      <span className="font-mono text-[18px] font-medium" style={{ color: levelColor }}>
+                      <span className="font-mono text-[18px] font-medium" style={{ color: LEVEL_COLOR }}>
                         {course.price > 0 ? `$${course.price}` : 'TBA'}
                       </span>
                     </div>
