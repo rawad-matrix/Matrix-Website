@@ -1,4 +1,8 @@
+'use client'
+
+import React from 'react'
 import Link from 'next/link'
+import { useInView } from '@/hooks/useInView'
 
 const TRACKS = [
   {
@@ -31,31 +35,38 @@ const TRACKS = [
 ]
 
 export function TrainingCTABanner() {
+  const { ref: sectionRef, inView } = useInView()
   return (
     <section
-      className="relative overflow-hidden py-[clamp(36px,5vh,72px)]"
-      style={{ background: '#F8F9FB', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+      className="relative overflow-hidden py-[clamp(48px,6vh,80px)]"
+      style={{ background: '#F8F9FB', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
     >
-      <div className="relative max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative max-w-7xl mx-auto px-8 max-[640px]:px-5">
         <div className="grid grid-cols-2 gap-16 items-center max-[900px]:grid-cols-1 max-[900px]:gap-10">
           {/* Left */}
-          <div>
+          <div
+            style={{
+              opacity: inView ? 1 : 0,
+              transform: inView ? 'translateX(0)' : 'translateX(-20px)',
+              transition: 'opacity .7s ease, transform .7s ease',
+            }}
+          >
             <div className="flex items-center gap-3 mb-4">
-              <span className="block w-10 h-[3px] bg-[#1B6FCC]" />
-              <span className="font-dm text-[12px] font-semibold uppercase tracking-[3px] text-[#1B6FCC]">Training Programs</span>
+              <span className="block w-10 h-0.75 bg-matrix-blue" />
+              <span className="font-dm text-[12px] font-semibold uppercase tracking-[3px] text-matrix-blue">Training Programs</span>
             </div>
             <h2
-              className="font-barlow font-extrabold uppercase text-[#1F2330] mb-5"
+              className="font-barlow font-extrabold uppercase text-matrix-ink mb-5"
               style={{ fontSize: 'clamp(34px, 4.6vw, 52px)', lineHeight: '1.02' }}
             >
               Build In-House Engineering Capability
             </h2>
-            <p className="font-dm text-[15.5px] text-[#64748B] mb-8 leading-[1.7] max-w-[480px]">
+            <p className="font-dm text-[15.5px] text-matrix-muted mb-8 leading-[1.7] max-w-120">
               From beginner PLC operators to advanced SCADA engineers — our structured training programs are built and delivered by working automation engineers, not classroom instructors.
             </p>
             <Link
               href="/training"
-              className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+              className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
             >
               Explore Training Programs
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -65,11 +76,15 @@ export function TrainingCTABanner() {
           </div>
 
           {/* Right: track types */}
-          <div className="flex flex-col gap-5">
-            {TRACKS.map((t) => (
+          <div className="flex flex-col gap-4">
+            {TRACKS.map((t, i) => (
               <div
                 key={t.label}
-                className="flex items-start gap-5 p-7 rounded-[2px]"
+                className={`reveal ${inView ? 'in-view' : ''}`}
+                style={{ transitionDelay: inView ? '0ms' : `${80 + i * 80}ms` }}
+              >
+              <div
+                className="flex items-start gap-5 p-6 rounded-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(42,47,58,.18)]"
                 style={{
                   background: '#fff',
                   border: '1px solid #E2E8F0',
@@ -77,15 +92,16 @@ export function TrainingCTABanner() {
                 }}
               >
                 <div
-                  className="flex-shrink-0 w-12 h-12 grid place-items-center rounded-[2px] text-[#1B6FCC]"
+                  className="shrink-0 w-12 h-12 grid place-items-center rounded-xs text-matrix-blue"
                   style={{ background: 'rgba(27,111,204,.10)' }}
                 >
                   {t.icon}
                 </div>
                 <div>
-                  <span className="font-barlow font-bold text-[20px] uppercase text-[#2A2F3A] block mb-1">{t.label}</span>
-                  <span className="font-dm text-[15px] text-[#64748B]">{t.desc}</span>
+                  <span className="font-barlow font-bold text-[20px] uppercase text-matrix-navy block mb-1">{t.label}</span>
+                  <span className="font-dm text-[15px] text-matrix-muted">{t.desc}</span>
                 </div>
+              </div>
               </div>
             ))}
           </div>

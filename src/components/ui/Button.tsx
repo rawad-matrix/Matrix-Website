@@ -28,7 +28,7 @@ const sizeClasses: Record<Size, string> = {
   lg:  'px-[28px] py-[16px] text-[14px]',
 }
 
-const base = 'font-dm font-semibold uppercase tracking-[0.04em] rounded-[2px] transition-all duration-150 inline-flex items-center gap-2 cursor-pointer shrink-0'
+const base = 'font-dm font-semibold uppercase tracking-[0.04em] rounded-xs transition-all duration-150 inline-flex items-center gap-2 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-matrix-blue focus-visible:ring-offset-2'
 
 export function Button({
   variant = 'primary',

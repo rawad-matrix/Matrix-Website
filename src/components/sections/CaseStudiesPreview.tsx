@@ -27,8 +27,8 @@ export async function CaseStudiesPreview() {
 
   return (
     <section
-      className="py-[clamp(36px,5vh,72px)] relative overflow-hidden"
-      style={{ background: '#0A0A12', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+      className="py-[clamp(48px,6vh,80px)] relative"
+      style={{ background: '#0A0A12' }}
     >
       {/* Subtle circuit overlay */}
       <div
@@ -97,7 +97,7 @@ export async function CaseStudiesPreview() {
         <div className="flex justify-center mt-12">
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 bg-transparent text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] border border-white/45 hover:bg-white hover:text-[#1F2330] transition-all duration-150"
+            className="inline-flex items-center gap-2 bg-transparent text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs border border-white/45 hover:bg-white hover:text-matrix-ink transition-all duration-150"
           >
             View All Case Studies
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

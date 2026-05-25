@@ -24,7 +24,7 @@ function BrandGrid({ cols, cellHeight, logoHeight, padding }: {
   const totalRows = Math.ceil(BRANDS.length / cols)
   return (
     <div
-      className="grid overflow-hidden rounded-[2px]"
+      className="grid overflow-hidden rounded-xs"
       style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, border: '1px solid #E2E8F0' }}
     >
       {BRANDS.map(({ name, imageSrc }, i) => {
@@ -64,9 +64,9 @@ export function BrandsRow() {
   return (
     <section
       className="bg-white"
-      style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+      style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
     >
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-[clamp(32px,4vh,56px)]">
+      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 py-[clamp(32px,4vh,56px)]">
         <SectionHeader
           label="Our Partners"
           title="Trusted by Industry"
@@ -75,12 +75,12 @@ export function BrandsRow() {
         />
 
         {/* Desktop: 5 columns → 2 rows */}
-        <div className="max-[640px]:hidden">
+        <div className="hidden md:block">
           <BrandGrid cols={5} cellHeight="clamp(180px,22vh,250px)" logoHeight="clamp(150px,18vh,210px)" padding="clamp(8px,1vw,16px)" />
         </div>
 
         {/* Mobile: 3 columns → 3 rows */}
-        <div className="min-[641px]:hidden">
+        <div className="md:hidden">
           <BrandGrid cols={3} cellHeight="clamp(110px,15vh,160px)" logoHeight="clamp(80px,12vh,130px)" padding="8px" />
         </div>
       </div>

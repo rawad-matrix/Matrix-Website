@@ -101,8 +101,8 @@ img { max-width: 100%; display: block; }
 .animate-pulse-red   { animation: pulse-red   2.2s infinite; }
 .animate-pulse-green { animation: pulse-green 2.2s infinite; }
 .animate-pulse-blue  { animation: pulse-blue  2.2s infinite; }
-.animate-fade-in-up  { animation: fade-in-up 0.6s ease forwards; }
-.animate-fade-in     { animation: fade-in    0.4s ease forwards; }
+.animate-fade-in-up  { animation: fade-in-up 0.9s ease forwards; }
+.animate-fade-in     { animation: fade-in    0.65s ease forwards; }
 
 /* Circuit grid overlay — used in hero, why, footer */
 .circuit-grid {
@@ -131,8 +131,8 @@ img { max-width: 100%; display: block; }
 /* Scroll animation helpers */
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(28px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
 }
 .reveal.in-view {
   opacity: 1;

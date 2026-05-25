@@ -57,36 +57,33 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="bg-[#F4F6FA] min-h-screen py-8 pb-20">
-      <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+    <div className="bg-matrix-topbar min-h-screen py-8 pb-20">
+      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
 
         {/* Header */}
         <div className="flex justify-between items-end flex-wrap gap-4 mb-7">
           <div>
-            <h1 className="font-barlow font-bold uppercase text-[42px] text-[#1F2330] leading-none">
+            <h1 className="font-barlow font-bold uppercase text-[42px] text-matrix-ink leading-none">
               Site Overview · Bekaa Solar
             </h1>
-            <div className="text-[14px] text-[#64748B] mt-1">
+            <div className="text-[14px] text-matrix-muted mt-1">
               Logged in as <b>{user?.email ?? '…'}</b> · Last sync 2 seconds ago
             </div>
           </div>
           <div className="flex items-center gap-4">
             <span
-              className="inline-flex items-center gap-2 font-mono text-[12px] text-[#22C55E] px-[14px] py-[8px]"
+              className="inline-flex items-center gap-2 font-mono text-[12px] text-matrix-success px-3.5 py-2"
               style={{ background: 'rgba(34,197,94,.08)', border: '1px solid rgba(34,197,94,.25)', borderRadius: '2px' }}
             >
               <span
-                className="w-2 h-2 rounded-full bg-[#22C55E]"
+                className="w-2 h-2 rounded-full bg-matrix-success"
                 style={{ animation: 'pulse-green 1.6s infinite' }}
               />
               LIVE · WebSocket
             </span>
             <button
               onClick={signOut}
-              className="font-dm font-semibold uppercase text-[12px] px-[18px] py-[10px] text-[#1F2330]"
-              style={{ background: 'transparent', border: '1px solid #E2E8F0', borderRadius: '2px', cursor: 'pointer', transition: 'all .15s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#2A2F3A'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#1F2330' }}
+              className="font-dm font-semibold uppercase text-[12px] px-4.5 py-2.5 text-matrix-ink border border-matrix-border rounded-xs bg-transparent cursor-pointer transition-all duration-150 hover:bg-matrix-navy hover:text-white hover:border-matrix-navy"
             >
               Sign Out
             </button>
@@ -97,51 +94,51 @@ export default function DashboardPage() {
         {loading ? (
           <div className="grid grid-cols-4 max-[900px]:grid-cols-2 gap-4 mb-6">
             {[0, 1, 2, 3].map(i => (
-              <div key={i} className="bg-white border border-[#E2E8F0] rounded-[2px] p-6 animate-pulse">
-                <div className="h-3 bg-[#E2E8F0] rounded w-1/2 mb-3" />
-                <div className="h-10 bg-[#E2E8F0] rounded w-3/4" />
+              <div key={i} className="bg-white border border-matrix-border rounded-xs p-6 animate-pulse">
+                <div className="h-3 bg-matrix-border rounded w-1/2 mb-3" />
+                <div className="h-10 bg-matrix-border rounded w-3/4" />
               </div>
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-4 max-[900px]:grid-cols-2 gap-4 mb-6">
             {/* Solar */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
-              <div className="text-[11px] tracking-[.18em] uppercase text-[#64748B] font-semibold">Solar Generation</div>
-              <div className="font-mono text-[34px] text-[#1F2330] font-medium mt-2 mb-1 leading-none">
-                {solar?.value ?? '18.4'} <span className="text-[14px] text-[#64748B]">kW</span>
+            <div className="bg-white border border-matrix-border rounded-xs p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
+              <div className="text-[11px] tracking-[.18em] uppercase text-matrix-muted font-semibold">Solar Generation</div>
+              <div className="font-mono text-[34px] text-matrix-ink font-medium mt-2 mb-1 leading-none">
+                {solar?.value ?? '18.4'} <span className="text-[14px] text-matrix-muted">kW</span>
               </div>
-              <div className="font-mono text-[12px] text-[#22C55E]">▲ 4.2% vs avg</div>
+              <div className="font-mono text-[12px] text-matrix-success">▲ 4.2% vs avg</div>
             </div>
             {/* Battery */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
-              <div className="text-[11px] tracking-[.18em] uppercase text-[#64748B] font-semibold">Battery Charge</div>
-              <div className="font-mono text-[34px] text-[#1F2330] font-medium mt-2 mb-1 leading-none">
-                {battery?.value ?? 87}<span className="text-[14px] text-[#64748B]">%</span>
+            <div className="bg-white border border-matrix-border rounded-xs p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
+              <div className="text-[11px] tracking-[.18em] uppercase text-matrix-muted font-semibold">Battery Charge</div>
+              <div className="font-mono text-[34px] text-matrix-ink font-medium mt-2 mb-1 leading-none">
+                {battery?.value ?? 87}<span className="text-[14px] text-matrix-muted">%</span>
               </div>
-              <div className="font-mono text-[12px] text-[#22C55E]">Charging · 142 kW</div>
+              <div className="font-mono text-[12px] text-matrix-success">Charging · 142 kW</div>
             </div>
             {/* Grid */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
-              <div className="text-[11px] tracking-[.18em] uppercase text-[#64748B] font-semibold">Grid (EDL)</div>
-              <div className="font-mono text-[34px] text-[#1F2330] font-medium mt-2 mb-1 leading-none">
+            <div className="bg-white border border-matrix-border rounded-xs p-6" style={{ borderTop: '3px solid #1B6FCC' }}>
+              <div className="text-[11px] tracking-[.18em] uppercase text-matrix-muted font-semibold">Grid (EDL)</div>
+              <div className="font-mono text-[34px] text-matrix-ink font-medium mt-2 mb-1 leading-none">
                 <span style={{ color: grid?.status === 'on' ? '#22C55E' : '#DC2626' }}>●</span> {grid?.status?.toUpperCase() ?? 'ON'}
               </div>
-              <div className="font-mono text-[12px] text-[#22C55E]">Stable · 380 V</div>
+              <div className="font-mono text-[12px] text-matrix-success">Stable · 380 V</div>
             </div>
             {/* Alarms */}
             <div
-              className="bg-white border border-[#E2E8F0] rounded-[2px] p-6"
+              className="bg-white border border-matrix-border rounded-xs p-6"
               style={{ borderTop: `3px solid ${alarmCount > 0 ? '#DC2626' : '#1B6FCC'}` }}
             >
-              <div className="text-[11px] tracking-[.18em] uppercase text-[#64748B] font-semibold">Active Alarms</div>
+              <div className="text-[11px] tracking-[.18em] uppercase text-matrix-muted font-semibold">Active Alarms</div>
               <div
                 className="font-mono text-[34px] font-medium mt-2 mb-1 leading-none"
                 style={{ color: alarmCount > 0 ? '#DC2626' : '#1F2330' }}
               >
                 {alarmCount}
               </div>
-              <div className="font-mono text-[12px] text-[#DC2626]">1 critical · 1 medium</div>
+              <div className="font-mono text-[12px] text-matrix-red">1 critical · 1 medium</div>
             </div>
           </div>
         )}
@@ -149,10 +146,10 @@ export default function DashboardPage() {
         {/* Main grid: 2fr / 1fr */}
         <div className="grid max-[980px]:grid-cols-1 gap-4" style={{ gridTemplateColumns: '2fr 1fr' }}>
           {/* Left panel */}
-          <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6">
+          <div className="bg-white border border-matrix-border rounded-xs p-6">
             {/* Chart header */}
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#E2E8F0]">
-              <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-[#1F2330]">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-matrix-border">
+              <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-matrix-ink">
                 Solar Array — Last {activeRange}
               </h3>
               <div className="flex gap-1.5">
@@ -160,7 +157,7 @@ export default function DashboardPage() {
                   <button
                     key={chip}
                     onClick={() => setActiveRange(chip)}
-                    className="font-mono text-[10.5px] tracking-[.1em] px-[10px] py-[4px] cursor-pointer"
+                    className="font-mono text-[10.5px] tracking-widest px-2.5 py-1 cursor-pointer"
                     style={{
                       border: '1px solid',
                       borderColor: activeRange === chip ? '#2A2F3A' : '#E2E8F0',
@@ -223,17 +220,17 @@ export default function DashboardPage() {
             </div>
 
             {/* Motor grid */}
-            <div className="flex justify-between items-center mt-6 mb-3 pb-3 border-b border-[#E2E8F0]">
-              <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-[#1F2330]">Motor Status</h3>
+            <div className="flex justify-between items-center mt-6 mb-3 pb-3 border-b border-matrix-border">
+              <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-matrix-ink">Motor Status</h3>
             </div>
             <div className="grid grid-cols-3 max-[760px]:grid-cols-2 gap-3">
               {motors.length > 0 ? motors.map((m) => (
                 <div
                   key={m.source_id}
-                  className="p-3 text-center border border-[#E2E8F0] rounded-[2px]"
+                  className="p-3 text-center border border-matrix-border rounded-xs"
                   style={{ background: '#F8F9FB' }}
                 >
-                  <div className="font-mono text-[11px] text-[#64748B] tracking-[.1em] uppercase">{m.source_id.replace('_', '-').toUpperCase()}</div>
+                  <div className="font-mono text-[11px] text-matrix-muted tracking-widest uppercase">{m.source_id.replace('_', '-').toUpperCase()}</div>
                   <div
                     className="font-mono text-[22px] font-medium my-1.5"
                     style={{ color: m.status === 'off' ? '#DC2626' : '#1F2330' }}
@@ -257,8 +254,8 @@ export default function DashboardPage() {
                   { id: 'FAN-01', rpm: '1,750', running: true },
                   { id: 'FAN-02', rpm: '1,748', running: true },
                 ].map(m => (
-                  <div key={m.id} className="p-3 text-center border border-[#E2E8F0] rounded-[2px]" style={{ background: '#F8F9FB' }}>
-                    <div className="font-mono text-[11px] text-[#64748B] tracking-[.1em] uppercase">{m.id}</div>
+                  <div key={m.id} className="p-3 text-center border border-matrix-border rounded-xs" style={{ background: '#F8F9FB' }}>
+                    <div className="font-mono text-[11px] text-matrix-muted tracking-widest uppercase">{m.id}</div>
                     <div className="font-mono text-[22px] font-medium my-1.5" style={{ color: m.running ? '#1F2330' : '#DC2626' }}>{m.rpm}</div>
                     <div className="text-[11px] uppercase tracking-[.16em] font-semibold" style={{ color: m.running ? '#22C55E' : '#DC2626' }}>
                       {m.running ? 'Running' : 'Stopped'}
@@ -272,15 +269,15 @@ export default function DashboardPage() {
           {/* Right panel */}
           <div className="flex flex-col gap-4">
             {/* Power Sources */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6">
-              <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#E2E8F0]">
-                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-[#1F2330]">Power Sources</h3>
+            <div className="bg-white border border-matrix-border rounded-xs p-6">
+              <div className="flex justify-between items-center mb-4 pb-3 border-b border-matrix-border">
+                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-matrix-ink">Power Sources</h3>
               </div>
               {sources.map(src => (
                 <button
                   key={src.id}
                   onClick={() => setActiveSrc(src.id)}
-                  className="w-full flex justify-between items-center py-3 border-b border-[#E2E8F0] last:border-0 text-left cursor-pointer transition-all"
+                  className="w-full flex justify-between items-center py-3 border-b border-matrix-border last:border-0 text-left cursor-pointer transition-all"
                   style={{
                     background: activeSrc === src.id ? '#2A2F3A' : 'transparent',
                     paddingLeft: activeSrc === src.id ? '12px' : '0',
@@ -294,7 +291,7 @@ export default function DashboardPage() {
                     style={{ color: activeSrc === src.id ? '#fff' : '#1F2330' }}
                   >
                     <span
-                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      className="w-2 h-2 rounded-full shrink-0"
                       style={{
                         background: src.status === 'on' ? '#22C55E' : src.status === 'warn' ? '#FFB200' : '#DC2626'
                       }}
@@ -307,24 +304,24 @@ export default function DashboardPage() {
             </div>
 
             {/* Active Alarms */}
-            <div className="bg-white border border-[#E2E8F0] rounded-[2px] p-6">
-              <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#E2E8F0]">
-                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-[#1F2330]">Active Alarms</h3>
-                <span className="font-mono text-[10.5px] tracking-[.1em] px-[10px] py-[4px] text-[#64748B]" style={{ border: '1px solid #E2E8F0' }}>
+            <div className="bg-white border border-matrix-border rounded-xs p-6">
+              <div className="flex justify-between items-center mb-4 pb-3 border-b border-matrix-border">
+                <h3 className="font-barlow font-bold uppercase text-[18px] tracking-[.04em] text-matrix-ink">Active Alarms</h3>
+                <span className="font-mono text-[10.5px] tracking-widest px-2.5 py-1 text-matrix-muted" style={{ border: '1px solid #E2E8F0' }}>
                   {ALARMS.length} unread
                 </span>
               </div>
               {ALARMS.map((alarm, i) => (
-                <div key={i} className="flex gap-3 items-start py-3 border-b border-[#E2E8F0] last:border-0">
+                <div key={i} className="flex gap-3 items-start py-3 border-b border-matrix-border last:border-0">
                   <span
-                    className="w-[6px] h-8 flex-shrink-0 mt-0.5"
+                    className="w-1.5 h-8 shrink-0 mt-0.5"
                     style={{
                       background: alarm.sev === 'critical' ? '#DC2626' : alarm.sev === 'med' ? '#FFB200' : '#22C55E'
                     }}
                   />
                   <div className="flex-1">
-                    <b className="block text-[13.5px] font-semibold text-[#1F2330]">{alarm.title}</b>
-                    <span className="font-mono text-[11.5px] text-[#64748B] mt-0.5 block">{alarm.meta}</span>
+                    <b className="block text-[13.5px] font-semibold text-matrix-ink">{alarm.title}</b>
+                    <span className="font-mono text-[11.5px] text-matrix-muted mt-0.5 block">{alarm.meta}</span>
                   </div>
                 </div>
               ))}

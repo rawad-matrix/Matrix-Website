@@ -89,7 +89,7 @@ export default function TrainingPage() {
             {TRACKS.map(({ n, title, desc, meta, alt }) => (
               <div
                 key={n}
-                className="relative flex flex-col min-h-120 p-12 rounded-xs overflow-hidden"
+                className="relative flex flex-col min-h-60 md:min-h-96 lg:min-h-120 p-12 rounded-xs overflow-hidden"
                 style={
                   alt
                     ? { background: '#fff', borderTop: '4px solid #1B6FCC', border: '1px solid #E2E8F0' }

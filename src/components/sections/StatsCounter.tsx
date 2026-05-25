@@ -36,7 +36,7 @@ export function StatsCounter() {
   return (
     <section
       ref={(el) => { ref.current = el; containerRef.current = el }}
-      className="relative overflow-hidden py-16"
+      className="relative overflow-hidden py-10 md:py-16"
       style={{
         background: '#F4F6FA',
         borderTop: '3px solid #1B6FCC',
@@ -50,8 +50,8 @@ export function StatsCounter() {
           background: 'repeating-linear-gradient(90deg, transparent 0 80px, rgba(42,47,58,.06) 80px 81px)',
         }}
       />
-      <div className="relative max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
-        <div className="grid grid-cols-4 gap-8 max-[760px]:grid-cols-2 max-[760px]:gap-8">
+      <div className="relative max-w-7xl mx-auto px-8 max-[640px]:px-5">
+        <div className="grid grid-cols-4 gap-8 max-[768px]:grid-cols-2 max-[768px]:gap-6">
           {STATS.map((s) => (
             <StatItem key={s.label} {...s} active={inView} />
           ))}

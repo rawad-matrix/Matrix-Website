@@ -138,40 +138,19 @@ export function SignInModal() {
 
           {/* Header */}
           <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-            <span
-              style={{
-                display: 'inline-block',
-                background: 'rgba(27,111,204,.10)',
-                border: '1px solid rgba(27,111,204,.30)',
-                color: '#1B6FCC',
-                padding: '5px 12px',
-                fontSize: '10.5px',
-                fontWeight: 600,
-                letterSpacing: '.22em',
-                textTransform: 'uppercase',
-                borderRadius: '2px',
-                marginBottom: '10px',
-                fontFamily: 'var(--font-dm-sans, DM Sans, sans-serif)',
-              }}
-            >
-              Welcome Back
-            </span>
             <h2
               style={{
                 fontFamily: 'var(--font-barlow-condensed, Barlow Condensed, sans-serif)',
-                fontSize: '30px',
+                fontSize: '32px',
                 fontWeight: 800,
                 textTransform: 'uppercase',
                 color: '#1F2330',
                 lineHeight: 1,
-                marginBottom: '6px',
+                margin: 0,
               }}
             >
-              Sign In to Your Account
+              Sign In
             </h2>
-            <p style={{ color: '#64748B', fontSize: '13.5px', fontFamily: 'var(--font-dm-sans, DM Sans, sans-serif)', margin: 0 }}>
-              Access your dashboard, courses & live monitoring.
-            </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>

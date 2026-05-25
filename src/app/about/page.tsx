@@ -33,26 +33,23 @@ export default function AboutPage() {
       />
 
       {/* Story section */}
-      <section className="bg-white py-[110px] max-[768px]:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <section className="bg-white py-27.5 max-[768px]:py-18">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <div className="grid grid-cols-2 gap-16 items-start max-[900px]:grid-cols-1 max-[900px]:gap-10">
             <div>
               <SectionHeader label="Our Story" title="Built on the Plant Floor." />
-              <p className="font-dm text-[16px] text-[#64748B] leading-[1.7] mb-4">
+              <p className="font-dm text-[16px] text-matrix-muted leading-[1.7] mb-4">
                 Matrix Energy & Automation was founded in Beirut in 2003 with a simple premise: industrial automation should be designed and delivered by engineers who understand both the theory and the reality of plant floor operation.
               </p>
-              <p className="font-dm text-[16px] text-[#64748B] leading-[1.7] mb-4">
+              <p className="font-dm text-[16px] text-matrix-muted leading-[1.7] mb-4">
                 Over two decades, we have grown from a local system integrator to a regional leader with completed projects in Lebanon, Iraq, Saudi Arabia, Sudan, Chad and beyond. Our team of 35+ engineers has commissioned systems in water treatment, food processing, power generation, pharmaceutical manufacturing and heavy industry.
               </p>
-              <p className="font-dm text-[16px] text-[#64748B] leading-[1.7]">
+              <p className="font-dm text-[16px] text-matrix-muted leading-[1.7]">
                 We remain privately held and engineering-first. Every project is owned by a senior engineer from scoping through commissioning. No subcontracting of core automation work.
               </p>
             </div>
             {/* Mission box */}
-            <div
-              className="rounded-[2px] p-10"
-              style={{ background: '#2A2F3A', borderTop: '4px solid #1B6FCC' }}
-            >
+            <div className="rounded-xs p-10 bg-matrix-navy border-t-4 border-t-matrix-blue">
               <h3 className="font-barlow font-bold text-[28px] uppercase text-white mb-5">Our Mission</h3>
               <p className="font-dm text-[15.5px] text-white/75 leading-[1.7] mb-6">
                 To deliver automation and energy solutions that genuinely improve plant performance, reduce downtime and transfer real knowledge to client teams — so they become more independent with every project we complete together.
@@ -60,7 +57,7 @@ export default function AboutPage() {
               <div className="flex flex-col gap-3">
                 {['Engineering-first culture', 'No subcontracting of core work', 'Knowledge transfer in every project', 'Regional expertise, global standards'].map((v) => (
                   <div key={v} className="flex items-center gap-3">
-                    <span className="w-[6px] h-[6px] rounded-full bg-[#1B6FCC] flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-matrix-blue shrink-0" />
                     <span className="font-dm text-[14px] text-white/80">{v}</span>
                   </div>
                 ))}
@@ -73,19 +70,19 @@ export default function AboutPage() {
       <StatsCounter />
 
       {/* Timeline */}
-      <section className="bg-white py-[110px] max-[768px]:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <section className="bg-white py-27.5 max-[768px]:py-18">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label="History" title="Two Decades of Growth." centered />
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
             {TIMELINE.map(({ year, title, desc }) => (
               <div
                 key={year}
-                className="bg-[#F8F9FB] rounded-[2px] p-7"
+                className="bg-matrix-off rounded-xs p-7"
                 style={{ border: '1px solid #E2E8F0', borderTop: '3px solid #1B6FCC' }}
               >
-                <span className="font-mono text-[13px] text-[#1B6FCC] font-medium block mb-2">{year}</span>
-                <h4 className="font-barlow font-bold text-[20px] uppercase text-[#2A2F3A] mb-2">{title}</h4>
-                <p className="font-dm text-[14px] text-[#64748B] leading-[1.6] m-0">{desc}</p>
+                <span className="font-mono text-[13px] text-matrix-blue font-medium block mb-2">{year}</span>
+                <h4 className="font-barlow font-bold text-[20px] uppercase text-matrix-navy mb-2">{title}</h4>
+                <p className="font-dm text-[14px] text-matrix-muted leading-[1.6] m-0">{desc}</p>
               </div>
             ))}
           </div>
@@ -93,23 +90,22 @@ export default function AboutPage() {
       </section>
 
       {/* Certifications */}
-      <section className="bg-[#F8F9FB] py-[110px] max-[768px]:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-8 max-[640px]:px-5">
+      <section className="bg-matrix-off py-27.5 max-[768px]:py-18">
+        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label="Accreditations" title="Certified & Authorised." centered />
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
             {CERTS.map(({ name, sub }) => (
               <div
                 key={name}
-                className="bg-white rounded-[2px] p-7 text-center"
-                style={{ border: '1px solid #E2E8F0' }}
+                className="bg-white rounded-xs p-7 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_24px_-8px_rgba(42,47,58,.18)] border border-matrix-border border-t-[3px] border-t-transparent hover:border-t-matrix-blue"
               >
-                <div className="w-14 h-14 bg-[rgba(27,111,204,.1)] rounded-[2px] grid place-items-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-matrix-blue/10 rounded-xs grid place-items-center mx-auto mb-4">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B6FCC" strokeWidth="1.8">
                     <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
                   </svg>
                 </div>
-                <h4 className="font-barlow font-bold text-[18px] uppercase text-[#2A2F3A] mb-1">{name}</h4>
-                <span className="font-dm text-[13px] text-[#64748B]">{sub}</span>
+                <h4 className="font-barlow font-bold text-[18px] uppercase text-matrix-navy mb-1">{name}</h4>
+                <span className="font-dm text-[13px] text-matrix-muted">{sub}</span>
               </div>
             ))}
           </div>

@@ -73,7 +73,7 @@ export function Hero() {
 
       {/* Image slider — replaces the right decorative panel */}
       <div
-        className="absolute right-0 top-0 bottom-0 hidden md:block pointer-events-none"
+        className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
         style={{
           width: '40%',
           clipPath: 'polygon(10% 0, 100% 0, 100% 100%, 0% 100%)',
@@ -107,13 +107,13 @@ export function Hero() {
 
       {/* Slider controls — need pointer-events, so outside the no-pointer-events wrapper */}
       <div
-        className="absolute right-0 top-0 bottom-0 hidden md:flex items-center pointer-events-auto"
+        className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-auto"
         style={{ width: '40%', clipPath: 'polygon(10% 0, 100% 0, 100% 100%, 0% 100%)' }}
       >
         {/* Prev arrow */}
         <button
           onClick={() => goTo((currentSlide - 1 + SLIDES.length) % SLIDES.length)}
-          className="absolute left-14 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#2A2F3A]/80 text-white flex items-center justify-center hover:bg-[#1B6FCC] transition-colors duration-150"
+          className="absolute left-14 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-matrix-navy/80 text-white flex items-center justify-center hover:bg-matrix-blue transition-colors duration-150"
           aria-label="Previous slide"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -123,7 +123,7 @@ export function Hero() {
         {/* Next arrow */}
         <button
           onClick={() => goTo((currentSlide + 1) % SLIDES.length)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#2A2F3A]/80 text-white flex items-center justify-center hover:bg-[#1B6FCC] transition-colors duration-150"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-matrix-navy/80 text-white flex items-center justify-center hover:bg-matrix-blue transition-colors duration-150"
           aria-label="Next slide"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -147,16 +147,18 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-8 max-[640px]:px-5 w-full py-[clamp(48px,6vh,96px)]">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 max-[640px]:px-5 w-full py-[clamp(48px,6vh,96px)]">
         {/* Tag pill */}
         <div
-          className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-[2px]"
+          className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-xs animate-fade-in"
           style={{
             background: 'rgba(27,111,204,.12)',
             border: '1px solid rgba(27,111,204,.35)',
+            animationDelay: '0ms',
+            animationFillMode: 'both',
           }}
         >
-          <span className="w-[8px] h-[8px] rounded-full bg-[#DC2626] animate-pulse-red shrink-0" />
+          <span className="w-2 h-2 rounded-full bg-matrix-red animate-pulse-red shrink-0" />
           <span className="font-dm font-semibold text-[11px] uppercase tracking-[0.28em] text-white/80">
             Automation & Energy Solutions
           </span>
@@ -164,11 +166,13 @@ export function Hero() {
 
         {/* H1 */}
         <h1
-          className="font-barlow font-extrabold uppercase text-white mb-8 max-w-[780px]"
+          className="font-barlow font-extrabold uppercase text-white mb-8 max-w-195 animate-fade-in-up"
           style={{
             fontSize: 'clamp(44px, 7.2vw, 86px)',
             lineHeight: '0.95',
             letterSpacing: '-0.01em',
+            animationDelay: '200ms',
+            animationFillMode: 'both',
           }}
         >
           Powering{' '}
@@ -182,13 +186,13 @@ export function Hero() {
           </span>
           <br />
           Industrial{' '}
-          <span className="text-[#DC2626]">Future.</span>
+          <span className="text-matrix-red">Future.</span>
         </h1>
 
         {/* Lead */}
         <p
-          className="font-dm text-[18px] mb-6 max-w-[560px]"
-          style={{ color: 'rgba(255,255,255,.78)', lineHeight: '1.6' }}
+          className="font-dm text-[18px] mb-6 max-w-140 animate-fade-in-up"
+          style={{ color: 'rgba(255,255,255,.78)', lineHeight: '1.6', animationDelay: '400ms', animationFillMode: 'both' }}
         >
           21 years of SCADA, PLC, and system integration experience across Lebanon,
           Iraq, Saudi Arabia and Africa. Turnkey EPC delivery, 24/7 maintenance, and
@@ -196,10 +200,10 @@ export function Hero() {
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap gap-[14px] mb-8">
+        <div className="flex flex-wrap gap-3.5 mb-8 animate-fade-in-up" style={{ animationDelay: '600ms', animationFillMode: 'both' }}>
           <Link
             href="/system-integrator"
-            className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[28px] py-[16px] font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+            className="inline-flex items-center gap-2 bg-matrix-blue text-white px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
           >
             Explore Solutions
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -209,7 +213,7 @@ export function Hero() {
           </Link>
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 bg-transparent text-white px-[28px] py-[16px] font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-[2px] border border-white hover:bg-white hover:text-[#1F2330] transition-all duration-150"
+            className="inline-flex items-center gap-2 bg-transparent text-white px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs border border-white hover:bg-white hover:text-matrix-ink transition-all duration-150"
           >
             Our Case Studies
           </Link>
@@ -218,8 +222,8 @@ export function Hero() {
         {/* Stats bar — count-up animation */}
         <div
           ref={statsRef as React.RefObject<HTMLDivElement>}
-          className="max-w-[680px] pt-8 grid grid-cols-3 gap-0"
-          style={{ borderTop: '1px solid rgba(255,255,255,.12)' }}
+          className="max-w-170 pt-8 grid grid-cols-3 gap-0 animate-fade-in-up"
+          style={{ borderTop: '1px solid rgba(255,255,255,.12)', animationDelay: '800ms', animationFillMode: 'both' }}
         >
           {[
             { count: c1, suffix: '+', l: 'Projects' },

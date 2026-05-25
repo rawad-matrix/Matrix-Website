@@ -1,5 +1,9 @@
+'use client'
+
+import React from 'react'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import Link from 'next/link'
+import { useInView } from '@/hooks/useInView'
 
 const CHECKLIST = [
   { t: '21 Years of Specialized Experience', d: 'Serving Lebanon, Iraq, Saudi Arabia and Africa since 2003.' },
@@ -10,10 +14,11 @@ const CHECKLIST = [
 ]
 
 export function WhyMatrix() {
+  const { ref: sectionRef, inView } = useInView()
   return (
     <section
-      className="relative overflow-hidden"
-      style={{ background: '#2A2F3A', color: '#fff', height: 'calc(100vh - 72px)', overflow: 'hidden', display: 'flex', alignItems: 'center' }}
+      className="relative overflow-hidden py-[clamp(48px,7vh,96px)]"
+      style={{ background: '#2A2F3A', color: '#fff' }}
     >
       {/* Circuit overlay */}
       <div
@@ -26,12 +31,20 @@ export function WhyMatrix() {
           backgroundSize: '60px 60px',
         }}
       />
-      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-8 max-[640px]:px-5 py-[clamp(16px,2.5vh,48px)]">
+      <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative z-10 w-full max-w-7xl mx-auto px-8 max-[640px]:px-5">
         <div className="grid grid-cols-2 gap-20 items-center max-[900px]:grid-cols-1 max-[900px]:gap-12">
           {/* Photo side */}
-          <div className="relative max-[900px]:hidden" style={{ height: 'clamp(280px, 52vh, 480px)' }}>
+          <div
+            className="relative max-[900px]:hidden"
+            style={{
+              height: 'clamp(320px, 52vh, 480px)',
+              opacity: inView ? 1 : 0,
+              transform: inView ? 'translateX(0)' : 'translateX(-24px)',
+              transition: 'opacity .7s ease, transform .7s ease',
+            }}
+          >
             <div
-              className="absolute inset-0 rounded-[2px] overflow-hidden"
+              className="absolute inset-0 rounded-xs overflow-hidden"
               style={{
                 background: `
                   linear-gradient(135deg, rgba(42,47,58,.45) 0%, rgba(42,47,58,.1) 100%),
@@ -49,27 +62,27 @@ export function WhyMatrix() {
               </span>
             </div>
             {/* Corner decorators */}
-            <div className="absolute -left-[14px] -top-[14px] w-[90px] h-[90px]" style={{ borderTop: '3px solid #1B6FCC', borderLeft: '3px solid #1B6FCC' }} />
-            <div className="absolute -right-[14px] -bottom-[14px] w-[90px] h-[90px]" style={{ borderBottom: '3px solid #1B6FCC', borderRight: '3px solid #1B6FCC' }} />
+            <div className="absolute -left-3.5 -top-3.5 w-22.5 h-22.5" style={{ borderTop: '3px solid #1B6FCC', borderLeft: '3px solid #1B6FCC' }} />
+            <div className="absolute -right-3.5 -bottom-3.5 w-22.5 h-22.5" style={{ borderBottom: '3px solid #1B6FCC', borderRight: '3px solid #1B6FCC' }} />
             {/* Badge */}
-            <div className="absolute left-6 bottom-6 flex items-baseline gap-[10px] bg-[#1B6FCC] text-white px-[18px] py-[14px] rounded-[2px]">
+            <div className="absolute left-6 bottom-6 flex items-baseline gap-2.5 bg-matrix-blue text-white px-4.5 py-3.5 rounded-xs">
               <span className="font-mono text-[30px] font-medium leading-none">21</span>
-              <span className="font-barlow text-[11px] uppercase tracking-[0.18em] max-w-[120px] leading-[1.3]">Years of Engineering Excellence</span>
+              <span className="font-barlow text-[11px] uppercase tracking-[0.18em] max-w-30 leading-[1.3]">Years of Engineering Excellence</span>
             </div>
           </div>
 
           {/* Text side */}
           <div>
             <SectionHeader label="Our Edge" title="Why Choose Matrix EA" light className="mb-4" />
-            <ul className="list-none p-0 m-0 mt-3 flex flex-col gap-[6px]">
-              {CHECKLIST.map((item) => (
+            <ul className="list-none p-0 m-0 mt-3 flex flex-col gap-1.5">
+              {CHECKLIST.map((item, i) => (
                 <li
                   key={item.t}
-                  className="flex gap-[14px] items-start py-[9px]"
-                  style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}
+                  className={`flex gap-3.5 items-start py-2.25 reveal ${inView ? 'in-view' : ''}`}
+                  style={{ borderBottom: '1px solid rgba(255,255,255,.08)', transitionDelay: inView ? '0ms' : `${i * 60}ms` }}
                 >
                   <div
-                    className="flex-shrink-0 w-7 h-7 grid place-items-center rounded-[2px] mt-[1px]"
+                    className="shrink-0 w-7 h-7 grid place-items-center rounded-xs mt-px"
                     style={{ border: '1.5px solid #1B6FCC', color: '#1B6FCC' }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -78,21 +91,21 @@ export function WhyMatrix() {
                   </div>
                   <div>
                     <span className="font-barlow font-bold text-[20px] uppercase tracking-[0.02em] text-white block">{item.t}</span>
-                    <span className="font-dm text-[14px] text-white/65 block mt-[2px]">{item.d}</span>
+                    <span className="font-dm text-[14px] text-white/65 block mt-0.5">{item.d}</span>
                   </div>
                 </li>
               ))}
             </ul>
-            <div className="mt-5 flex flex-wrap gap-[14px]">
+            <div className="mt-5 flex flex-wrap gap-3.5">
               <Link
                 href="/system-integrator"
-                className="inline-flex items-center gap-2 bg-[#1B6FCC] text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] hover:bg-[#155AA8] hover:-translate-y-px transition-all duration-150"
+                className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
               >
                 Our Services
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-transparent text-white px-[22px] py-[12px] font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-[2px] border border-white/45 hover:border-[#1B6FCC] hover:text-[#1B6FCC] transition-all duration-150"
+                className="inline-flex items-center gap-2 bg-transparent text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs border border-white/45 hover:border-matrix-blue hover:text-matrix-blue transition-all duration-150"
               >
                 Get a Quote
               </Link>
