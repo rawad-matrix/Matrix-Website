@@ -8,23 +8,62 @@ type Course = {
   id: string
   title: string
   slug: string
+  short_description: string | null
   price: number
   level: string
   duration_hours: number
+  category: string | null
   is_published: boolean
   created_at: string
+}
+
+type FormData = {
+  title: string
+  slug: string
+  short_description: string
+  level: string
+  duration_hours: string
+  price: string
+  category: string
+  is_published: boolean
+}
+
+const EMPTY_FORM: FormData = {
+  title: '',
+  slug: '',
+  short_description: '',
+  level: 'Beginner',
+  duration_hours: '',
+  price: '',
+  category: '',
+  is_published: false,
+}
+
+function toSlug(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+
+const LEVEL_COLORS: Record<string, string> = {
+  Beginner: '#22C55E', Intermediate: '#1B6FCC', Advanced: '#DC2626',
 }
 
 export default function AdminCoursesPage() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [form, setForm] = useState<FormData>(EMPTY_FORM)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchCourses = async () => {
     const supabase = createClient()
     const { data } = await supabase
       .from('courses')
-      .select('id, title, slug, price, level, duration_hours, is_published, created_at')
+      .select('id, title, slug, short_description, price, level, duration_hours, category, is_published, created_at')
       .order('created_at', { ascending: false })
     if (data) setCourses(data)
     setLoading(false)
@@ -40,8 +79,83 @@ export default function AdminCoursesPage() {
     setToggling(null)
   }
 
-  const LEVEL_COLORS: Record<string, string> = {
-    Beginner: '#22C55E', Intermediate: '#1B6FCC', Advanced: '#DC2626',
+  const openAdd = () => {
+    setEditingId(null)
+    setForm(EMPTY_FORM)
+    setError(null)
+    setDrawerOpen(true)
+  }
+
+  const openEdit = (c: Course) => {
+    setEditingId(c.id)
+    setForm({
+      title: c.title,
+      slug: c.slug,
+      short_description: c.short_description ?? '',
+      level: c.level,
+      duration_hours: String(c.duration_hours),
+      price: String(c.price),
+      category: c.category ?? '',
+      is_published: c.is_published,
+    })
+    setError(null)
+    setDrawerOpen(true)
+  }
+
+  const closeDrawer = () => {
+    setDrawerOpen(false)
+    setEditingId(null)
+    setForm(EMPTY_FORM)
+    setError(null)
+  }
+
+  const handleField = (key: keyof FormData, value: string | boolean) => {
+    setForm(prev => {
+      const next = { ...prev, [key]: value }
+      if (key === 'title' && !editingId) next.slug = toSlug(value as string)
+      return next
+    })
+  }
+
+  const saveCourse = async () => {
+    if (!form.title.trim() || !form.slug.trim()) {
+      setError('Title and slug are required.')
+      return
+    }
+    setSaving(true)
+    setError(null)
+    const supabase = createClient()
+    const payload = {
+      title: form.title.trim(),
+      slug: form.slug.trim(),
+      short_description: form.short_description.trim() || null,
+      level: form.level,
+      duration_hours: parseInt(form.duration_hours) || 0,
+      price: parseFloat(form.price) || 0,
+      category: form.category.trim() || null,
+      is_published: form.is_published,
+    }
+
+    if (editingId) {
+      const { error: err } = await supabase.from('courses').update(payload).eq('id', editingId)
+      if (err) { setError(err.message); setSaving(false); return }
+      setCourses(prev => prev.map(c => c.id === editingId ? { ...c, ...payload } : c))
+    } else {
+      const { data, error: err } = await supabase.from('courses').insert(payload).select().single()
+      if (err) { setError(err.message); setSaving(false); return }
+      if (data) setCourses(prev => [data, ...prev])
+    }
+    setSaving(false)
+    closeDrawer()
+  }
+
+  const deleteCourse = async (id: string) => {
+    setDeleting(true)
+    const supabase = createClient()
+    await supabase.from('courses').delete().eq('id', id)
+    setCourses(prev => prev.filter(c => c.id !== id))
+    setConfirmDelete(null)
+    setDeleting(false)
   }
 
   return (
@@ -59,7 +173,18 @@ export default function AdminCoursesPage() {
               <h3 className="font-barlow font-bold uppercase text-[22px] tracking-[.04em] text-matrix-ink">
                 Courses ({courses.length})
               </h3>
-              <div className="text-[12px] text-matrix-muted">Toggle to publish / unpublish</div>
+              <button
+                onClick={openAdd}
+                className="flex items-center gap-2 px-4 py-2 font-dm font-semibold text-[12px] uppercase tracking-[.04em] text-white rounded-xs transition-colors"
+                style={{ background: '#1B6FCC' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#155AA8')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#1B6FCC')}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Course
+              </button>
             </div>
 
             {loading ? (
@@ -69,7 +194,7 @@ export default function AdminCoursesPage() {
                 <table className="w-full border-collapse text-[13.5px]">
                   <thead>
                     <tr>
-                      {['Title', 'Level', 'Duration', 'Price', 'Status', 'Published', ''].map(h => (
+                      {['Title', 'Level', 'Duration', 'Price', 'Status', 'Published', 'Actions'].map(h => (
                         <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-matrix-muted font-semibold bg-matrix-off">{h}</th>
                       ))}
                     </tr>
@@ -83,8 +208,8 @@ export default function AdminCoursesPage() {
                         </td>
                         <td className="px-6 py-3">
                           <span
-                            className="inline-block font-mono text-[10.5px] px-2 py-1 uppercase tracking-widest"
-                            style={{ border: `1px solid ${LEVEL_COLORS[course.level] ?? '#E2E8F0'}`, color: LEVEL_COLORS[course.level] ?? '#64748B', borderRadius: '2px' }}
+                            className="inline-block font-mono text-[10.5px] px-2 py-1 uppercase tracking-widest rounded-xs"
+                            style={{ border: `1px solid ${LEVEL_COLORS[course.level] ?? '#E2E8F0'}`, color: LEVEL_COLORS[course.level] ?? '#64748B' }}
                           >
                             {course.level}
                           </span>
@@ -109,36 +234,72 @@ export default function AdminCoursesPage() {
                             className="relative w-10 h-5 rounded-full transition-colors"
                             style={{
                               background: course.is_published ? '#1B6FCC' : '#E2E8F0',
-                              border: 'none',
-                              cursor: 'pointer',
+                              border: 'none', cursor: 'pointer',
                               opacity: toggling === course.id ? 0.5 : 1,
                             }}
                             aria-label={course.is_published ? 'Unpublish' : 'Publish'}
                           >
                             <span
                               className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform"
-                              style={{
-                                left: course.is_published ? 'calc(100% - 18px)' : '2px',
-                                boxShadow: '0 1px 3px rgba(0,0,0,.2)',
-                              }}
+                              style={{ left: course.is_published ? 'calc(100% - 18px)' : '2px', boxShadow: '0 1px 3px rgba(0,0,0,.2)' }}
                             />
                           </button>
                         </td>
                         <td className="px-6 py-3">
-                          <div className="flex gap-2">
-                            <a
-                              href={`/courses/${course.slug}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-muted"
-                              style={{ border: '1px solid #E2E8F0', borderRadius: '2px' }}
-                            >
-                              View
-                            </a>
-                          </div>
+                          {confirmDelete === course.id ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-[12px] text-matrix-ink">Delete?</span>
+                              <button
+                                onClick={() => deleteCourse(course.id)}
+                                disabled={deleting}
+                                className="text-[11px] font-semibold text-white px-2 py-1 rounded-xs"
+                                style={{ background: '#DC2626' }}
+                              >
+                                {deleting ? '…' : 'Yes'}
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="text-[11px] font-semibold text-matrix-muted px-2 py-1 rounded-xs"
+                                style={{ border: '1px solid #E2E8F0' }}
+                              >
+                                No
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex gap-2">
+                              <a
+                                href={`/courses/${course.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-muted rounded-xs"
+                                style={{ border: '1px solid #E2E8F0' }}
+                              >
+                                View
+                              </a>
+                              <button
+                                onClick={() => openEdit(course)}
+                                className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-blue rounded-xs"
+                                style={{ border: '1px solid #1B6FCC' }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(course.id)}
+                                className="font-dm font-semibold uppercase text-[11px] px-2.5 py-1.5 text-matrix-red rounded-xs"
+                                style={{ border: '1px solid #DC2626' }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ))}
+                    {courses.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-10 text-center text-matrix-muted text-[14px]">No courses yet</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -146,6 +307,158 @@ export default function AdminCoursesPage() {
           </div>
         </div>
       </div>
+
+      {/* Slide-in drawer */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-[300] flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0"
+            style={{ background: 'rgba(0,0,0,.45)' }}
+            onClick={closeDrawer}
+          />
+          {/* Panel */}
+          <div
+            className="relative ml-auto h-full overflow-y-auto flex flex-col"
+            style={{ width: '480px', maxWidth: '100vw', background: '#fff', boxShadow: '-8px 0 40px rgba(0,0,0,.15)' }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-matrix-border shrink-0">
+              <h2 className="font-barlow font-bold uppercase text-[22px] text-matrix-ink leading-none">
+                {editingId ? 'Edit Course' : 'Add Course'}
+              </h2>
+              <button onClick={closeDrawer} className="text-matrix-muted hover:text-matrix-ink transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Form */}
+            <div className="flex-1 px-6 py-6 flex flex-col gap-4">
+              {error && (
+                <div className="text-[13px] text-matrix-red px-4 py-3 rounded-xs" style={{ background: 'rgba(220,38,38,.08)', border: '1px solid rgba(220,38,38,.2)' }}>
+                  {error}
+                </div>
+              )}
+
+              <label className="flex flex-col gap-1.5">
+                <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Title *</span>
+                <input
+                  value={form.title}
+                  onChange={e => handleField('title', e.target.value)}
+                  className="w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue"
+                  placeholder="e.g. Siemens TIA Portal Advanced"
+                />
+              </label>
+
+              <label className="flex flex-col gap-1.5">
+                <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Slug *</span>
+                <input
+                  value={form.slug}
+                  onChange={e => handleField('slug', e.target.value)}
+                  className="w-full px-3 py-2.5 text-[13px] font-mono text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue"
+                  placeholder="auto-generated from title"
+                />
+              </label>
+
+              <div className="grid grid-cols-2 gap-4">
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Level</span>
+                  <select
+                    value={form.level}
+                    onChange={e => handleField('level', e.target.value)}
+                    className="w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue bg-white"
+                  >
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Duration (hours)</span>
+                  <input
+                    type="number"
+                    value={form.duration_hours}
+                    onChange={e => handleField('duration_hours', e.target.value)}
+                    className="w-full px-3 py-2.5 text-[14px] font-mono text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue"
+                    placeholder="e.g. 24"
+                    min="1"
+                  />
+                </label>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Price (USD)</span>
+                  <input
+                    type="number"
+                    value={form.price}
+                    onChange={e => handleField('price', e.target.value)}
+                    className="w-full px-3 py-2.5 text-[14px] font-mono text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue"
+                    placeholder="e.g. 199"
+                    min="0"
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Category</span>
+                  <input
+                    value={form.category}
+                    onChange={e => handleField('category', e.target.value)}
+                    className="w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue"
+                    placeholder="e.g. PLC, SCADA, VFD"
+                  />
+                </label>
+              </div>
+
+              <label className="flex flex-col gap-1.5">
+                <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Short Description</span>
+                <textarea
+                  value={form.short_description}
+                  onChange={e => handleField('short_description', e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue resize-none"
+                  placeholder="One or two sentences shown on course cards"
+                />
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <button
+                  type="button"
+                  onClick={() => handleField('is_published', !form.is_published)}
+                  className="relative w-10 h-5 rounded-full transition-colors"
+                  style={{ background: form.is_published ? '#1B6FCC' : '#E2E8F0', border: 'none', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  <span
+                    className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform"
+                    style={{ left: form.is_published ? 'calc(100% - 18px)' : '2px', boxShadow: '0 1px 3px rgba(0,0,0,.2)' }}
+                  />
+                </button>
+                <span className="font-dm text-[14px] text-matrix-ink font-medium">Publish immediately</span>
+              </label>
+            </div>
+
+            {/* Footer */}
+            <div className="shrink-0 px-6 py-5 border-t border-matrix-border flex gap-3">
+              <button
+                onClick={saveCourse}
+                disabled={saving}
+                className="flex-1 py-3 font-dm font-semibold text-[13px] uppercase tracking-[.04em] text-white rounded-xs transition-colors"
+                style={{ background: saving ? '#6B9FD4' : '#1B6FCC', cursor: saving ? 'not-allowed' : 'pointer' }}
+              >
+                {saving ? 'Saving…' : editingId ? 'Save Changes' : 'Add Course'}
+              </button>
+              <button
+                onClick={closeDrawer}
+                className="px-5 py-3 font-dm font-semibold text-[13px] uppercase tracking-[.04em] text-matrix-ink rounded-xs"
+                style={{ border: '1px solid #E2E8F0' }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

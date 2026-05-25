@@ -27,11 +27,6 @@ const NAV_LINKS: NavItem[] = [
   { href: '/contact', label: 'Contact' },
 ]
 
-const ADMIN_LINKS = [
-  { href: '/admin/case-studies',  label: 'Case Studies' },
-  { href: '/admin/announcements', label: 'Announcements' },
-]
-
 interface MobileMenuProps {
   open: boolean
   onClose: () => void
@@ -191,22 +186,16 @@ export function MobileMenu({ open, onClose, isAdmin }: MobileMenuProps) {
                 Admin Panel
               </span>
             </div>
-            {ADMIN_LINKS.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={`flex items-center gap-3 pl-2 pr-2 py-3 font-dm text-[18px] font-semibold uppercase tracking-[0.06em] transition-colors border-b border-white/08 ${
-                    isActive ? 'text-matrix-blue' : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  <span className="w-0.5 h-4 shrink-0 rounded-full bg-matrix-blue" />
-                  {item.label}
-                </Link>
-              )
-            })}
+            <Link
+              href="/admin"
+              onClick={onClose}
+              className={`flex items-center gap-3 pl-2 pr-2 py-3 font-dm text-[18px] font-semibold uppercase tracking-[0.06em] transition-colors border-b border-white/08 ${
+                pathname.startsWith('/admin') ? 'text-matrix-blue' : 'text-white/70 hover:text-white'
+              }`}
+            >
+              <span className="w-0.5 h-4 shrink-0 rounded-full bg-matrix-blue" />
+              Admin Panel
+            </Link>
           </div>
         )}
       </nav>

@@ -30,19 +30,12 @@ const NAV_LINKS: NavItem[] = [
   { href: '/contact', label: 'Contact' },
 ]
 
-const ADMIN_NAV = [
-  { href: '/admin/case-studies',  label: 'Case Studies',  desc: 'Publish & manage client case studies' },
-  { href: '/admin/announcements', label: 'Announcements', desc: 'Broadcast emails to all registered clients' },
-]
-
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [showSignIn, setShowSignIn] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [adminDropdownOpen, setAdminDropdownOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const adminCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
   const { user, loading, isAdmin } = useAuth()
 
@@ -54,13 +47,11 @@ export function Navbar() {
 
   useEffect(() => {
     setDropdownOpen(false)
-    setAdminDropdownOpen(false)
   }, [pathname])
 
   useEffect(() => {
     return () => {
       if (closeTimer.current) clearTimeout(closeTimer.current)
-      if (adminCloseTimer.current) clearTimeout(adminCloseTimer.current)
     }
   }, [])
 
@@ -70,13 +61,6 @@ export function Navbar() {
   }
   function scheduleClose() {
     closeTimer.current = setTimeout(() => setDropdownOpen(false), 150)
-  }
-  function openAdminDropdown() {
-    if (adminCloseTimer.current) clearTimeout(adminCloseTimer.current)
-    setAdminDropdownOpen(true)
-  }
-  function scheduleAdminClose() {
-    adminCloseTimer.current = setTimeout(() => setAdminDropdownOpen(false), 150)
   }
 
   return (
@@ -195,62 +179,24 @@ export function Navbar() {
               )
             })}
 
-            {/* Admin dropdown — visible only when signed in as admin */}
+            {/* Admin link — visible only when signed in as admin */}
             {isAdmin && (
-              <div
-                className="relative self-stretch flex items-center"
-                onMouseEnter={openAdminDropdown}
-                onMouseLeave={scheduleAdminClose}
+              <Link
+                href="/admin"
+                className={`relative px-3 py-2.5 font-dm text-[12.5px] font-medium uppercase tracking-[0.07em] transition-colors duration-150 flex items-center gap-1.5 group ${
+                  pathname.startsWith('/admin') ? 'text-white' : 'text-white/78 hover:text-white'
+                }`}
               >
-                <button
-                  className="relative px-3 py-2.5 font-dm text-[12.5px] font-medium uppercase tracking-[0.07em] transition-colors duration-150 flex items-center gap-1.5 h-full text-white/78 hover:text-white"
-                >
-                  Admin
-                  <span className="font-mono text-[8.5px] px-1.5 py-[2px] bg-[#1B6FCC]/25 text-[#1B6FCC] border border-[#1B6FCC]/40 uppercase tracking-[0.1em] rounded-[2px]">
-                    panel
-                  </span>
-                  <svg
-                    width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                    className="transition-transform duration-200 mt-px"
-                    style={{ transform: adminDropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }}
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-
-                {/* Admin dropdown panel */}
-                <div
-                  className="absolute top-full left-0 z-[200] min-w-[272px] transition-all duration-150"
-                  style={{
-                    background: '#2A2F3A',
-                    border: '1px solid rgba(255,255,255,.10)',
-                    borderTop: '2px solid #1B6FCC',
-                    boxShadow: '0 12px 40px rgba(0,0,0,.50)',
-                    borderRadius: '0 0 2px 2px',
-                    opacity: adminDropdownOpen ? 1 : 0,
-                    transform: adminDropdownOpen ? 'translateY(0)' : 'translateY(-5px)',
-                    pointerEvents: adminDropdownOpen ? 'auto' : 'none',
-                  }}
-                >
-                  {ADMIN_NAV.map((item, i) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="flex flex-col px-5 py-3.5 transition-colors duration-150 hover:bg-white/5 group/item"
-                      style={{
-                        borderBottom: i < ADMIN_NAV.length - 1 ? '1px solid rgba(255,255,255,.06)' : undefined,
-                      }}
-                    >
-                      <span className="font-dm text-[12px] font-semibold uppercase tracking-[0.07em] text-white/85 group-hover/item:text-white transition-colors duration-150">
-                        {item.label}
-                      </span>
-                      <span className="font-dm text-[11px] text-white/38 mt-0.5 normal-case tracking-normal">
-                        {item.desc}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+                Admin
+                <span className="font-mono text-[8.5px] px-1.5 py-[2px] bg-[#1B6FCC]/25 text-[#1B6FCC] border border-[#1B6FCC]/40 uppercase tracking-[0.1em] rounded-[2px]">
+                  panel
+                </span>
+                <span
+                  className="absolute bottom-0 left-3 right-3 h-0.5 bg-matrix-blue transition-all duration-200 ease-out origin-left"
+                  style={{ transform: pathname.startsWith('/admin') ? 'scaleX(1)' : 'scaleX(0)' }}
+                />
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-matrix-blue scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-out origin-left" />
+              </Link>
             )}
           </div>
 
