@@ -15,11 +15,12 @@ type Course = {
 }
 
 // ── Badge colour by level ────────────────────────────────────────────────────
+// All levels share the brand blue — clean, consistent look
 const LEVEL_COLOR: Record<string, string> = {
-  All:      '#8B5CF6',   // purple  — bundle courses
-  Basic:    '#22C55E',   // green
-  Pro:      '#1B6FCC',   // blue
-  Advanced: '#DC2626',   // red
+  All:      '#1B6FCC',
+  Basic:    '#1B6FCC',
+  Pro:      '#1B6FCC',
+  Advanced: '#1B6FCC',
 }
 
 // ── Category-based card gradient when no image ───────────────────────────────

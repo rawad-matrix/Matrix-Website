@@ -51,7 +51,7 @@ function toSlug(s: string) {
 }
 
 const LEVEL_COLORS: Record<string, string> = {
-  All: '#8B5CF6', Basic: '#22C55E', Pro: '#1B6FCC', Advanced: '#DC2626',
+  All: '#1B6FCC', Basic: '#1B6FCC', Pro: '#1B6FCC', Advanced: '#1B6FCC',
 }
 
 const inputCls = 'w-full px-3 py-2.5 text-[14px] font-dm text-matrix-ink border border-matrix-border rounded-xs outline-none focus:border-matrix-blue bg-white'
