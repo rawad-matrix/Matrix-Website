@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../page'
 
@@ -13,6 +13,7 @@ type Course = {
   level: string
   duration_hours: number
   category: string | null
+  featured_image: string | null
   is_published: boolean
   created_at: string
 }
@@ -26,6 +27,7 @@ type FormData = {
   price: string
   category: string
   is_published: boolean
+  featured_image: string | null
 }
 
 const EMPTY_FORM: FormData = {
@@ -37,6 +39,7 @@ const EMPTY_FORM: FormData = {
   price: '',
   category: '',
   is_published: false,
+  featured_image: null,
 }
 
 function toSlug(s: string) {
@@ -58,12 +61,16 @@ export default function AdminCoursesPage() {
   const [form, setForm] = useState<FormData>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchCourses = async () => {
     const supabase = createClient()
     const { data } = await supabase
       .from('courses')
-      .select('id, title, slug, short_description, price, level, duration_hours, category, is_published, created_at')
+      .select('id, title, slug, short_description, price, level, duration_hours, category, featured_image, is_published, created_at')
       .order('created_at', { ascending: false })
     if (data) setCourses(data)
     setLoading(false)
@@ -82,6 +89,8 @@ export default function AdminCoursesPage() {
   const openAdd = () => {
     setEditingId(null)
     setForm(EMPTY_FORM)
+    setImageFile(null)
+    setImagePreview(null)
     setError(null)
     setDrawerOpen(true)
   }
@@ -97,7 +106,10 @@ export default function AdminCoursesPage() {
       price: String(c.price),
       category: c.category ?? '',
       is_published: c.is_published,
+      featured_image: c.featured_image ?? null,
     })
+    setImageFile(null)
+    setImagePreview(c.featured_image ?? null)
     setError(null)
     setDrawerOpen(true)
   }
@@ -106,7 +118,25 @@ export default function AdminCoursesPage() {
     setDrawerOpen(false)
     setEditingId(null)
     setForm(EMPTY_FORM)
+    setImageFile(null)
+    setImagePreview(null)
     setError(null)
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) { setError('Image must be under 5 MB.'); return }
+    setImageFile(file)
+    setImagePreview(URL.createObjectURL(file))
+    setError(null)
+  }
+
+  const removeImage = () => {
+    setImageFile(null)
+    setImagePreview(null)
+    setForm(prev => ({ ...prev, featured_image: null }))
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const handleField = (key: keyof FormData, value: string | boolean) => {
@@ -125,6 +155,25 @@ export default function AdminCoursesPage() {
     setSaving(true)
     setError(null)
     const supabase = createClient()
+
+    // Upload new image if one was selected
+    let featuredImageUrl = form.featured_image
+    if (imageFile) {
+      setUploadingImage(true)
+      const ext = imageFile.name.split('.').pop()
+      const path = `courses/${Date.now()}-${form.slug.trim()}.${ext}`
+      const { data: uploadData, error: uploadErr } = await supabase.storage
+        .from('course-images')
+        .upload(path, imageFile, { upsert: false })
+      setUploadingImage(false)
+      if (uploadErr) {
+        setError(`Image upload failed: ${uploadErr.message}. Create a public "course-images" bucket in Supabase Storage first.`)
+        setSaving(false)
+        return
+      }
+      featuredImageUrl = supabase.storage.from('course-images').getPublicUrl(uploadData.path).data.publicUrl
+    }
+
     const payload = {
       title: form.title.trim(),
       slug: form.slug.trim(),
@@ -134,6 +183,7 @@ export default function AdminCoursesPage() {
       price: parseFloat(form.price) || 0,
       category: form.category.trim() || null,
       is_published: form.is_published,
+      featured_image: featuredImageUrl,
     }
 
     if (editingId) {
@@ -310,7 +360,7 @@ export default function AdminCoursesPage() {
 
       {/* Slide-in drawer */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-[300] flex">
+        <div className="fixed inset-0 z-300 flex">
           {/* Backdrop */}
           <div
             className="absolute inset-0"
@@ -411,6 +461,44 @@ export default function AdminCoursesPage() {
                 </label>
               </div>
 
+              {/* Image upload */}
+              <div className="flex flex-col gap-1.5">
+                <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">
+                  Course Image <span className="font-normal normal-case tracking-normal text-matrix-muted">(optional · max 5 MB)</span>
+                </span>
+                {imagePreview ? (
+                  <div>
+                    <div className="border border-matrix-border rounded-xs overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={imagePreview} alt="Preview" className="w-full max-h-40 object-cover" />
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <button type="button" onClick={() => fileInputRef.current?.click()}
+                        className="font-dm font-semibold text-[11px] uppercase tracking-widest text-matrix-muted px-2.5 py-1 rounded-xs border border-matrix-border">
+                        Change
+                      </button>
+                      <button type="button" onClick={removeImage}
+                        className="font-dm font-semibold text-[11px] uppercase tracking-widest text-matrix-red px-2.5 py-1 rounded-xs border border-matrix-red/30">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button type="button" onClick={() => fileInputRef.current?.click()}
+                    className="w-full flex flex-col items-center justify-center gap-2 py-6 border-2 border-dashed border-matrix-border rounded-xs text-matrix-muted hover:border-matrix-blue hover:text-matrix-blue transition-colors">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span className="font-dm font-semibold text-[11px] uppercase tracking-widest">Click to upload image</span>
+                    <span className="font-dm text-[11px]">PNG, JPG, WEBP · max 5 MB</span>
+                  </button>
+                )}
+                <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp"
+                  onChange={handleImageChange} className="hidden" />
+              </div>
+
               <label className="flex flex-col gap-1.5">
                 <span className="font-dm text-[11px] uppercase tracking-widest text-matrix-muted font-semibold">Short Description</span>
                 <textarea
@@ -442,11 +530,11 @@ export default function AdminCoursesPage() {
             <div className="shrink-0 px-6 py-5 border-t border-matrix-border flex gap-3">
               <button
                 onClick={saveCourse}
-                disabled={saving}
+                disabled={saving || uploadingImage}
                 className="flex-1 py-3 font-dm font-semibold text-[13px] uppercase tracking-[.04em] text-white rounded-xs transition-colors"
-                style={{ background: saving ? '#6B9FD4' : '#1B6FCC', cursor: saving ? 'not-allowed' : 'pointer' }}
+                style={{ background: (saving || uploadingImage) ? '#6B9FD4' : '#1B6FCC', cursor: (saving || uploadingImage) ? 'not-allowed' : 'pointer' }}
               >
-                {saving ? 'Saving…' : editingId ? 'Save Changes' : 'Add Course'}
+                {uploadingImage ? 'Uploading image…' : saving ? 'Saving…' : editingId ? 'Save Changes' : 'Add Course'}
               </button>
               <button
                 onClick={closeDrawer}

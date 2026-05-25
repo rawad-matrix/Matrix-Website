@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-function buildEmailHtml(subject: string, message: string, appUrl: string) {
+function buildEmailHtml(subject: string, message: string, appUrl: string, imageUrl: string | null = null) {
   const logoUrl = `${appUrl}/images/logo.jpg`
   const safeMessage = message.replace(/\n/g, '<br>')
 
@@ -55,6 +55,12 @@ function buildEmailHtml(subject: string, message: string, appUrl: string) {
               ${safeMessage}
             </p>
 
+            ${imageUrl ? `
+            <!-- Announcement image -->
+            <div style="margin:0 0 24px;border-radius:3px;overflow:hidden;border:1px solid #E2E8F0;">
+              <img src="${imageUrl}" alt="Announcement" style="display:block;width:100%;max-width:568px;height:auto;" />
+            </div>` : ''}
+
             <!-- CTA button -->
             <table cellpadding="0" cellspacing="0" style="margin-top:28px;">
               <tr>
@@ -79,7 +85,7 @@ function buildEmailHtml(subject: string, message: string, appUrl: string) {
               <tr>
                 <td style="width:50%;vertical-align:top;padding-right:12px;">
                   <p style="margin:0 0 4px;color:#64748B;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">Phone</p>
-                  <a href="tel:+9611277663" style="color:#1B6FCC;font-size:13px;text-decoration:none;">+961 1 277 663</a>
+                  <a href="tel:+96178800274" style="color:#1B6FCC;font-size:13px;text-decoration:none;">+961 78 800 274</a>
                 </td>
                 <td style="width:50%;vertical-align:top;padding-left:12px;">
                   <p style="margin:0 0 4px;color:#64748B;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">Email</p>
@@ -152,7 +158,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { subject, message } = await request.json()
+  const { subject, message, imageUrl } = await request.json()
   if (!subject?.trim() || !message?.trim()) {
     return NextResponse.json({ error: 'Subject and message are required' }, { status: 400 })
   }
@@ -198,7 +204,7 @@ export async function POST(request: NextRequest) {
           from: 'Matrix EA <info@matrixea.co>',
           to: recipient.email,
           subject,
-          html: buildEmailHtml(subject, message, process.env.NEXT_PUBLIC_APP_URL ?? 'https://matrixea.co'),
+          html: buildEmailHtml(subject, message, process.env.NEXT_PUBLIC_APP_URL ?? 'https://matrixea.co', imageUrl ?? null),
         }),
       })
       if (res.ok) sent++

@@ -127,7 +127,7 @@ export default function AdminSettingsPage() {
                         value={form.phone}
                         onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
                         className={fieldClass}
-                        placeholder="+961 1 277 663"
+                        placeholder="+961 78 800 274"
                       />
                     </div>
                   </div>
@@ -229,7 +229,7 @@ export default function AdminSettingsPage() {
                 {[
                   ['Domain', 'matrixea.co'],
                   ['Contact Email', 'info@matrixea.co'],
-                  ['Phone', '+961 1 277 663'],
+                  ['Phone', '+961 78 800 274'],
                   ['Address', 'Khaldeh, Beirut — Lebanon'],
                   ['Hours', 'Mon–Sat 09:00–20:00'],
                   ['Stack', 'Next.js · Supabase · Vercel'],
