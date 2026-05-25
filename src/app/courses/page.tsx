@@ -5,6 +5,7 @@ import { PageHero } from '@/components/sections/PageHero'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import CoursesClient from './CoursesClient'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export default async function CoursesPage() {

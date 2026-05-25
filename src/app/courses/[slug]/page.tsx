@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 // Always fetch fresh — reflects admin edits immediately
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 type Module = {
