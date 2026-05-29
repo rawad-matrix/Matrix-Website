@@ -2,28 +2,11 @@ export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
-import { createClient as createAnonClient } from '@supabase/supabase-js'
 import { PageHero } from '@/components/sections/PageHero'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import { CaseStudyGallery } from '@/components/sections/CaseStudyGallery'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-
-export async function generateStaticParams() {
-  try {
-    const supabase = createAnonClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key'
-    )
-    const { data } = await supabase
-      .from('case_studies')
-      .select('slug')
-      .eq('is_published', true)
-    return (data ?? []).map((row: { slug: string }) => ({ slug: row.slug }))
-  } catch {
-    return []
-  }
-}
 
 export default async function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
