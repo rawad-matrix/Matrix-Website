@@ -8,7 +8,7 @@
 **Company:** Matrix Energy & Automation sarl  
 **Domain:** matrixea.co  
 **Purpose:** Industrial B2B website + online training platform (buy courses like Udemy) + live IoT monitoring dashboard  
-**Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · Supabase · PWA · Vercel  
+**Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Supabase · PWA · Cloudflare Pages  
 
 ---
 
@@ -36,12 +36,12 @@ git push origin main
 
 ---
 
-## CURRENT BUILD STATUS (as of 2026-05-16)
+## CURRENT BUILD STATUS (as of 2026-05-29)
 
-The project is **substantially complete**. Below is the definitive status of every feature:
+The project is **substantially complete and deployed on Cloudflare Pages**. Below is the definitive status of every feature:
 
 ### ✅ DONE
-- **Foundation:** Next.js 16.2.6, React 19, Tailwind v4, all packages installed, design tokens, fonts, animation keyframes, utility classes
+- **Foundation:** Next.js 15.3.3 (downgraded from 16 for Cloudflare compatibility), React 19, Tailwind v4, all packages installed, design tokens, fonts, animation keyframes, utility classes
 - **Layout:** Topbar, Navbar (sticky + scroll shadow + mobile overlay), Footer, MobileMenu, PublicShell wrapper, FloatingWhatsApp button
 - **Homepage:** All 8 sections — Hero, ServicesGrid, WhyMatrix, BrandsRow, StatsCounter (count-up animation), CaseStudiesPreview, TrainingCTABanner, ContactStrip
 - **Static pages:** System Integrator, Training, About, Contact (with form), Case Studies listing, Case Study detail, Install App
@@ -58,11 +58,11 @@ The project is **substantially complete**. Below is the definitive status of eve
 - **UI Components:** `Button.tsx` (all variants), `SectionHeader.tsx`, `ContactForm.tsx`
 
 ### ⚠️ PENDING / INCOMPLETE
-- **PWA service worker:** `@ducanh2912/next-pwa` is installed but NOT wired in `next.config.ts` — Next.js 16 uses Turbopack by default which is incompatible. Wire it at Vercel deploy time by switching to webpack mode, or use a standalone service worker file.
-- **Admin case studies page:** `/admin/case-studies/page.tsx` — full CRUD with image upload to Supabase Storage, slide-in drawer form, required/optional fields, publish/featured toggles.
-- **Course detail from Supabase:** Currently all 7 courses are hardcoded. The DB seed exists but the detail page reads from a static dict. If you want dynamic courses, refactor to read from Supabase.
+- **Custom domain:** `www.matrixea.co` nameservers switched to Cloudflare — waiting for propagation. Once done: Cloudflare Pages → Custom Domains → add `www.matrixea.co`.
+- **PWA service worker:** `@ducanh2912/next-pwa` is installed but NOT wired — Cloudflare Pages uses edge runtime which is incompatible with Workbox. Use a standalone `public/sw.js` with cache-first strategy instead.
 - **Image assets:** `/public/images/logo.jpg`, `icon-192.png`, `icon-512.png` need to be placed (logo source is at `/design-reference/matrix-logo.jpg`).
-- **Vercel deployment:** Not yet deployed. Step 12 in the original plan.
+- **Supabase Pro:** Currently on free tier. Upgrade to Pro ($25/month) before going live to prevent project pausing. Use UptimeRobot (free) to ping site every 5 min in the meantime.
+- **Course detail from Supabase:** Currently all 31 courses are hardcoded in page files. If admin-editable courses are needed, refactor to fetch from Supabase.
 
 ---
 
@@ -83,11 +83,12 @@ Reference these files constantly — they are the pixel-perfect source of truth.
 ## TECH STACK & ACTUAL VERSIONS
 
 ```
-Next.js     16.2.6
+Next.js     15.3.3  (downgraded from 16.2.6 — Cloudflare next-on-pages requires <=15.5.2)
 React       19.2.4
 TypeScript  5.x
 Tailwind    4.x  (uses @theme inline in CSS — NO tailwind.config.ts)
 Supabase    @supabase/supabase-js ^2, @supabase/ssr ^0.10
+Cloudflare  @cloudflare/next-on-pages@1.13.16
 ```
 
 ### All installed packages (from package.json):
@@ -102,7 +103,7 @@ Supabase    @supabase/supabase-js ^2, @supabase/ssr ^0.10
   "class-variance-authority": "^0.7.1",
   "clsx": "^2.1.1",
   "lucide-react": "^1.16.0",
-  "next": "16.2.6",
+  "next": "15.3.3",
   "react": "19.2.4",
   "react-dom": "19.2.4",
   "react-hook-form": "^7.75.0",
@@ -492,7 +493,8 @@ Seed file: `src/lib/seed-courses.ts` — run once to populate courses table.
     /user/dashboard/page.tsx              ← ✅ (protected, enrolled courses)
     /user/layout.tsx                      ← ✅
     /checkout/page.tsx                    ← ✅ (protected, bank transfer)
-    /admin/page.tsx                       ← ✅ (overview + AdminSidebar component)
+    /admin/page.tsx                       ← ✅ (overview only)
+    /admin/AdminSidebar.tsx               ← ✅ (extracted — import from here, NOT from page.tsx)
     /admin/layout.tsx                     ← ✅
     /admin/courses/page.tsx               ← ✅
     /admin/enrollments/page.tsx           ← ✅
@@ -557,7 +559,9 @@ Seed file: `src/lib/seed-courses.ts` — run once to populate courses table.
     icon-512.png                          ← ❌ NEEDED (PWA icon)
 
 /middleware.ts                            ← ✅ (full route protection)
-/next.config.ts                           ← ✅ (Supabase image domains; PWA pending)
+/next.config.ts                           ← ✅ (Supabase image domains, eslint disabled during build)
+/wrangler.toml                            ← ✅ (Cloudflare Pages config, output dir .vercel/output/static)
+/.npmrc                                   ← ✅ (legacy-peer-deps=true)
 /design-reference/                        ← ✅ all HTML design files
 ```
 
@@ -591,10 +595,8 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=9611277663
 
 `public/manifest.json` is complete. The service worker is NOT yet wired.
 
-When deploying to Vercel:
-1. Switch `next dev --turbo` to `next dev` (webpack mode) to enable `@ducanh2912/next-pwa`
-2. OR use a standalone `public/sw.js` with a simple cache-first strategy
-3. Wire `next.config.ts` with the `withPWA` wrapper below:
+**Note for Cloudflare Pages:** `@ducanh2912/next-pwa` (Workbox-based) is incompatible with the edge runtime. Use a standalone `public/sw.js` instead. The `withPWA` wrapper below is kept for reference but should NOT be used with Cloudflare Pages:
+
 
 ```ts
 import withPWA from '@ducanh2912/next-pwa'
@@ -728,13 +730,14 @@ Siemens | ABB | Allen Bradley | Delta | Veichi
 
 In priority order:
 
-1. **Copy logo image:** `cp design-reference/matrix-logo.jpg public/images/logo.jpg` — fixes broken logo across entire site
-2. **Create PWA icons:** Generate `icon-192.png` and `icon-512.png` from the logo, place in `public/images/`
-3. ~~**Admin case studies page:**~~ ✅ Built — `/admin/case-studies/page.tsx`
-4. **Wire PWA service worker:** Add `withPWA` wrapper to `next.config.ts` when switching to webpack mode for production build
-5. **Deploy to Vercel:** Connect repo, set all env vars, connect Supabase project via Vercel integration
-6. **Real case study data:** Seed `case_studies` table and make the listing/detail pages fetch from Supabase instead of using static mock data
-7. **Supabase → course detail (optional):** Refactor `/courses/[slug]/page.tsx` to fetch from Supabase `courses` table instead of using the static dict, if admin-editable courses are needed
+1. **Finish custom domain:** When Cloudflare emails confirmation → Pages → Custom Domains → add `www.matrixea.co` → update `www` CNAME in Cloudflare DNS from Netlify to `matrix-website-c8d.pages.dev`
+2. **Test all pages on live URL:** Check auth, enrollment flow, admin panel, IoT dashboard on the Cloudflare Pages URL
+3. **Copy logo image:** `cp design-reference/matrix-logo.jpg public/images/logo.jpg` — fixes broken logo across entire site
+4. **Create PWA icons:** Generate `icon-192.png` and `icon-512.png` from the logo, place in `public/images/`
+5. **UptimeRobot:** Set up free monitor at uptimerobot.com pinging the site every 5 min — prevents Supabase free tier from pausing
+6. **Real case study data:** Seed `case_studies` table in Supabase and verify listing/detail pages fetch correctly
+7. **Supabase Pro:** Upgrade before going live with real paying students ($25/month — prevents DB pausing)
+8. **Automated DB backup:** GitHub Action → pg_dump Supabase → store .sql in GitHub releases or external storage (deferred — set up when Supabase Pro is active)
 
 ---
 
@@ -755,23 +758,68 @@ In priority order:
 13. **Nav link hover:** underline grows from left (width 0 → 100%, 200ms ease) using `::after` pseudo-element.
 14. **Mobile menu:** full-screen overlay with navy background, links stagger-fade in.
 15. **Float WhatsApp button:** Fixed bottom-right, present on all public pages via `PublicShell`.
-16. **`AdminSidebar` is exported from `/admin/page.tsx`** — import it from there in all admin sub-pages.
+16. **`AdminSidebar` is in `src/app/admin/AdminSidebar.tsx`** — import from `'../AdminSidebar'` in all admin sub-pages. Do NOT export it from `page.tsx` (Next.js 15 forbids non-standard named exports from page files).
 17. **Course data is static in the page file** — to edit course content, modify the `COURSES` dict in `src/app/courses/[slug]/page.tsx` and the courses array in `src/app/courses/page.tsx`.
 
 ---
 
-## VERCEL DEPLOYMENT
+## CLOUDFLARE PAGES DEPLOYMENT
 
+**Live URL:** `https://a2c6f6e4.matrix-website-c8d.pages.dev/`  
+**Custom domain (pending):** `www.matrixea.co`  
+**GitHub repo:** `rawad-matrix/Matrix-Website` — auto-deploys on every push to `main`
+
+### Build configuration (set in Cloudflare Pages dashboard)
 ```
-- Connect GitHub repo to Vercel
-- Add all .env.local variables to Vercel Environment Variables
-- Set NEXT_PUBLIC_APP_URL to https://matrixea.co
-- Framework preset: Next.js (auto-detected)
-- Build command: next build
-- Install the Vercel-Supabase integration from Vercel marketplace for automatic env sync
-- For PWA: add withPWA wrapper to next.config.ts (see PWA section above)
+Build command:        npm run pages:build
+Build output dir:     .vercel/output/static
+Root directory:       /
+Node version:         22
 ```
+
+### `package.json` build scripts
+```json
+"pages:build": "npx @cloudflare/next-on-pages@1",
+"preview":     "npm run pages:build && wrangler pages dev .vercel/output/static",
+"deploy":      "npm run pages:build && wrangler pages deploy .vercel/output/static"
+```
+
+### Critical Cloudflare Pages rules
+- **Every route must have `export const runtime = 'edge'`** at the top of the file
+- Routes using cookies/auth also need `export const dynamic = 'force-dynamic'`
+- **`generateStaticParams` is incompatible with `export const runtime = 'edge'`** — do not use both together
+- `src/app/icon.tsx` uses `ImageResponse` (no fs/path — those are Node.js only)
+- ESLint is disabled during builds (`eslint: { ignoreDuringBuilds: true }` in next.config.ts)
+- `.npmrc` has `legacy-peer-deps=true` to resolve peer dependency conflicts
+
+### Environment variables (set in Cloudflare Pages dashboard)
+All variables from `.env.local` must be added to Cloudflare Pages → Settings → Environment Variables.
+
+### To add custom domain after nameserver propagation
+1. Cloudflare Pages → matrix-website project → Custom Domains
+2. Add `www.matrixea.co`
+3. Cloudflare auto-updates the DNS CNAME record
+
+### DNS (Cloudflare — matrixea.co zone)
+- Nameservers switched from Bluehost to Cloudflare on 2026-05-29
+- `www` CNAME still points to old Netlify URL — update to `matrix-website-c8d.pages.dev` after Pages custom domain is added
+- `mail` A record → DNS only (not proxied) — email stays on Bluehost server
+- MX records → DNS only — email routing intact
 
 ---
 
-*Last updated: 2026-05-16. Reflects actual built state of the codebase.*
+## INFRASTRUCTURE DECISIONS
+
+**Hosting:** Cloudflare Pages (free) — replaced Netlify (bandwidth limit hit) and Vercel (never deployed)  
+**Database + Auth:** Supabase (free tier now, upgrade to Pro $25/month before launch)  
+**DNS:** Cloudflare (switched from Bluehost nameservers on 2026-05-29)  
+**Domain registrar:** Bluehost (matrixea.co, renews Aug 2026 — keep auto-renew ON)  
+**Email server:** Bluehost WordPress Choice Plus Hosting (expires May 2027, auto-renew OFF)
+
+**Bluehost services — auto-renew turned OFF (no longer needed):**
+- CodeGuard Basic (was backing up Bluehost hosting)
+- Malware Scan and Clean (was scanning Bluehost hosting)
+
+---
+
+*Last updated: 2026-05-29. Reflects actual built and deployed state of the codebase.*
