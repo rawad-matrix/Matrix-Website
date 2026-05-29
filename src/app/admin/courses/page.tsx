@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { AdminSidebar } from '../page'
+import { AdminSidebar } from '../AdminSidebar'
 
 type Course = {
   id: string

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AdminSidebar } from '../page'
+import { AdminSidebar } from '../AdminSidebar'
 
 type UserRow = {
   id: string

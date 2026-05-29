@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { AdminSidebar } from '../page'
+import { AdminSidebar } from '../AdminSidebar'
 
 type SendResult = { sent: number; total: number; failed?: string[] }
 
