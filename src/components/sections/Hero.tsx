@@ -19,13 +19,19 @@ const SLIDES = [
   },
 ]
 
-export function Hero() {
+type HeroProps = {
+  slideImages?: [string | null, string | null, string | null]
+  stats?: { projects?: number; clients?: number; years?: number }
+}
+
+export function Hero({ slideImages = [null, null, null], stats = {} }: HeroProps) {
+  const { projects = 1200, clients = 800, years = 21 } = stats
   const [currentSlide, setCurrentSlide] = useState(0)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const { ref: statsRef, inView } = useInView(0.3)
-  const c1 = useCountUp(1200, 1400, inView)
-  const c2 = useCountUp(800, 1400, inView)
-  const c3 = useCountUp(21, 1400, inView)
+  const c1 = useCountUp(projects, 1400, inView)
+  const c2 = useCountUp(clients, 1400, inView)
+  const c3 = useCountUp(years, 1400, inView)
 
   function startInterval() {
     if (intervalRef.current) clearInterval(intervalRef.current)
@@ -85,18 +91,33 @@ export function Hero() {
             className="absolute inset-0 transition-opacity duration-500 ease-in-out"
             style={{
               opacity: i === currentSlide ? 1 : 0,
-              background: slide.gradient,
               borderLeft: '1px solid rgba(27,111,204,.18)',
             }}
           >
+            {/* Real photo if uploaded, otherwise gradient */}
+            {slideImages[i] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={slideImages[i]!}
+                alt={slide.label}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0" style={{ background: slide.gradient }} />
+            )}
+            {/* Stripe texture overlay */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 backgroundImage: 'repeating-linear-gradient(110deg, rgba(255,255,255,.018) 0 2px, transparent 2px 14px)',
               }}
             />
+            {/* Dark overlay for readability when photo is set */}
+            {slideImages[i] && (
+              <div className="absolute inset-0" style={{ background: 'rgba(10,10,18,.45)' }} />
+            )}
             <span
-              className="absolute font-mono text-[11px] uppercase tracking-[0.2em] left-8 bottom-8"
+              className="absolute font-mono text-[11px] uppercase tracking-[0.2em] left-8 bottom-8 z-10"
               style={{ color: 'rgba(255,255,255,.32)' }}
             >
               {slide.label}

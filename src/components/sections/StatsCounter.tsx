@@ -3,12 +3,7 @@ import { useRef } from 'react'
 import { useInView } from '@/hooks/useInView'
 import { useCountUp } from '@/hooks/useCountUp'
 
-const STATS = [
-  { n: 1200, suffix: '+', label: 'Projects Completed' },
-  { n: 800, suffix: '+', label: 'Satisfied Clients' },
-  { n: 21, suffix: '', label: 'Years Experience' },
-  { n: 99, suffix: '%', label: 'Satisfaction Rate' },
-]
+type StatProps = { projects?: number; clients?: number; years?: number; satisfaction?: number }
 
 function StatItem({ n, suffix, label, active }: { n: number; suffix: string; label: string; active: boolean }) {
   const val = useCountUp(n, 1400, active)
@@ -29,9 +24,17 @@ function StatItem({ n, suffix, label, active }: { n: number; suffix: string; lab
   )
 }
 
-export function StatsCounter() {
+export function StatsCounter({ stats = {} }: { stats?: StatProps }) {
+  const { projects = 1200, clients = 800, years = 21, satisfaction = 99 } = stats
   const containerRef = useRef<HTMLElement | null>(null)
   const { ref, inView } = useInView(0.2)
+
+  const STATS = [
+    { n: projects, suffix: '+', label: 'Projects Completed' },
+    { n: clients, suffix: '+', label: 'Satisfied Clients' },
+    { n: years, suffix: '', label: 'Years Experience' },
+    { n: satisfaction, suffix: '%', label: 'Satisfaction Rate' },
+  ]
 
   return (
     <section

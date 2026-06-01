@@ -13,7 +13,7 @@ const CHECKLIST = [
   { t: 'Training & Knowledge Transfer', d: 'Every project includes optional hands-on operator and technician training.' },
 ]
 
-export function WhyMatrix() {
+export function WhyMatrix({ imageUrl }: { imageUrl?: string | null }) {
   const { ref: sectionRef, inView } = useInView()
   return (
     <section
@@ -45,21 +45,31 @@ export function WhyMatrix() {
           >
             <div
               className="absolute inset-0 rounded-xs overflow-hidden"
-              style={{
-                background: `
-                  linear-gradient(135deg, rgba(42,47,58,.45) 0%, rgba(42,47,58,.1) 100%),
-                  repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, transparent 2px 16px),
-                  linear-gradient(170deg, #3F4655 0%, #2A2F3A 90%)
-                `,
-                border: '1px solid rgba(27,111,204,.18)',
-              }}
+              style={{ border: '1px solid rgba(27,111,204,.18)' }}
             >
-              <span
-                className="absolute inset-x-0 font-mono text-[11px] uppercase tracking-[0.2em] text-center"
-                style={{ color: 'rgba(255,255,255,.32)', top: '50%', transform: 'translateY(-50%)' }}
-              >
-                Factory / Refinery Photo
-              </span>
+              {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={imageUrl} alt="Matrix facility" className="w-full h-full object-cover" />
+              ) : (
+                <>
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `
+                        linear-gradient(135deg, rgba(42,47,58,.45) 0%, rgba(42,47,58,.1) 100%),
+                        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, transparent 2px 16px),
+                        linear-gradient(170deg, #3F4655 0%, #2A2F3A 90%)
+                      `,
+                    }}
+                  />
+                  <span
+                    className="absolute inset-x-0 font-mono text-[11px] uppercase tracking-[0.2em] text-center z-10"
+                    style={{ color: 'rgba(255,255,255,.32)', top: '50%', transform: 'translateY(-50%)' }}
+                  >
+                    Factory / Refinery Photo
+                  </span>
+                </>
+              )}
             </div>
             {/* Corner decorators */}
             <div className="absolute -left-3.5 -top-3.5 w-22.5 h-22.5" style={{ borderTop: '3px solid #1B6FCC', borderLeft: '3px solid #1B6FCC' }} />
