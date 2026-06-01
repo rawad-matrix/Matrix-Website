@@ -47,6 +47,7 @@ export function Navbar() {
 
   useEffect(() => {
     setDropdownOpen(false)
+    setShowSignIn(false)
   }, [pathname])
 
   useEffect(() => {
