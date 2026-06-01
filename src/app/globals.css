@@ -128,6 +128,19 @@ img { max-width: 100%; display: block; }
   .section-pad-sm { padding: 48px 0; }
 }
 
+/* Ghost button on dark backgrounds — white text, dark text on hover */
+.btn-ghost-dark {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.6);
+  background-color: transparent;
+  transition: background-color 0.15s, color 0.15s;
+}
+.btn-ghost-dark:hover {
+  background-color: #ffffff;
+  color: #1F2330;
+  border-color: #ffffff;
+}
+
 /* Scroll animation helpers */
 .reveal {
   opacity: 0;

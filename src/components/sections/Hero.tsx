@@ -213,7 +213,7 @@ export function Hero() {
           </Link>
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 bg-transparent text-white px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs border border-white hover:bg-white hover:text-matrix-ink transition-all duration-150"
+            className="inline-flex items-center gap-2 px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs border btn-ghost-dark"
           >
             Our Case Studies
           </Link>

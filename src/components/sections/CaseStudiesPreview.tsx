@@ -52,7 +52,7 @@ export async function CaseStudiesPreview() {
               <Link
                 key={c.slug}
                 href={`/case-studies/${c.slug}`}
-                className="group relative overflow-hidden rounded-xs bg-[#0A0A12] text-white cursor-pointer transition-transform duration-250 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-xs bg-[#0A0A12] text-white cursor-pointer"
                 style={{ height: 'clamp(280px, 38vh, 460px)' }}
               >
                 <span className="absolute top-6 right-6 z-10 font-mono text-[11px] tracking-widest text-white/50">
@@ -97,7 +97,7 @@ export async function CaseStudiesPreview() {
         <div className="flex justify-center mt-12">
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 bg-transparent text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs border border-white/70 hover:bg-white hover:text-matrix-ink transition-all duration-150"
+            className="inline-flex items-center gap-2 px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs border btn-ghost-dark"
           >
             View All Case Studies
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
