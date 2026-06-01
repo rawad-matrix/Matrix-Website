@@ -5,6 +5,14 @@ import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../AdminSidebar'
 
 type SendResult = { sent: number; total: number; failed?: string[] }
+type AnnouncementLog = {
+  id: string
+  subject: string
+  message: string
+  image_url: string | null
+  recipients_count: number
+  sent_at: string
+}
 
 export default function AnnouncementsPage() {
   const [subject, setSubject] = useState('')
@@ -16,6 +24,21 @@ export default function AnnouncementsPage() {
   const [result, setResult] = useState<SendResult | null>(null)
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [history, setHistory] = useState<AnnouncementLog[]>([])
+  const [historyLoading, setHistoryLoading] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('announcements')
+      .select('*')
+      .order('sent_at', { ascending: false })
+      .limit(20)
+      .then(({ data }) => {
+        if (data) setHistory(data)
+        setHistoryLoading(false)
+      })
+  }, [])
 
   const canSend = subject.trim().length > 0 && message.trim().length > 0 && !loading && !uploading
 
@@ -96,6 +119,10 @@ export default function AnnouncementsPage() {
           setSubject('')
           setMessage('')
           removeImage()
+          // Refresh history
+          const supabase = createClient()
+          supabase.from('announcements').select('*').order('sent_at', { ascending: false }).limit(20)
+            .then(({ data: logs }) => { if (logs) setHistory(logs) })
         }
       }
     } catch {
@@ -282,69 +309,47 @@ export default function AnnouncementsPage() {
               </form>
             </div>
 
-            {/* Info card */}
-            <div className="bg-white border border-matrix-border p-6 rounded-xs">
-              <h3 className="font-barlow font-bold uppercase text-[16px] text-matrix-ink mb-4">
-                How It Works
-              </h3>
-              <ul className="flex flex-col gap-4">
-                {[
-                  {
-                    icon: (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#1B6FCC" strokeWidth="2" width="16" height="16">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    ),
-                    text: 'Sent to all registered users except admin accounts.',
-                  },
-                  {
-                    icon: (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#1B6FCC" strokeWidth="2" width="16" height="16">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <polyline points="21 15 16 10 5 21"/>
-                      </svg>
-                    ),
-                    text: 'Optional image appears in the email body — great for promotions or banners.',
-                  },
-                  {
-                    icon: (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#1B6FCC" strokeWidth="2" width="16" height="16">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
-                    ),
-                    text: 'Sent from info@matrixea.co with your full branding.',
-                  },
-                  {
-                    icon: (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#FFB200" strokeWidth="2" width="16" height="16">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                        <line x1="12" y1="9" x2="12" y2="13" />
-                        <line x1="12" y1="17" x2="12.01" y2="17" />
-                      </svg>
-                    ),
-                    text: 'This sends immediately — double-check before clicking Send.',
-                  },
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-[13.5px] text-matrix-ink">
-                    <span style={{ flexShrink: 0, marginTop: '2px' }}>{item.icon}</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 pt-4 border-t border-matrix-border">
-                <p className="font-dm text-[11.5px] text-matrix-muted leading-relaxed">
-                  <strong className="text-matrix-ink">Storage bucket required</strong> for images:<br />
-                  In Supabase → Storage, create a public bucket named{' '}
-                  <code className="font-mono bg-matrix-off px-1 py-0.5 rounded border border-matrix-border text-[10.5px]">
-                    announcement-images
-                  </code>
-                </p>
+            {/* Sent history */}
+            <div className="bg-white border border-matrix-border rounded-xs overflow-hidden">
+              <div className="px-5 py-4 border-b border-matrix-border">
+                <h3 className="font-barlow font-bold uppercase text-[16px] text-matrix-ink">
+                  Sent History
+                </h3>
               </div>
+              {historyLoading ? (
+                <div className="p-6 text-center font-mono text-[11px] text-matrix-muted tracking-widest">LOADING…</div>
+              ) : history.length === 0 ? (
+                <div className="p-6 text-center font-dm text-[13px] text-matrix-muted">
+                  No announcements sent yet.
+                </div>
+              ) : (
+                <ul className="divide-y divide-matrix-border">
+                  {history.map(item => (
+                    <li key={item.id} className="px-5 py-4">
+                      <div className="flex items-start justify-between gap-3 mb-1">
+                        <span className="font-dm font-semibold text-[13.5px] text-matrix-ink leading-snug flex-1">
+                          {item.subject}
+                        </span>
+                        <span
+                          className="font-mono text-[10px] px-2 py-0.5 rounded-xs shrink-0"
+                          style={{ background: 'rgba(27,111,204,.1)', color: '#1B6FCC' }}
+                        >
+                          {item.recipients_count} sent
+                        </span>
+                      </div>
+                      <p className="font-dm text-[12px] text-matrix-muted line-clamp-2 leading-relaxed mb-1.5">
+                        {item.message}
+                      </p>
+                      <span className="font-mono text-[10.5px] text-matrix-muted">
+                        {new Date(item.sent_at).toLocaleDateString('en-GB', {
+                          day: '2-digit', month: 'short', year: 'numeric',
+                          hour: '2-digit', minute: '2-digit',
+                        })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </main>

@@ -216,6 +216,14 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Save to announcements log
+  await adminClient.from('announcements').insert({
+    subject: subject.trim(),
+    message: message.trim(),
+    image_url: imageUrl ?? null,
+    recipients_count: sent,
+  })
+
   return NextResponse.json({
     sent,
     total: recipients.length,

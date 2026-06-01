@@ -31,8 +31,8 @@ const CATEGORY_GRADIENT: Record<string, string> = {
 const DEFAULT_GRADIENT = 'linear-gradient(160deg,#1a2a3a 0%,#0a1a28 90%)'
 
 // ── Filter definitions ────────────────────────────────────────────────────────
-const LEVEL_FILTERS = ['Bundle', 'Basic', 'Pro', 'Advanced'] as const
-const BRAND_FILTERS = ['ALL', 'Siemens', 'Delta', 'IoT', 'SCADA'] as const
+const LEVEL_FILTERS = ['All', 'Bundle', 'Advanced', 'Pro', 'Basic'] as const
+const BRAND_FILTERS = ['All Types', 'Siemens', 'Delta', 'IoT', 'SCADA', 'Other'] as const
 
 function matchesCourse(course: Course, level: string | null, brand: string): boolean {
   // Level check — null means show all levels
@@ -44,8 +44,8 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
     }
   }
 
-  // Brand check — 'ALL' means no brand filter
-  if (brand === 'ALL') return true
+  // Brand check
+  if (brand === 'All Types') return true
   if (brand === 'Siemens') {
     return (
       course.slug.startsWith('s7-') ||
@@ -58,12 +58,20 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
   if (brand === 'Delta') return course.slug.startsWith('delta-')
   if (brand === 'IoT') return (course.category ?? '') === 'IoT'
   if (brand === 'SCADA') return (course.category ?? '') === 'SCADA'
+  if (brand === 'Other') {
+    return !(
+      course.slug.startsWith('s7-') || course.slug.startsWith('si-') ||
+      course.slug.startsWith('scada-wincc') || course.slug === 'pam-c' ||
+      course.slug === 'par-c' || course.slug.startsWith('delta-') ||
+      (course.category ?? '') === 'IoT' || (course.category ?? '') === 'SCADA'
+    )
+  }
   return false
 }
 
 export default function CoursesClient({ courses }: { courses: Course[] }) {
   const [levelFilter, setLevelFilter] = useState<string | null>(null)
-  const [brandFilter, setBrandFilter] = useState<string>('ALL')
+  const [brandFilter, setBrandFilter] = useState<string>('All Types')
 
   const filtered = courses.filter(c => matchesCourse(c, levelFilter, brandFilter))
 
@@ -82,11 +90,11 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
             {/* Row 1 — Level */}
             <div className="flex flex-wrap gap-2">
               {LEVEL_FILTERS.map(lv => {
-                const isActive = levelFilter === lv
+                const isActive = lv === 'All' ? levelFilter === null : levelFilter === lv
                 return (
                   <button
                     key={lv}
-                    onClick={() => setLevelFilter(isActive ? null : lv)}
+                    onClick={() => setLevelFilter(lv === 'All' ? null : (isActive ? null : lv))}
                     className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
                   >
                     {lv}
@@ -147,7 +155,7 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                   style={{ background: '#2A2F3A' }}
                 >
                   {/* Card image / gradient top */}
-                  <div className="h-40 overflow-hidden transition-transform duration-500 group-hover:scale-105 relative">
+                  <div className="h-52 overflow-hidden relative">
                     {course.featured_image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
