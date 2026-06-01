@@ -7,15 +7,28 @@ import { AdminSidebar } from '../AdminSidebar'
 type Settings = Record<string, string>
 
 const IMAGE_SLOTS = [
-  { key: 'hero_slide_1_image', label: 'Hero Slide 1', hint: 'Industrial automation background' },
-  { key: 'hero_slide_2_image', label: 'Hero Slide 2', hint: 'SCADA systems background' },
-  { key: 'hero_slide_3_image', label: 'Hero Slide 3', hint: 'PLC programming background' },
+  { key: 'hero_slide_1_image',  label: 'Slide 1', hint: 'Industrial automation' },
+  { key: 'hero_slide_2_image',  label: 'Slide 2', hint: 'SCADA systems' },
+  { key: 'hero_slide_3_image',  label: 'Slide 3', hint: 'PLC programming' },
+  { key: 'hero_slide_4_image',  label: 'Slide 4', hint: 'Energy management' },
+  { key: 'hero_slide_5_image',  label: 'Slide 5', hint: 'Process control' },
+  { key: 'hero_slide_6_image',  label: 'Slide 6', hint: 'Motor drives' },
+  { key: 'hero_slide_7_image',  label: 'Slide 7', hint: 'Factory automation' },
+  { key: 'hero_slide_8_image',  label: 'Slide 8', hint: 'Power systems' },
+  { key: 'hero_slide_9_image',  label: 'Slide 9', hint: 'Training & certification' },
+  { key: 'hero_slide_10_image', label: 'Slide 10', hint: 'System integration' },
 ]
 
 const WHY_SLOT = {
   key: 'why_matrix_image',
   label: 'Why Matrix — Photo',
   hint: 'Factory / site photo beside the checklist on homepage',
+}
+
+const TRAINING_SLOT = {
+  key: 'training_banner_image',
+  label: 'Training Page Banner',
+  hint: 'Photo shown in the Training page hero (right panel). Recommended: 1200 × 900 px.',
 }
 
 const STAT_FIELDS = [
@@ -224,7 +237,7 @@ export default function ContentPage() {
                   Recommended size: 1200 × 900 px, landscape.
                 </p>
               </div>
-              <div className="p-6 grid grid-cols-3 gap-5 max-[900px]:grid-cols-1">
+              <div className="p-6 grid grid-cols-5 gap-4 max-[1200px]:grid-cols-3 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
                 {IMAGE_SLOTS.map(slot => (
                   <ImageSlot
                     key={slot.key}
@@ -256,6 +269,29 @@ export default function ContentPage() {
                   slotKey={WHY_SLOT.key}
                   label={WHY_SLOT.label}
                   hint={WHY_SLOT.hint}
+                  settings={settings}
+                  onUpload={uploadImage}
+                  onRemove={removeImage}
+                  uploading={uploading}
+                />
+              </div>
+            </section>
+
+            {/* ── Training Banner ──────────────────────────────────────── */}
+            <section className="bg-white border border-matrix-border rounded-xs">
+              <div className="px-6 py-4 border-b border-matrix-border">
+                <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
+                  Training Page Banner
+                </h2>
+                <p className="font-dm text-[13px] text-matrix-muted mt-0.5">
+                  Photo shown in the right panel of the Training page hero. Recommended: 1200 × 900 px, landscape.
+                </p>
+              </div>
+              <div className="p-6" style={{ maxWidth: '320px' }}>
+                <ImageSlot
+                  slotKey={TRAINING_SLOT.key}
+                  label={TRAINING_SLOT.label}
+                  hint={TRAINING_SLOT.hint}
                   settings={settings}
                   onUpload={uploadImage}
                   onRemove={removeImage}

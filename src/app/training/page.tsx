@@ -1,8 +1,12 @@
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { PageHero } from '@/components/sections/PageHero'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { ContactStrip } from '@/components/sections/ContactStrip'
+import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 export const metadata: Metadata = { title: 'Training' }
@@ -63,13 +67,21 @@ const LEVEL_COLOR: Record<string, string> = {
   Beginner: '#64748B',
 }
 
-export default function TrainingPage() {
+export default async function TrainingPage() {
+  let bannerImage: string | null = null
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from('site_settings').select('value').eq('key', 'training_banner_image').single()
+    bannerImage = data?.value ?? null
+  } catch { /* use default */ }
+
   return (
     <>
       <PageHero
         title="Training Programs"
         subtitle="Hands-on automation training delivered by engineers who deploy these systems every week."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Training' }]}
+        bannerImage={bannerImage}
       />
 
       {/* Track cards */}

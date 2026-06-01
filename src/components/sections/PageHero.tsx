@@ -9,9 +9,10 @@ interface PageHeroProps {
   title: string
   subtitle?: string
   breadcrumbs?: Crumb[]
+  bannerImage?: string | null
 }
 
-export function PageHero({ title, subtitle, breadcrumbs }: PageHeroProps) {
+export function PageHero({ title, subtitle, breadcrumbs, bannerImage }: PageHeroProps) {
   const parts = title.split(' ')
   const last = parts.pop()
   const rest = parts.join(' ')
@@ -36,14 +37,26 @@ export function PageHero({ title, subtitle, breadcrumbs }: PageHeroProps) {
         />
         {/* Right decorative panel */}
         <div
-          className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none"
+          className="absolute right-0 top-0 bottom-0 hidden lg:block pointer-events-none overflow-hidden"
           style={{
             width: '35%',
             clipPath: 'polygon(10% 0, 100% 0, 100% 100%, 0% 100%)',
-            background: `repeating-linear-gradient(110deg, rgba(255,255,255,.018) 0 2px, transparent 2px 14px)`,
             borderLeft: '1px solid rgba(27,111,204,.15)',
           }}
-        />
+        >
+          {bannerImage ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={bannerImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              <div className="absolute inset-0" style={{ background: 'rgba(42,47,58,.55)' }} />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{ background: 'repeating-linear-gradient(110deg, rgba(255,255,255,.018) 0 2px, transparent 2px 14px)' }}
+            />
+          )}
+        </div>
         <div className="relative z-10 max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <h1
             className="font-barlow font-extrabold uppercase text-white animate-fade-in-up"

@@ -4,28 +4,37 @@ import Link from 'next/link'
 import { useCountUp } from '@/hooks/useCountUp'
 import { useInView } from '@/hooks/useInView'
 
-const SLIDES = [
-  {
-    gradient: 'linear-gradient(135deg, rgba(27,111,204,.35) 0%, rgba(10,10,18,.95) 100%)',
-    label: 'Industrial Automation',
-  },
-  {
-    gradient: 'linear-gradient(135deg, rgba(220,38,38,.25) 0%, rgba(10,10,18,.95) 100%)',
-    label: 'SCADA Systems',
-  },
-  {
-    gradient: 'linear-gradient(135deg, rgba(34,197,94,.18) 0%, rgba(10,10,18,.95) 100%)',
-    label: 'PLC Programming',
-  },
+const SLIDE_DEFS = [
+  { gradient: 'linear-gradient(135deg, rgba(27,111,204,.35) 0%, rgba(10,10,18,.95) 100%)',  label: 'Industrial Automation' },
+  { gradient: 'linear-gradient(135deg, rgba(220,38,38,.25) 0%, rgba(10,10,18,.95) 100%)',   label: 'SCADA Systems' },
+  { gradient: 'linear-gradient(135deg, rgba(34,197,94,.18) 0%, rgba(10,10,18,.95) 100%)',   label: 'PLC Programming' },
+  { gradient: 'linear-gradient(135deg, rgba(27,111,204,.22) 0%, rgba(10,10,18,.95) 100%)',  label: 'Energy Management' },
+  { gradient: 'linear-gradient(135deg, rgba(255,178,0,.20) 0%, rgba(10,10,18,.95) 100%)',   label: 'Process Control' },
+  { gradient: 'linear-gradient(135deg, rgba(139,92,246,.22) 0%, rgba(10,10,18,.95) 100%)', label: 'Motor Drives' },
+  { gradient: 'linear-gradient(135deg, rgba(20,184,166,.18) 0%, rgba(10,10,18,.95) 100%)',  label: 'Factory Automation' },
+  { gradient: 'linear-gradient(135deg, rgba(251,146,60,.18) 0%, rgba(10,10,18,.95) 100%)',  label: 'Power Systems' },
+  { gradient: 'linear-gradient(135deg, rgba(34,197,94,.12) 0%, rgba(10,10,18,.95) 100%)',   label: 'Training & Certification' },
+  { gradient: 'linear-gradient(135deg, rgba(220,38,38,.15) 0%, rgba(10,10,18,.95) 100%)',   label: 'System Integration' },
 ]
 
 type HeroProps = {
-  slideImages?: [string | null, string | null, string | null]
+  slideImages?: (string | null)[]
   stats?: { projects?: number; clients?: number; years?: number }
 }
 
-export function Hero({ slideImages = [null, null, null], stats = {} }: HeroProps) {
+export function Hero({ slideImages = [], stats = {} }: HeroProps) {
   const { projects = 1200, clients = 800, years = 21 } = stats
+
+  // Only cycle through slots that have images; fall back to first 3 gradient slides
+  const SLIDES = (() => {
+    const withImages = SLIDE_DEFS
+      .map((def, i) => ({ ...def, imageUrl: slideImages[i] ?? null }))
+      .filter(s => s.imageUrl !== null)
+    return withImages.length > 0
+      ? withImages
+      : SLIDE_DEFS.slice(0, 3).map(def => ({ ...def, imageUrl: null }))
+  })()
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const { ref: statsRef, inView } = useInView(0.3)
@@ -95,10 +104,10 @@ export function Hero({ slideImages = [null, null, null], stats = {} }: HeroProps
             }}
           >
             {/* Real photo if uploaded, otherwise gradient */}
-            {slideImages[i] ? (
+            {slide.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={slideImages[i]!}
+                src={slide.imageUrl}
                 alt={slide.label}
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -113,7 +122,7 @@ export function Hero({ slideImages = [null, null, null], stats = {} }: HeroProps
               }}
             />
             {/* Dark overlay for readability when photo is set */}
-            {slideImages[i] && (
+            {slide.imageUrl && (
               <div className="absolute inset-0" style={{ background: 'rgba(10,10,18,.45)' }} />
             )}
             <span

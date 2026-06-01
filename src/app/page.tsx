@@ -32,6 +32,13 @@ export default async function HomePage() {
           s.hero_slide_1_image ?? null,
           s.hero_slide_2_image ?? null,
           s.hero_slide_3_image ?? null,
+          s.hero_slide_4_image ?? null,
+          s.hero_slide_5_image ?? null,
+          s.hero_slide_6_image ?? null,
+          s.hero_slide_7_image ?? null,
+          s.hero_slide_8_image ?? null,
+          s.hero_slide_9_image ?? null,
+          s.hero_slide_10_image ?? null,
         ]}
         stats={{
           projects: s.stat_projects ? parseInt(s.stat_projects) : undefined,
