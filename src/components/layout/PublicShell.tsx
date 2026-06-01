@@ -4,7 +4,6 @@ import { Topbar } from './Topbar'
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
 import { FloatingWhatsApp } from './FloatingWhatsApp'
-import { SignInModal } from './SignInModal'
 
 const HIDDEN_ROUTES = ['/dashboard', '/admin', '/auth', '/user']
 
@@ -28,7 +27,6 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       {!hideFooter && <Footer />}
       <FloatingWhatsApp />
-      <SignInModal />
     </>
   )
 }
