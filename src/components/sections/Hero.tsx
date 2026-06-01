@@ -107,7 +107,7 @@ export function Hero() {
 
       {/* Slider controls — need pointer-events, so outside the no-pointer-events wrapper */}
       <div
-        className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-auto"
+        className="absolute right-0 top-0 bottom-0 hidden lg:flex items-center pointer-events-auto z-20"
         style={{ width: '40%', clipPath: 'polygon(10% 0, 100% 0, 100% 100%, 0% 100%)' }}
       >
         {/* Prev arrow */}
