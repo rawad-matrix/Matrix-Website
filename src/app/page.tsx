@@ -4,7 +4,6 @@ export const dynamic = 'force-dynamic'
 import { Hero } from '@/components/sections/Hero'
 import { ServicesGrid } from '@/components/sections/ServicesGrid'
 import { WhyMatrix } from '@/components/sections/WhyMatrix'
-import { StatsCounter } from '@/components/sections/StatsCounter'
 import { TrainingCTABanner } from '@/components/sections/TrainingCTABanner'
 import { CaseStudiesPreview } from '@/components/sections/CaseStudiesPreview'
 import { BrandsRow } from '@/components/sections/BrandsRow'
@@ -48,14 +47,6 @@ export default async function HomePage() {
       />
       <ServicesGrid />
       <WhyMatrix imageUrl={s.why_matrix_image ?? null} />
-      <StatsCounter
-        stats={{
-          projects: s.stat_projects ? parseInt(s.stat_projects) : undefined,
-          clients: s.stat_clients ? parseInt(s.stat_clients) : undefined,
-          years: s.stat_years ? parseInt(s.stat_years) : undefined,
-          satisfaction: s.stat_satisfaction ? parseInt(s.stat_satisfaction) : undefined,
-        }}
-      />
       <TrainingCTABanner />
       <CaseStudiesPreview />
       <BrandsRow />

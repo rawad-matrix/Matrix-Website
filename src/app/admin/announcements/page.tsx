@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -146,7 +146,7 @@ export default function AnnouncementsPage() {
     <div style={{ background: '#F4F6FA', minHeight: 'calc(100vh - 108px)' }}>
       <div
         className="max-w-7xl mx-auto px-6 py-10"
-        style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '32px' }}
+        style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '32px', alignItems: 'start' }}
       >
         <AdminSidebar />
 
@@ -298,7 +298,7 @@ export default function AnnouncementsPage() {
                     transition: 'background .15s',
                   }}
                 >
-                  {uploading ? 'Uploading image…' : loading ? 'Sending…' : 'Send to All Clients'}
+                  {uploading ? 'Uploading image...' : loading ? 'Sending...' : 'Send to All Clients'}
                   {!loading && !uploading && (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14">
                       <line x1="22" y1="2" x2="11" y2="13" />
@@ -317,7 +317,7 @@ export default function AnnouncementsPage() {
                 </h3>
               </div>
               {historyLoading ? (
-                <div className="p-6 text-center font-mono text-[11px] text-matrix-muted tracking-widest">LOADING…</div>
+                <div className="p-6 text-center font-mono text-[11px] text-matrix-muted tracking-widest">LOADING...</div>
               ) : history.length === 0 ? (
                 <div className="p-6 text-center font-dm text-[13px] text-matrix-muted">
                   No announcements sent yet.
@@ -357,3 +357,4 @@ export default function AnnouncementsPage() {
     </div>
   )
 }
+

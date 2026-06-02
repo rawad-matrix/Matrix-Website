@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -21,14 +21,14 @@ const IMAGE_SLOTS = [
 
 const WHY_SLOT = {
   key: 'why_matrix_image',
-  label: 'Why Matrix — Photo',
+  label: 'Why Matrix - Photo',
   hint: 'Factory / site photo beside the checklist on homepage',
 }
 
 const TRAINING_SLOT = {
   key: 'training_banner_image',
   label: 'Training Page Banner',
-  hint: 'Photo shown in the Training page hero (right panel). Recommended: 1200 × 900 px.',
+  hint: 'Photo shown in the Training page hero (right panel). Recommended: 1200x900 px.',
 }
 
 const STAT_FIELDS = [
@@ -74,7 +74,7 @@ function ImageSlot({
         )}
         {isUploading && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,.55)' }}>
-            <span className="font-mono text-[11px] text-white uppercase tracking-widest">Uploading…</span>
+            <span className="font-mono text-[11px] text-white uppercase tracking-widest">Uploading...</span>
           </div>
         )}
       </div>
@@ -193,13 +193,13 @@ export default function ContentPage() {
   }
 
   const panelStyle = { background: '#F4F6FA', minHeight: 'calc(100vh - 108px)' }
-  const gridStyle = { display: 'grid', gridTemplateColumns: '240px 1fr', gap: '32px' }
+  const gridStyle = { display: 'grid', gridTemplateColumns: '240px 1fr', gap: '32px', alignItems: 'start' }
 
   if (loading) return (
     <div style={panelStyle}>
       <div className="max-w-7xl mx-auto px-6 py-10" style={gridStyle}>
         <AdminSidebar />
-        <div className="font-mono text-[11px] text-matrix-muted tracking-widest mt-16 text-center">LOADING…</div>
+        <div className="font-mono text-[11px] text-matrix-muted tracking-widest mt-16 text-center">LOADING...</div>
       </div>
     </div>
   )
@@ -226,7 +226,7 @@ export default function ContentPage() {
 
           <div className="flex flex-col gap-7">
 
-            {/* ── Hero Slides ───────────────────────────────────────────── */}
+            {/* â”€â”€ Hero Slides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="bg-white border border-matrix-border rounded-xs">
               <div className="px-6 py-4 border-b border-matrix-border">
                 <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
@@ -234,7 +234,7 @@ export default function ContentPage() {
                 </h2>
                 <p className="font-dm text-[13px] text-matrix-muted mt-0.5">
                   Background photos for the 3 rotating slides on the homepage hero (right panel).
-                  Recommended size: 1200 × 900 px, landscape.
+                  Recommended size: 1200 x 900 px, landscape.
                 </p>
               </div>
               <div className="p-6 grid grid-cols-5 gap-4 max-[1200px]:grid-cols-3 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
@@ -253,15 +253,15 @@ export default function ContentPage() {
               </div>
             </section>
 
-            {/* ── Why Matrix Image ──────────────────────────────────────── */}
+            {/* â”€â”€ Why Matrix Image â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="bg-white border border-matrix-border rounded-xs">
               <div className="px-6 py-4 border-b border-matrix-border">
                 <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
-                  Why Matrix — Section Photo
+                  Why Matrix - Section Photo
                 </h2>
                 <p className="font-dm text-[13px] text-matrix-muted mt-0.5">
                   The photo displayed beside the &quot;Why Choose Matrix EA&quot; checklist on the homepage.
-                  Recommended size: 800 × 600 px.
+                  Recommended size: 800 x 600 px.
                 </p>
               </div>
               <div className="p-6" style={{ maxWidth: '320px' }}>
@@ -277,14 +277,14 @@ export default function ContentPage() {
               </div>
             </section>
 
-            {/* ── Training Banner ──────────────────────────────────────── */}
+            {/* â”€â”€ Training Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="bg-white border border-matrix-border rounded-xs">
               <div className="px-6 py-4 border-b border-matrix-border">
                 <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
                   Training Page Banner
                 </h2>
                 <p className="font-dm text-[13px] text-matrix-muted mt-0.5">
-                  Photo shown in the right panel of the Training page hero. Recommended: 1200 × 900 px, landscape.
+                  Photo shown in the right panel of the Training page hero. Recommended: 1200 x 900 px, landscape.
                 </p>
               </div>
               <div className="p-6" style={{ maxWidth: '320px' }}>
@@ -300,7 +300,7 @@ export default function ContentPage() {
               </div>
             </section>
 
-            {/* ── Site Statistics ───────────────────────────────────────── */}
+            {/* â”€â”€ Site Statistics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="bg-white border border-matrix-border rounded-xs">
               <div className="px-6 py-4 border-b border-matrix-border">
                 <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
@@ -365,7 +365,7 @@ export default function ContentPage() {
                     transition: 'background .2s',
                   }}
                 >
-                  {statsSaved ? '✓ Saved' : statsSaving ? 'Saving…' : 'Save Statistics'}
+                  {statsSaved ? 'Saved' : statsSaving ? 'Saving...' : 'Save Statistics'}
                 </button>
               </div>
             </section>
@@ -376,3 +376,4 @@ export default function ContentPage() {
     </div>
   )
 }
+
