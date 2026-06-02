@@ -88,14 +88,14 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
           <div className="flex flex-col gap-3 mb-10">
 
             {/* Row 1 — Level */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
               {LEVEL_FILTERS.map(lv => {
                 const isActive = lv === 'All' ? levelFilter === null : levelFilter === lv
                 return (
                   <button
                     key={lv}
                     onClick={() => setLevelFilter(lv === 'All' ? null : (isActive ? null : lv))}
-                    className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
+                    className={`${btnBase} shrink-0 ${isActive ? btnActive : btnInactive}`}
                   >
                     {lv}
                   </button>
@@ -104,14 +104,14 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
             </div>
 
             {/* Row 2 — Brand / Topic */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
               {BRAND_FILTERS.map(br => {
                 const isActive = brandFilter === br
                 return (
                   <button
                     key={br}
                     onClick={() => setBrandFilter(br)}
-                    className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
+                    className={`${btnBase} shrink-0 ${isActive ? btnActive : btnInactive}`}
                   >
                     {br}
                   </button>
@@ -155,7 +155,7 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                   style={{ background: '#2A2F3A' }}
                 >
                   {/* Card image / gradient top */}
-                  <div className="h-52 overflow-hidden relative">
+                  <div className="h-52 max-[600px]:h-36 overflow-hidden relative">
                     {course.featured_image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -173,7 +173,7 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                     )}
                   </div>
 
-                  <div className="p-6 flex flex-col gap-3 flex-1">
+                  <div className="p-6 max-[600px]:p-4 flex flex-col gap-3 flex-1">
                     {/* Level badge — always blue */}
                     <span
                       className="inline-block font-mono text-[10.5px] uppercase tracking-[0.12em] px-2 py-0.5 rounded-xs self-start"

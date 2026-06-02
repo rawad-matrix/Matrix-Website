@@ -103,9 +103,8 @@ export function MobileMenu({ open, onClose, isAdmin }: MobileMenuProps) {
                   <Link
                     href={link.href}
                     onClick={onClose}
-                    className={`font-barlow font-bold text-[26px] uppercase tracking-wide py-3 transition-colors flex-1 ${
-                      isActive ? 'text-matrix-blue' : 'text-white hover:text-matrix-blue'
-                    }`}
+                    className="font-barlow font-bold text-[26px] uppercase tracking-wide py-3 transition-colors flex-1"
+                    style={{ color: isActive ? '#1B6FCC' : '#ffffff' }}
                   >
                     {link.label}
                   </Link>
@@ -158,13 +157,12 @@ export function MobileMenu({ open, onClose, isAdmin }: MobileMenuProps) {
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className={`font-barlow font-bold text-[26px] uppercase tracking-wide py-3 border-b border-white/08 transition-all ${
-                isActive ? 'text-matrix-blue' : 'text-white hover:text-matrix-blue'
-              }`}
+              className="font-barlow font-bold text-[26px] uppercase tracking-wide py-3 border-b border-white/08 transition-all"
               style={{
                 opacity: open ? 1 : 0,
                 transform: open ? 'translateY(0)' : 'translateY(16px)',
                 transition: `opacity 0.4s ease ${delay}, transform 0.4s ease ${delay}, color 0.15s`,
+                color: isActive ? '#1B6FCC' : '#ffffff',
               }}
             >
               {link.label}

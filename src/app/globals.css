@@ -141,6 +141,10 @@ img { max-width: 100%; display: block; }
   border-color: #ffffff;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Scroll animation helpers */
 .reveal {
   opacity: 0;
