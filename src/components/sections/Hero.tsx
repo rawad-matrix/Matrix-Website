@@ -109,7 +109,8 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
               <img
                 src={slide.imageUrl}
                 alt={slide.label}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain"
+                style={{ background: '#0A0A12' }}
               />
             ) : (
               <div className="absolute inset-0" style={{ background: slide.gradient }} />
@@ -121,16 +122,6 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
                 backgroundImage: 'repeating-linear-gradient(110deg, rgba(255,255,255,.018) 0 2px, transparent 2px 14px)',
               }}
             />
-            {/* Dark overlay for readability when photo is set */}
-            {slide.imageUrl && (
-              <div className="absolute inset-0" style={{ background: 'rgba(10,10,18,.45)' }} />
-            )}
-            <span
-              className="absolute font-mono text-[11px] uppercase tracking-[0.2em] left-8 bottom-8 z-10"
-              style={{ color: 'rgba(255,255,255,.32)' }}
-            >
-              {slide.label}
-            </span>
           </div>
         ))}
       </div>
