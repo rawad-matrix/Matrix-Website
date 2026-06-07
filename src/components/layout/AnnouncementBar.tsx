@@ -51,17 +51,17 @@ export function AnnouncementBar() {
         <span style={{
           background: '#FFB200',
           color: '#1F2330',
-          fontSize: '9.5px',
+          fontSize: '12px',
           fontWeight: 800,
           letterSpacing: '0.16em',
           textTransform: 'uppercase',
-          padding: '3px 8px',
+          padding: '4px 10px',
           borderRadius: '2px',
           flexShrink: 0,
           fontFamily: 'var(--font-jetbrains-mono, JetBrains Mono, monospace)',
           whiteSpace: 'nowrap',
         }}>
-          🎉 New Branch
+          New Branch
         </span>
 
         {/* Main message */}
