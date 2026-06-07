@@ -2,19 +2,28 @@
 
 import { useState, useEffect } from 'react'
 
-// Bump the key suffix if you want the bar to re-appear for users who already dismissed it
-const DISMISS_KEY = 'matrix_branch_announcement_v2'
-const MAPS_URL    = 'https://maps.app.goo.gl/z94Gr9NJ4FASvKVK7'
+// Bump the key suffix to force the bar to re-appear for users who already dismissed it
+const DISMISS_KEY      = 'matrix_branch_announcement_v2'
+const DISMISS_DAYS     = 7
+const MAPS_URL         = 'https://maps.app.goo.gl/z94Gr9NJ4FASvKVK7'
+
+function wasDismissed(): boolean {
+  try {
+    const val = localStorage.getItem(DISMISS_KEY)
+    if (!val) return false
+    return Date.now() - parseInt(val, 10) < DISMISS_DAYS * 86_400_000
+  } catch { return false }
+}
 
 export function AnnouncementBar() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (!sessionStorage.getItem(DISMISS_KEY)) setVisible(true)
+    if (!wasDismissed()) setVisible(true)
   }, [])
 
   function dismiss() {
-    sessionStorage.setItem(DISMISS_KEY, '1')
+    try { localStorage.setItem(DISMISS_KEY, String(Date.now())) } catch { /* */ }
     setVisible(false)
   }
 
