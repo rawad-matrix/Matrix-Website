@@ -56,7 +56,7 @@ function ImageSlot({
       <div className="relative" style={{ height: '180px', background: '#0A0A12' }}>
         {currentUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={currentUrl} alt={label} className="w-full h-full object-cover" />
+          <img src={currentUrl} alt={label} className="w-full h-full object-contain" style={{ background: '#0A0A12' }} />
         ) : (
           <div
             className="w-full h-full flex flex-col items-center justify-center gap-2"
@@ -80,9 +80,8 @@ function ImageSlot({
       </div>
 
       {/* Info + buttons */}
-      <div className="p-4">
-        <p className="font-dm font-semibold text-[13px] text-matrix-ink mb-0.5">{label}</p>
-        <p className="font-dm text-[11.5px] text-matrix-muted mb-3">{hint}</p>
+      <div className="p-3">
+        <p className="font-dm font-semibold text-[13px] text-matrix-ink mb-2">{label}</p>
         <div className="flex gap-2">
           <button
             onClick={() => fileRef.current?.click()}
@@ -237,7 +236,7 @@ export default function ContentPage() {
                   Recommended size: 1200 x 900 px, landscape.
                 </p>
               </div>
-              <div className="p-6 grid grid-cols-5 gap-4 max-[1200px]:grid-cols-3 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
+              <div className="p-6 grid grid-cols-4 gap-4 max-[1100px]:grid-cols-3 max-[800px]:grid-cols-2 max-[500px]:grid-cols-1">
                 {IMAGE_SLOTS.map(slot => (
                   <ImageSlot
                     key={slot.key}
