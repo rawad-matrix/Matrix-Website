@@ -1,51 +1,18 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-
-// Bump the key suffix to force the bar to re-appear for users who already dismissed it
-const DISMISS_KEY      = 'matrix_branch_announcement_v2'
-const DISMISS_DAYS     = 7
-const MAPS_URL         = 'https://maps.app.goo.gl/z94Gr9NJ4FASvKVK7'
-
-function wasDismissed(): boolean {
-  try {
-    const val = localStorage.getItem(DISMISS_KEY)
-    if (!val) return false
-    return Date.now() - parseInt(val, 10) < DISMISS_DAYS * 86_400_000
-  } catch { return false }
-}
+const MAPS_URL = 'https://maps.app.goo.gl/z94Gr9NJ4FASvKVK7'
 
 export function AnnouncementBar() {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    if (!wasDismissed()) setVisible(true)
-  }, [])
-
-  function dismiss() {
-    try { localStorage.setItem(DISMISS_KEY, String(Date.now())) } catch { /* */ }
-    setVisible(false)
-  }
-
-  if (!visible) return null
-
   return (
     <div
       role="banner"
       style={{
         background: 'linear-gradient(95deg,#1a3a6e 0%,#1B6FCC 55%,#1760c0 100%)',
         borderBottom: '1px solid rgba(255,255,255,.12)',
-        padding: '10px 48px 10px 20px',   // right padding leaves room for × button
+        padding: '10px 20px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '0',
-        flexWrap: 'wrap',
-        position: 'relative',
-        animation: 'fade-in .4s ease forwards',
       }}
     >
-      {/* ── Inner content ── */}
       <div
         style={{
           display: 'flex',
@@ -131,12 +98,8 @@ export function AnnouncementBar() {
             paddingBottom: '1px',
             whiteSpace: 'nowrap',
             flexShrink: 0,
-            transition: 'opacity .15s',
           }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
-          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
-          {/* Map pin icon */}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="12" height="12">
             <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
@@ -144,35 +107,6 @@ export function AnnouncementBar() {
           View on Maps
         </a>
       </div>
-
-      {/* Dismiss × */}
-      <button
-        onClick={dismiss}
-        aria-label="Dismiss announcement"
-        style={{
-          position: 'absolute',
-          right: '12px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          color: 'rgba(255,255,255,.55)',
-          padding: '6px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'color .15s',
-          borderRadius: '2px',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-        onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.55)')}
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="15" height="15">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
     </div>
   )
 }
