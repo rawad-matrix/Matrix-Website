@@ -109,8 +109,7 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
               <img
                 src={slide.imageUrl}
                 alt={slide.label}
-                className="absolute inset-0 w-full h-full object-contain"
-                style={{ background: '#0A0A12' }}
+                className="absolute inset-0 w-full h-full object-cover"
               />
             ) : (
               <div className="absolute inset-0" style={{ background: slide.gradient }} />
