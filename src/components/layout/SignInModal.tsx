@@ -28,10 +28,16 @@ export function SignInModal() {
   })
 
   useEffect(() => {
-    // Use sessionStorage so modal reappears on every page load / hard refresh
+    // Don't show if already dismissed this session
     if (sessionStorage.getItem(STORAGE_KEY)) return
-    const timer = setTimeout(() => setVisible(true), 600)
-    return () => clearTimeout(timer)
+
+    // Check auth — only show to guests (not signed-in users)
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) return   // user is signed in → never show
+      const timer = setTimeout(() => setVisible(true), 3000)
+      return () => clearTimeout(timer)
+    })
   }, [])
 
   function dismiss() {
