@@ -1,10 +1,24 @@
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/sections/PageHero'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { StatsCounter } from '@/components/sections/StatsCounter'
 import { ContactStrip } from '@/components/sections/ContactStrip'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'About' }
+
+async function getSiteSettings(): Promise<Record<string, string>> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from('site_settings').select('key, value')
+    return Object.fromEntries((data ?? []).filter(r => r.value).map(r => [r.key, r.value as string]))
+  } catch {
+    return {}
+  }
+}
 
 const TIMELINE = [
   { year: '2003', title: 'Founded in Beirut', desc: 'Matrix EA established as a system integration firm focused on PLC and SCADA automation for Lebanese industry.' },
@@ -14,16 +28,16 @@ const TIMELINE = [
   { year: '2023', title: 'Digital Platform', desc: 'Launched online course catalog and live IoT monitoring platform for remote client sites.' },
 ]
 
-const CERTS = [
-  { name: 'Siemens Authorised Partner', sub: 'Automation & Drives' },
-  { name: 'ABB Authorised Distributor', sub: 'Drives & Motors' },
-  { name: 'Allen Bradley Integrator', sub: 'Rockwell Automation' },
-  { name: 'Delta Authorised Partner', sub: 'PLC & VFD' },
-  { name: 'Veichi Authorised Distributor', sub: 'VFD & Servo' },
-  { name: 'ISO 9001 Aligned', sub: 'Quality Management' },
-]
+export default async function AboutPage() {
+  const s = await getSiteSettings()
 
-export default function AboutPage() {
+  const stats = {
+    projects:     s.stat_projects     ? parseInt(s.stat_projects)     : undefined,
+    clients:      s.stat_clients      ? parseInt(s.stat_clients)      : undefined,
+    years:        s.stat_years        ? parseInt(s.stat_years)        : undefined,
+    satisfaction: s.stat_satisfaction ? parseInt(s.stat_satisfaction) : undefined,
+  }
+
   return (
     <>
       <PageHero
@@ -67,7 +81,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <StatsCounter />
+      <StatsCounter stats={stats} />
 
       {/* Timeline */}
       <section className="bg-white py-27.5 max-[768px]:py-18">
@@ -83,29 +97,6 @@ export default function AboutPage() {
                 <span className="font-mono text-[13px] text-matrix-blue font-medium block mb-2">{year}</span>
                 <h4 className="font-barlow font-bold text-[20px] uppercase text-matrix-navy mb-2">{title}</h4>
                 <p className="font-dm text-[14px] text-matrix-muted leading-[1.6] m-0">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications */}
-      <section className="bg-matrix-off py-27.5 max-[768px]:py-18">
-        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
-          <SectionHeader label="Accreditations" title="Certified & Authorised." centered />
-          <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
-            {CERTS.map(({ name, sub }) => (
-              <div
-                key={name}
-                className="bg-white rounded-xs p-7 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_24px_-8px_rgba(42,47,58,.18)] border border-matrix-border border-t-[3px] border-t-transparent hover:border-t-matrix-blue"
-              >
-                <div className="w-14 h-14 bg-matrix-blue/10 rounded-xs grid place-items-center mx-auto mb-4">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B6FCC" strokeWidth="1.8">
-                    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
-                  </svg>
-                </div>
-                <h4 className="font-barlow font-bold text-[18px] uppercase text-matrix-navy mb-1">{name}</h4>
-                <span className="font-dm text-[13px] text-matrix-muted">{sub}</span>
               </div>
             ))}
           </div>

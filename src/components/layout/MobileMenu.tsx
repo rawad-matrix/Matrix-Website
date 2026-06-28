@@ -23,7 +23,6 @@ const NAV_LINKS: NavItem[] = [
   { href: '/courses', label: 'Courses' },
   { href: '/about', label: 'About' },
   { href: '/case-studies', label: 'Case Studies' },
-  { href: '/dashboard', label: 'Dashboard' },
   { href: '/contact', label: 'Contact' },
 ]
 
