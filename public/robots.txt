@@ -1,0 +1,26 @@
+# Matrix Energy & Automation — robots.txt
+
+User-agent: *
+Allow: /
+# Private / non-content routes — keep crawlers (and casual bots) out.
+Disallow: /admin
+Disallow: /api
+Disallow: /auth
+Disallow: /user
+Disallow: /dashboard
+Disallow: /checkout
+
+# Aggressive SEO scrapers with no value to us.
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+Sitemap: https://matrixea.co/sitemap.xml

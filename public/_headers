@@ -1,0 +1,24 @@
+# Cloudflare Pages edge headers.
+# Applies to every response served directly by the CDN (including static
+# assets), complementing the security headers set in next.config.ts for
+# server-rendered routes.
+
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-DNS-Prefetch-Control: on
+
+# Immutable, content-hashed Next.js assets — cache aggressively.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images (logo, icons, uploaded assets served from /images).
+/images/*
+  Cache-Control: public, max-age=86400
