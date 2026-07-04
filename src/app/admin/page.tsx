@@ -40,7 +40,7 @@ export default function AdminOverviewPage() {
         { data: recentEnroll },
       ] = await Promise.all([
         supabase.from('enrollments').select('*', { count: 'exact', head: true }),
-        supabase.from('enrollments').select('*', { count: 'exact', head: true }).eq('status', 'pending_payment'),
+        supabase.from('enrollments').select('*', { count: 'exact', head: true }).in('status', ['pending', 'pending_payment']),
         supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_published', true),
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
         supabase.from('case_studies').select('*', { count: 'exact', head: true }),
@@ -66,7 +66,7 @@ export default function AdminOverviewPage() {
 
   const STATUS_PILL: Record<string, { bg: string; color: string; label: string }> = {
     active: { bg: 'rgba(34,197,94,.12)', color: '#16A34A', label: 'Active' },
-    pending_payment: { bg: 'rgba(255,178,0,.12)', color: '#B47700', label: 'Pending Payment' },
+    pending_payment: { bg: 'rgba(255,178,0,.12)', color: '#B47700', label: 'Pending' },
     pending: { bg: 'rgba(255,178,0,.12)', color: '#B47700', label: 'Pending' },
     completed: { bg: 'rgba(27,111,204,.12)', color: '#1B6FCC', label: 'Completed' },
     cancelled: { bg: 'rgba(220,38,38,.12)', color: '#DC2626', label: 'Cancelled' },
@@ -111,7 +111,7 @@ export default function AdminOverviewPage() {
                   { label: 'Registered Users', val: stats?.totalUsers ?? 0 },
                   { label: 'Published Courses', val: stats?.activeCourses ?? 0 },
                   { label: 'Case Studies', val: stats?.totalCaseStudies ?? 0 },
-                  { label: 'Pending Payments', val: stats?.pendingPayments ?? 0 },
+                  { label: 'Pending Enrollments', val: stats?.pendingPayments ?? 0 },
                 ].map(kpi => (
                   <div key={kpi.label} className="bg-white border border-matrix-border rounded-xs p-4" style={{ borderLeft: '3px solid #1B6FCC' }}>
                     <div className="text-[10.5px] tracking-[.18em] uppercase text-matrix-muted">{kpi.label}</div>

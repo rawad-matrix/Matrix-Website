@@ -229,7 +229,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
                   Enroll Now
                 </Link>
                 <a
-                  href={`https://wa.me/96171483747?text=Hi%20Matrix%20—%20I'd%20like%20to%20enquire%20about%20the%20${encodeURIComponent(c.title)}%20course.`}
+                  href={`https://wa.me/96178800274?text=Hi%20Matrix%20—%20I'd%20like%20to%20enquire%20about%20the%20${encodeURIComponent(c.title)}%20course.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full text-center bg-transparent text-white py-3 font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-xs border border-white/30 hover:border-matrix-wa hover:text-matrix-wa transition-all duration-150"

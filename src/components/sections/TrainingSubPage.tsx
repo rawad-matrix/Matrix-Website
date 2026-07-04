@@ -28,7 +28,7 @@ export function TrainingSubPage({
   whoLabel, whoTitle, whoCards,
   ctaTitle, ctaDesc, ctaButton,
 }: TrainingSubPageProps) {
-  const waLink = `https://wa.me/96171483747?text=Hi%20Matrix%20%E2%80%94%20I%20am%20interested%20in%20the%20${encodeURIComponent(titleLine1 + ' ' + titleAccent)}%20program.`
+  const waLink = `https://wa.me/96178800274?text=Hi%20Matrix%20%E2%80%94%20I%20am%20interested%20in%20the%20${encodeURIComponent(titleLine1 + ' ' + titleAccent)}%20program.`
 
   return (
     <>

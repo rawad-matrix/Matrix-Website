@@ -145,7 +145,7 @@ export default function UserDashboardPage() {
                           className="text-[12px] font-mono mb-3 px-3 py-2"
                           style={{ background: 'rgba(255,178,0,.08)', border: '1px solid rgba(255,178,0,.25)', color: '#B47700', borderRadius: '2px' }}
                         >
-                          Payment pending · Our team will confirm within 24h
+                          Enrollment pending · Our team will confirm shortly
                         </div>
                       )}
                       {isActive ? (

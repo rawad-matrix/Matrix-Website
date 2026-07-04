@@ -29,7 +29,7 @@ export function ContactStrip() {
             Contact Us
           </Link>
           <a
-            href="https://wa.me/96171483747"
+            href="https://wa.me/96178800274"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-matrix-wa text-white px-5 py-3 font-dm font-semibold text-[12.5px] uppercase tracking-[0.04em] rounded-xs hover:brightness-110 hover:-translate-y-px transition-all duration-150"

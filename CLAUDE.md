@@ -699,7 +699,7 @@ Key responsive behaviors:
 - Email: `info@matrixea.co`
 - Address: `3rd Floor, MUC University Bldg, Khaldeh Round About, Beirut — Lebanon`
 - Hours: `Mon–Sat 09:00 – 20:00 · Sunday Closed`
-- WhatsApp: `https://wa.me/96171483747`
+- WhatsApp: `https://wa.me/96178800274`
 - Facebook: `#` (placeholder until real URL given)
 - Instagram: `#`
 - TikTok: `#`

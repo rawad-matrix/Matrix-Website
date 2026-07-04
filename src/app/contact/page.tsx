@@ -57,7 +57,7 @@ export default function ContactPage() {
               </div>
 
               <a
-                href="https://wa.me/96171483747"
+                href="https://wa.me/96178800274"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full bg-matrix-wa text-white px-6 py-4 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:brightness-110 transition-all duration-150 mb-6"

@@ -7,9 +7,6 @@ import { AdminSidebar } from '../AdminSidebar'
 type Enrollment = {
   id: string
   status: string
-  payment_method: string | null
-  payment_reference: string | null
-  amount_paid: number | null
   enrolled_at: string
   profiles: { full_name: string | null; email?: string } | null
   courses: { title: string; slug: string } | null
@@ -33,7 +30,7 @@ export default function AdminEnrollmentsPage() {
     const supabase = createClient()
     supabase
       .from('enrollments')
-      .select('id, status, payment_method, payment_reference, amount_paid, enrolled_at, profiles(full_name), courses(title, slug)')
+      .select('id, status, enrolled_at, profiles(full_name), courses(title, slug)')
       .order('enrolled_at', { ascending: false })
       .then(({ data }) => {
         if (data) setEnrollments(data as unknown as Enrollment[])
@@ -49,7 +46,7 @@ export default function AdminEnrollmentsPage() {
     setUpdating(null)
   }
 
-  const FILTER_OPTIONS = ['all', 'pending_payment', 'active', 'completed', 'cancelled']
+  const FILTER_OPTIONS = ['all', 'pending', 'active', 'completed', 'cancelled']
   const filtered = filter === 'all' ? enrollments : enrollments.filter(e => e.status === filter)
 
   return (
@@ -96,7 +93,7 @@ export default function AdminEnrollmentsPage() {
                   <table className="w-full border-collapse text-[13px]">
                     <thead>
                       <tr>
-                        {['Student', 'Course', 'Payment', 'Reference', 'Date', 'Status', 'Actions'].map(h => (
+                        {['Student', 'Course', 'Date', 'Status', 'Actions'].map(h => (
                           <th key={h} className="text-left px-5 py-3 text-[10px] tracking-[.18em] uppercase text-[#64748B] font-semibold bg-[#F8F9FB]">{h}</th>
                         ))}
                       </tr>
@@ -111,12 +108,6 @@ export default function AdminEnrollmentsPage() {
                             </td>
                             <td className="px-5 py-3 text-[#64748B] max-w-[160px] truncate">{e.courses?.title ?? '—'}</td>
                             <td className="px-5 py-3 font-mono text-[11.5px] text-[#64748B]">
-                              {e.payment_method ?? '—'}
-                            </td>
-                            <td className="px-5 py-3 font-mono text-[11.5px] text-[#64748B]">
-                              {e.payment_reference ?? '—'}
-                            </td>
-                            <td className="px-5 py-3 font-mono text-[11.5px] text-[#64748B]">
                               {new Date(e.enrolled_at).toLocaleDateString()}
                             </td>
                             <td className="px-5 py-3">
@@ -129,7 +120,7 @@ export default function AdminEnrollmentsPage() {
                             </td>
                             <td className="px-5 py-3">
                               <div className="flex gap-1.5">
-                                {e.status === 'pending_payment' && (
+                                {(e.status === 'pending' || e.status === 'pending_payment') && (
                                   <>
                                     <button
                                       onClick={() => updateStatus(e.id, 'active')}
@@ -166,7 +157,7 @@ export default function AdminEnrollmentsPage() {
                       })}
                       {filtered.length === 0 && (
                         <tr>
-                          <td colSpan={7} className="px-6 py-10 text-center text-[#64748B] text-[14px]">No enrollments found</td>
+                          <td colSpan={5} className="px-6 py-10 text-center text-[#64748B] text-[14px]">No enrollments found</td>
                         </tr>
                       )}
                     </tbody>

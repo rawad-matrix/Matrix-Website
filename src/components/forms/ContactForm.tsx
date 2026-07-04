@@ -11,6 +11,8 @@ const schema = z.object({
   phone: z.string().optional(),
   email: z.string().email('Valid email required'),
   message: z.string().min(10, 'Message must be at least 10 characters'),
+  // Honeypot — must stay empty. Bots fill it; humans never see it.
+  website: z.string().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -52,6 +54,15 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      {/* Honeypot: hidden from users, catches bots. Kept out of tab order. */}
+      <input
+        {...register('website')}
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}
+      />
       <div className="grid grid-cols-2 gap-5 max-[640px]:grid-cols-1">
         <div>
           <label className={labelCls}>Name *</label>

@@ -127,6 +127,24 @@ CREATE POLICY "Users read own profile"
 CREATE POLICY "Users update own profile"
   ON profiles FOR UPDATE USING (auth.uid() = id);
 
+-- Freeze the role column for non-admins so a user cannot self-promote
+-- to 'admin' by updating their own profile row (no column lock on the
+-- policy above). See also security-fixes.sql.
+CREATE OR REPLACE FUNCTION public.prevent_role_change()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  IF NEW.role IS DISTINCT FROM OLD.role AND NOT public.is_admin() THEN
+    NEW.role := OLD.role;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_prevent_role_change ON public.profiles;
+CREATE TRIGGER trg_prevent_role_change
+  BEFORE UPDATE ON public.profiles
+  FOR EACH ROW EXECUTE FUNCTION public.prevent_role_change();
+
 CREATE POLICY "Admins read all profiles"
   ON profiles FOR ALL USING (public.is_admin());
 
@@ -134,8 +152,10 @@ CREATE POLICY "Admins read all profiles"
 CREATE POLICY "Users see own enrollments"
   ON enrollments FOR SELECT USING (auth.uid() = user_id);
 
+-- Self-service enrollments may only be created as 'pending';
+-- only admins (is_admin) can promote them to 'active'/'completed'.
 CREATE POLICY "Users create own enrollments"
-  ON enrollments FOR INSERT WITH CHECK (auth.uid() = user_id);
+  ON enrollments FOR INSERT WITH CHECK (auth.uid() = user_id AND status = 'pending');
 
 CREATE POLICY "Admins manage enrollments"
   ON enrollments FOR ALL USING (public.is_admin());
@@ -164,6 +184,38 @@ CREATE POLICY "Public read published case studies"
 
 CREATE POLICY "Admins manage case studies"
   ON case_studies FOR ALL USING (public.is_admin());
+
+-- Site Settings (editable homepage stats, hero images, etc.)
+CREATE TABLE IF NOT EXISTS site_settings (
+  key   TEXT PRIMARY KEY,
+  value TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read site settings"
+  ON site_settings FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins write site settings"
+  ON site_settings FOR ALL
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- Announcements (broadcast email log)
+CREATE TABLE IF NOT EXISTS announcements (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  image_url TEXT,
+  recipients_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE announcements ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins manage announcements"
+  ON announcements FOR ALL
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ── Auto-create profile on signup ──────────────────────────
 

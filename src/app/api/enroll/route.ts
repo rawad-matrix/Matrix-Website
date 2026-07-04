@@ -3,9 +3,18 @@ import type { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
+// Escape user-supplied strings before embedding them in the HTML email.
+function esc(v: unknown): string {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const { userEmail, courseTitle, coursePrice, reference, accountName, bankName, notes } = body
+  const { userEmail, courseTitle, notes } = body
 
   if (process.env.RESEND_API_KEY) {
     try {
@@ -18,19 +27,15 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           from: 'noreply@matrixea.co',
           to: process.env.CONTACT_EMAIL_TO ?? 'info@matrixea.co',
-          subject: `New Enrollment: ${courseTitle}`,
+          subject: `New Enrollment Request: ${esc(courseTitle)}`,
           html: `
-            <h2>New Course Enrollment — Payment Confirmation</h2>
-            <p><strong>Student:</strong> ${userEmail}</p>
-            <p><strong>Course:</strong> ${courseTitle}</p>
-            <p><strong>Amount:</strong> $${coursePrice} USD</p>
+            <h2>New Course Enrollment Request</h2>
+            <p><strong>Student:</strong> ${esc(userEmail)}</p>
+            <p><strong>Course:</strong> ${esc(courseTitle)}</p>
+            ${notes ? `<p><strong>Notes:</strong> ${esc(notes)}</p>` : ''}
             <hr>
-            <p><strong>Account Holder:</strong> ${accountName}</p>
-            <p><strong>Bank:</strong> ${bankName}</p>
-            <p><strong>Transfer Reference:</strong> ${reference}</p>
-            ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ''}
-            <hr>
-            <p>Please verify the transfer and activate the enrollment in the <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/enrollments">admin panel</a>.</p>
+            <p>Review and confirm this student in the
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/enrollments">admin panel</a>.</p>
           `,
         }),
       })
