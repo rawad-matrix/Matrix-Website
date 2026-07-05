@@ -51,7 +51,7 @@ const fieldStyle = (error?: boolean) => ({
 function RegisterPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = safeRedirect(searchParams.get('redirect'), '/user/dashboard')
+  const redirect = safeRedirect(searchParams.get('redirect'), '/courses')
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
   const [captchaToken, setCaptchaToken] = useState('')

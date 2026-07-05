@@ -6,6 +6,12 @@ const PROTECTED_ROUTES = ['/dashboard', '/user', '/checkout', '/admin']
 const ADMIN_ROUTES = ['/admin']
 
 export async function middleware(request: NextRequest) {
+  // Monitoring dashboard is hidden for now — send visitors to the courses page.
+  // To re-enable it later, delete this block.
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/courses', request.url))
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
