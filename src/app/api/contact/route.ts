@@ -14,13 +14,40 @@ function esc(v: unknown): string {
     .replace(/"/g, '&quot;')
 }
 
+// Verify a Cloudflare Turnstile token server-side. Returns true when the
+// secret isn't configured (feature off) so the form keeps working.
+async function verifyTurnstile(token: string | undefined, ip: string | null): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY
+  if (!secret) return true
+  if (!token) return false
+  try {
+    const form = new URLSearchParams({ secret, response: token })
+    if (ip) form.set('remoteip', ip)
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form,
+    })
+    const data = (await res.json()) as { success?: boolean }
+    return data.success === true
+  } catch {
+    return false
+  }
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const { name, company, subject, phone, email, message, website } = body
+  const { name, company, subject, phone, email, message, website, captchaToken } = body
 
   // Honeypot — a real user never fills this. Pretend success so bots don't retry.
   if (website) {
     return NextResponse.json({ success: true })
+  }
+
+  // Bot check (no-op until TURNSTILE_SECRET_KEY is set).
+  const ip = request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for')
+  if (!(await verifyTurnstile(captchaToken, ip))) {
+    return NextResponse.json({ error: 'Verification failed' }, { status: 403 })
   }
 
   if (!name || !subject || !message) {

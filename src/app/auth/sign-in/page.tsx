@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
 import { safeRedirect } from '@/lib/utils'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -21,18 +22,24 @@ function SignInPage() {
   const redirect = safeRedirect(searchParams.get('redirect'), '/dashboard')
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
   const onSubmit = async (data: FormData) => {
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setServerError('Please complete the verification.')
+      return
+    }
     setLoading(true)
     setServerError('')
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
+      options: { captchaToken: captchaToken || undefined },
     })
     if (error) {
       setServerError(error.message)
@@ -204,6 +211,8 @@ function SignInPage() {
                 {serverError}
               </div>
             )}
+
+            <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
             <button
               type="submit"

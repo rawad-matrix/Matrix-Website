@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 const schema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -22,14 +23,21 @@ const labelCls = 'block font-dm text-[13px] font-semibold text-[#1F2330] mb-[6px
 
 export function ContactForm() {
   const [sent, setSent] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaError, setCaptchaError] = useState('')
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (data: FormData) => {
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setCaptchaError('Please complete the verification.')
+      return
+    }
+    setCaptchaError('')
     try {
       await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, captchaToken }),
       })
       setSent(true)
     } catch {
@@ -100,6 +108,9 @@ export function ContactForm() {
         />
         {errors.message && <span className="text-[12px] text-[#DC2626] mt-1 block">{errors.message.message}</span>}
       </div>
+      <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
+      {captchaError && <span className="text-[12px] text-[#DC2626] block">{captchaError}</span>}
+
       <button
         type="submit"
         disabled={isSubmitting}

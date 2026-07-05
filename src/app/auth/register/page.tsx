@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
 import { safeRedirect } from '@/lib/utils'
 import { COUNTRIES, DEFAULT_DIAL, flagEmoji } from '@/lib/country-codes'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 const schema = z.object({
   firstName: z.string().min(1, 'Required'),
@@ -53,6 +54,7 @@ function RegisterPage() {
   const redirect = safeRedirect(searchParams.get('redirect'), '/user/dashboard')
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -60,6 +62,10 @@ function RegisterPage() {
   })
 
   const onSubmit = async (data: FormData) => {
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setServerError('Please complete the verification.')
+      return
+    }
     setLoading(true)
     setServerError('')
     const supabase = createClient()
@@ -74,6 +80,7 @@ function RegisterPage() {
       options: {
         data: { full_name: fullName, company: data.company, role: data.role, phone: fullPhone },
         emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
+        captchaToken: captchaToken || undefined,
       },
     })
 
@@ -307,6 +314,8 @@ function RegisterPage() {
                 {serverError}
               </div>
             )}
+
+            <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
             <button
               type="submit"
