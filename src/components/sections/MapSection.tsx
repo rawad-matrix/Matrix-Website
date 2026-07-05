@@ -20,8 +20,8 @@ export const BRANCH_EMBEDS = [
 export function MapSection({ texts }: { texts?: Record<string, string> }) {
   const t = makeTx(texts)
   return (
-    <section className="bg-white">
-      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 pt-14 pb-14">
+    <section className="bg-white min-h-screen flex items-center">
+      <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 pt-14 pb-14 w-full">
         <SectionHeader
           label={t('home.map.label')}
           title={t('home.map.title')}
