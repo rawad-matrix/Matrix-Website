@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 interface SignInModalProps {
   open: boolean
@@ -14,10 +15,11 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
   const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!open) { setCaptchaToken(''); return }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
@@ -31,10 +33,18 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setError('Please complete the verification.')
+      return
+    }
     setError('')
     setLoading(true)
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken: captchaToken || undefined },
+    })
     setLoading(false)
     if (authError) {
       setError(authError.message)
@@ -122,6 +132,8 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
               {error}
             </p>
           )}
+
+          <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
           <button
             type="submit"

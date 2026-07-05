@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 const STORAGE_KEY = 'matrix_signin_modal_dismissed'
 
@@ -21,6 +22,7 @@ export function SignInModal() {
   const [visible, setVisible] = useState(false)
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
   const router = useRouter()
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -46,12 +48,17 @@ export function SignInModal() {
   }
 
   const onSubmit = async (data: FormData) => {
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setServerError('Please complete the verification.')
+      return
+    }
     setLoading(true)
     setServerError('')
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
+      options: { captchaToken: captchaToken || undefined },
     })
     if (error) {
       setServerError(error.message)
@@ -59,7 +66,7 @@ export function SignInModal() {
       return
     }
     dismiss()
-    router.push('/dashboard')
+    router.push('/courses')
     router.refresh()
   }
 
@@ -260,6 +267,8 @@ export function SignInModal() {
                 {serverError}
               </div>
             )}
+
+            <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
             <button
               type="submit"

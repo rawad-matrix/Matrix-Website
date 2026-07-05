@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../AdminSidebar'
+import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 type ProfileForm = {
   full_name: string
@@ -18,6 +19,7 @@ export default function AdminSettingsPage() {
   const [saveMsg, setSaveMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [resetSending, setResetSending] = useState(false)
   const [resetMsg, setResetMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const [captchaToken, setCaptchaToken] = useState('')
 
   useEffect(() => {
     const supabase = createClient()
@@ -57,11 +59,16 @@ export default function AdminSettingsPage() {
   }
 
   const sendReset = async () => {
+    if (TURNSTILE_ENABLED && !captchaToken) {
+      setResetMsg({ ok: false, text: 'Please complete the verification below.' })
+      return
+    }
     setResetSending(true)
     setResetMsg(null)
     const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
+      captchaToken: captchaToken || undefined,
     })
     setResetSending(false)
     if (error) setResetMsg({ ok: false, text: error.message })
@@ -198,6 +205,8 @@ export default function AdminSettingsPage() {
                     {resetMsg.text}
                   </div>
                 )}
+
+                <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
                 <div>
                   <button
