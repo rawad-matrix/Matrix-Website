@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useInView } from '@/hooks/useInView'
 
 const CHECKLIST = [
-  { t: '21 Years of Specialized Experience', d: 'Serving Lebanon, Iraq, Saudi Arabia and Africa since 2003.' },
+  { t: '21 Years of Specialized Experience', d: 'Serving Lebanon, Iraq, Saudi Arabia and Africa since 2005.' },
   { t: 'Certified Siemens & ABB Partners', d: 'Authorised distributor and service provider for Siemens and ABB automation.' },
   { t: '24/7 Maintenance Support', d: 'Round-the-clock remote monitoring and on-site response across the region.' },
   { t: 'Turnkey EPC Delivery', d: 'We own the project from engineering through procurement to commissioning.' },

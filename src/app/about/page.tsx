@@ -21,7 +21,7 @@ async function getSiteSettings(): Promise<Record<string, string>> {
 }
 
 const TIMELINE = [
-  { year: '2003', title: 'Founded in Beirut', desc: 'Matrix EA established as a system integration firm focused on PLC and SCADA automation for Lebanese industry.' },
+  { year: '2005', title: 'Founded in Beirut', desc: 'Matrix EA established as a system integration firm focused on PLC and SCADA automation for Lebanese industry.' },
   { year: '2011', title: 'Regional Expansion', desc: 'Opened project offices in Iraq and Saudi Arabia, completing major water and industrial automation projects.' },
   { year: '2015', title: 'Training Division Launched', desc: 'Established the Matrix EA Training Centre, delivering accredited PLC, SCADA and EPLAN courses.' },
   { year: '2019', title: 'Energy Division', desc: "Added solar and battery storage design to our portfolio, responding to Lebanon's energy crisis." },
@@ -51,15 +51,15 @@ export default async function AboutPage() {
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <div className="grid grid-cols-2 gap-16 items-start max-[900px]:grid-cols-1 max-[900px]:gap-10">
             <div>
-              <SectionHeader label="Our Story" title="Built on the Plant Floor." />
+              <SectionHeader label="Our Story" title="Born on the Factory Floor." />
               <p className="font-dm text-[16px] text-matrix-muted leading-[1.7] mb-4">
-                Matrix Energy & Automation was founded in Beirut in 2003 with a simple premise: industrial automation should be designed and delivered by engineers who understand both the theory and the reality of plant floor operation.
+                Matrix Energy & Automation sarl was founded in Beirut in 2005 with a simple premise: industrial automation should be designed and delivered by engineers who understand both the theory and the reality of plant floor operation.
               </p>
               <p className="font-dm text-[16px] text-matrix-muted leading-[1.7] mb-4">
-                Over two decades, we have grown from a local system integrator to a regional leader with completed projects in Lebanon, Iraq, Saudi Arabia, Sudan, Chad and beyond. Our team of 35+ engineers has commissioned systems in water treatment, food processing, power generation, pharmaceutical manufacturing and heavy industry.
+                Over two decades, we have grown from a local system integrator to a regional leader with completed projects in Lebanon, Iraq, Saudi Arabia, Angola, Nigeria, across Africa and beyond. Our team of 15+ engineers has commissioned systems in water treatment, food processing, power generation, steam plants, solar systems, pharmaceutical manufacturing and heavy industry.
               </p>
               <p className="font-dm text-[16px] text-matrix-muted leading-[1.7]">
-                We remain privately held and engineering-first. Every project is owned by a senior engineer from scoping through commissioning. No subcontracting of core automation work.
+                We remain privately held and engineering-first. Every project is owned by a senior engineer from scoping through commissioning.
               </p>
             </div>
             {/* Mission box */}
@@ -69,7 +69,7 @@ export default async function AboutPage() {
                 To deliver automation and energy solutions that genuinely improve plant performance, reduce downtime and transfer real knowledge to client teams — so they become more independent with every project we complete together.
               </p>
               <div className="flex flex-col gap-3">
-                {['Engineering-first culture', 'No subcontracting of core work', 'Knowledge transfer in every project', 'Regional expertise, global standards'].map((v) => (
+                {['Engineering-first culture', 'Knowledge transfer in every project', 'Regional expertise, global standards'].map((v) => (
                   <div key={v} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-matrix-blue shrink-0" />
                     <span className="font-dm text-[14px] text-white/80">{v}</span>
