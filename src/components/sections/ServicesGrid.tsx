@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { useInView } from '@/hooks/useInView'
+import { makeTx } from '@/lib/site-text'
 
 const SERVICES = [
   {
@@ -75,13 +76,14 @@ const SERVICES = [
   },
 ]
 
-export function ServicesGrid() {
+export function ServicesGrid({ texts }: { texts?: Record<string, string> }) {
   const { ref: gridRef, inView } = useInView()
+  const t = makeTx(texts)
   return (
     <section className="bg-white py-[clamp(36px,5vh,72px)]">
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
         <div className="mb-12">
-          <SectionHeader label="What We Do" title="Engineering Solutions That Work." className="mb-0" />
+          <SectionHeader label={t('home.services.label')} title={t('home.services.title')} className="mb-0" />
         </div>
         <div ref={gridRef as React.RefObject<HTMLDivElement>} className="grid grid-cols-3 gap-6 max-[980px]:grid-cols-2 max-[600px]:grid-cols-1">
           {SERVICES.map((svc, i) => {
@@ -115,10 +117,10 @@ export function ServicesGrid() {
                   {svc.icon}
                 </div>
                 <h3 className="font-barlow font-bold text-[22px] uppercase text-matrix-navy tracking-[0.01em]">
-                  {svc.title}
+                  {t(`home.services.card${i + 1}.title`)}
                 </h3>
                 <p className="font-dm text-[14.5px] text-matrix-muted leading-[1.6] m-0 flex-1">
-                  {svc.desc}
+                  {t(`home.services.card${i + 1}.desc`)}
                 </p>
                 {!isComing && (
                   <div className="mt-auto pt-3.5 inline-flex items-center gap-2 font-dm text-[12px] font-semibold uppercase tracking-[0.16em] text-matrix-navy group-hover:text-matrix-blue transition-colors">

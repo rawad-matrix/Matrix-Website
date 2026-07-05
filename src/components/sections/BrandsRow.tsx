@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { SectionHeader } from '@/components/ui/SectionHeader'
+import { makeTx } from '@/lib/site-text'
 
 const BRANDS = [
   { name: 'Siemens', imageSrc: '/images/brands/logo_siemens.png' },
@@ -60,7 +61,8 @@ function BrandGrid({ cols, cellHeight, logoHeight, padding }: {
   )
 }
 
-export function BrandsRow() {
+export function BrandsRow({ texts }: { texts?: Record<string, string> }) {
+  const t = makeTx(texts)
   return (
     <section
       className="bg-white"
@@ -68,9 +70,9 @@ export function BrandsRow() {
     >
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 py-[clamp(32px,4vh,56px)]">
         <SectionHeader
-          label="Our Partners"
-          title="Trusted by Industry"
-          subtitle="Authorised partner and integrator for the world's leading industrial automation brands."
+          label={t('home.brands.label')}
+          title={t('home.brands.title')}
+          subtitle={t('home.brands.subtitle')}
           className="mb-10"
         />
 

@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useInView } from '@/hooks/useInView'
+import { makeTx } from '@/lib/site-text'
 
 const TRACKS = [
   {
@@ -34,8 +35,9 @@ const TRACKS = [
   },
 ]
 
-export function TrainingCTABanner() {
+export function TrainingCTABanner({ texts }: { texts?: Record<string, string> }) {
   const { ref: sectionRef, inView } = useInView()
+  const t = makeTx(texts)
   return (
     <section
       className="relative overflow-hidden py-[clamp(48px,6vh,80px)]"
@@ -53,22 +55,22 @@ export function TrainingCTABanner() {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="block w-10 h-0.75 bg-matrix-blue" />
-              <span className="font-dm text-[12px] font-semibold uppercase tracking-[3px] text-matrix-blue">Training Programs</span>
+              <span className="font-dm text-[12px] font-semibold uppercase tracking-[3px] text-matrix-blue">{t('home.training.label')}</span>
             </div>
             <h2
               className="font-barlow font-extrabold uppercase text-matrix-ink mb-5"
               style={{ fontSize: 'clamp(34px, 4.6vw, 52px)', lineHeight: '1.02' }}
             >
-              Build In-House Engineering Capability
+              {t('home.training.title')}
             </h2>
             <p className="font-dm text-[15.5px] text-matrix-muted mb-8 leading-[1.7] max-w-120">
-              From beginner PLC operators to advanced SCADA engineers — our structured training programs are built and delivered by working automation engineers, not classroom instructors.
+              {t('home.training.lead')}
             </p>
             <Link
               href="/training"
               className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
             >
-              Explore Training Programs
+              {t('home.training.cta')}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
               </svg>
@@ -77,9 +79,9 @@ export function TrainingCTABanner() {
 
           {/* Right: track types */}
           <div className="flex flex-col gap-4">
-            {TRACKS.map((t, i) => (
+            {TRACKS.map((track, i) => (
               <div
-                key={t.label}
+                key={track.label}
                 className={`reveal ${inView ? 'in-view' : ''}`}
                 style={{ transitionDelay: inView ? '0ms' : `${80 + i * 80}ms` }}
               >
@@ -95,11 +97,11 @@ export function TrainingCTABanner() {
                   className="shrink-0 w-12 h-12 grid place-items-center rounded-xs text-matrix-blue"
                   style={{ background: 'rgba(27,111,204,.10)' }}
                 >
-                  {t.icon}
+                  {track.icon}
                 </div>
                 <div>
-                  <span className="font-barlow font-bold text-[20px] uppercase text-matrix-navy block mb-1">{t.label}</span>
-                  <span className="font-dm text-[15px] text-matrix-muted">{t.desc}</span>
+                  <span className="font-barlow font-bold text-[20px] uppercase text-matrix-navy block mb-1">{t(`home.training.track${i + 1}.title`)}</span>
+                  <span className="font-dm text-[15px] text-matrix-muted">{t(`home.training.track${i + 1}.desc`)}</span>
                 </div>
               </div>
               </div>

@@ -4,17 +4,13 @@ import React from 'react'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import Link from 'next/link'
 import { useInView } from '@/hooks/useInView'
+import { makeTx } from '@/lib/site-text'
 
-const CHECKLIST = [
-  { t: '21 Years of Specialized Experience', d: 'Serving Lebanon, Iraq, Saudi Arabia and Africa since 2005.' },
-  { t: 'Certified Siemens & ABB Partners', d: 'Authorised distributor and service provider for Siemens and ABB automation.' },
-  { t: '24/7 Maintenance Support', d: 'Round-the-clock remote monitoring and on-site response across the region.' },
-  { t: 'Turnkey EPC Delivery', d: 'We own the project from engineering through procurement to commissioning.' },
-  { t: 'Training & Knowledge Transfer', d: 'Every project includes optional hands-on operator and technician training.' },
-]
+const CHECKLIST_KEYS = [1, 2, 3, 4, 5]
 
-export function WhyMatrix({ imageUrl }: { imageUrl?: string | null }) {
+export function WhyMatrix({ imageUrl, texts }: { imageUrl?: string | null; texts?: Record<string, string> }) {
   const { ref: sectionRef, inView } = useInView()
+  const t = makeTx(texts)
   return (
     <section
       className="relative overflow-hidden py-[clamp(48px,7vh,96px)]"
@@ -77,17 +73,17 @@ export function WhyMatrix({ imageUrl }: { imageUrl?: string | null }) {
             {/* Badge */}
             <div className="absolute left-6 bottom-6 flex items-baseline gap-2.5 bg-matrix-blue text-white px-4.5 py-3.5 rounded-xs">
               <span className="font-mono text-[30px] font-medium leading-none">21</span>
-              <span className="font-barlow text-[11px] uppercase tracking-[0.18em] max-w-30 leading-[1.3]">Years of Engineering Excellence</span>
+              <span className="font-barlow text-[11px] uppercase tracking-[0.18em] max-w-30 leading-[1.3]">{t('home.why.badge')}</span>
             </div>
           </div>
 
           {/* Text side */}
           <div>
-            <SectionHeader label="Our Edge" title="Why Choose Matrix EA" light className="mb-4" />
+            <SectionHeader label={t('home.why.label')} title={t('home.why.title')} light className="mb-4" />
             <ul className="list-none p-0 m-0 mt-3 flex flex-col gap-1.5">
-              {CHECKLIST.map((item, i) => (
+              {CHECKLIST_KEYS.map((n, i) => (
                 <li
-                  key={item.t}
+                  key={n}
                   className={`flex gap-3.5 items-start py-2.25 reveal ${inView ? 'in-view' : ''}`}
                   style={{ borderBottom: '1px solid rgba(255,255,255,.08)', transitionDelay: inView ? '0ms' : `${i * 60}ms` }}
                 >
@@ -100,8 +96,8 @@ export function WhyMatrix({ imageUrl }: { imageUrl?: string | null }) {
                     </svg>
                   </div>
                   <div>
-                    <span className="font-barlow font-bold text-[20px] uppercase tracking-[0.02em] text-white block">{item.t}</span>
-                    <span className="font-dm text-[14px] text-white/65 block mt-0.5">{item.d}</span>
+                    <span className="font-barlow font-bold text-[20px] uppercase tracking-[0.02em] text-white block">{t(`home.why.item${n}.title`)}</span>
+                    <span className="font-dm text-[14px] text-white/65 block mt-0.5">{t(`home.why.item${n}.desc`)}</span>
                   </div>
                 </li>
               ))}
@@ -111,13 +107,13 @@ export function WhyMatrix({ imageUrl }: { imageUrl?: string | null }) {
                 href="/system-integrator"
                 className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
               >
-                Our Services
+                {t('home.why.cta1')}
               </Link>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 bg-transparent text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs border border-white/45 hover:border-matrix-blue hover:text-matrix-blue transition-all duration-150"
               >
-                Get a Quote
+                {t('home.why.cta2')}
               </Link>
             </div>
           </div>

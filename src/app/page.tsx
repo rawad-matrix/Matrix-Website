@@ -10,6 +10,7 @@ import { BrandsRow } from '@/components/sections/BrandsRow'
 import { MapSection } from '@/components/sections/MapSection'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import { createClient } from '@/lib/supabase/server'
+import { textOverridesFrom } from '@/lib/site-text'
 
 async function getSiteSettings(): Promise<Record<string, string>> {
   try {
@@ -23,10 +24,12 @@ async function getSiteSettings(): Promise<Record<string, string>> {
 
 export default async function HomePage() {
   const s = await getSiteSettings()
+  const texts = textOverridesFrom(s)
 
   return (
     <>
       <Hero
+        texts={texts}
         slideImages={[
           s.hero_slide_1_image ?? null,
           s.hero_slide_2_image ?? null,
@@ -45,13 +48,13 @@ export default async function HomePage() {
           years: s.stat_years ? parseInt(s.stat_years) : undefined,
         }}
       />
-      <ServicesGrid />
-      <WhyMatrix imageUrl={s.why_matrix_image ?? null} />
-      <TrainingCTABanner />
+      <ServicesGrid texts={texts} />
+      <WhyMatrix imageUrl={s.why_matrix_image ?? null} texts={texts} />
+      <TrainingCTABanner texts={texts} />
       <CaseStudiesPreview />
-      <BrandsRow />
-      <MapSection />
-      <ContactStrip />
+      <BrandsRow texts={texts} />
+      <MapSection texts={texts} />
+      <ContactStrip texts={texts} />
     </>
   )
 }

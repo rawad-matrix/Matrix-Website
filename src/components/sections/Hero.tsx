@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useCountUp } from '@/hooks/useCountUp'
 import { useInView } from '@/hooks/useInView'
+import { makeTx } from '@/lib/site-text'
 
 const SLIDE_DEFS = [
   { gradient: 'linear-gradient(135deg, rgba(27,111,204,.35) 0%, rgba(10,10,18,.95) 100%)',  label: 'Industrial Automation' },
@@ -20,10 +21,12 @@ const SLIDE_DEFS = [
 type HeroProps = {
   slideImages?: (string | null)[]
   stats?: { projects?: number; clients?: number; years?: number }
+  texts?: Record<string, string>
 }
 
-export function Hero({ slideImages = [], stats = {} }: HeroProps) {
+export function Hero({ slideImages = [], stats = {}, texts }: HeroProps) {
   const { projects = 1200, clients = 800, years = 21 } = stats
+  const t = makeTx(texts)
 
   // Only cycle through slots that have images; fall back to first 3 gradient slides
   const SLIDES = (() => {
@@ -181,7 +184,7 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
         >
           <span className="w-2 h-2 rounded-full bg-matrix-red animate-pulse-red shrink-0" />
           <span className="font-dm font-semibold text-[11px] uppercase tracking-[0.28em] text-white/80">
-            Automation & Energy Solutions
+            {t('home.hero.tag')}
           </span>
         </div>
 
@@ -196,18 +199,18 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
             animationFillMode: 'both',
           }}
         >
-          Powering{' '}
+          {t('home.hero.title1')}{' '}
           <span
             style={{
               WebkitTextStroke: '2px rgba(255,255,255,0.55)',
               color: 'transparent',
             }}
           >
-            Lebanon's
+            {t('home.hero.title_outline')}
           </span>
           <br />
-          Industrial{' '}
-          <span className="text-matrix-red">Future.</span>
+          {t('home.hero.title2')}{' '}
+          <span className="text-matrix-red">{t('home.hero.title_accent')}</span>
         </h1>
 
         {/* Lead */}
@@ -215,9 +218,7 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
           className="font-dm text-[18px] mb-6 max-w-140 animate-fade-in-up"
           style={{ color: 'rgba(255,255,255,.78)', lineHeight: '1.6', animationDelay: '400ms', animationFillMode: 'both' }}
         >
-          21 years of SCADA, PLC, and system integration experience across Lebanon,
-          Iraq, Saudi Arabia and Africa. Turnkey EPC delivery, 24/7 maintenance, and
-          hands-on training that builds your team's independence.
+          {t('home.hero.lead')}
         </p>
 
         {/* CTAs */}
@@ -226,7 +227,7 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
             href="/system-integrator"
             className="inline-flex items-center gap-2 bg-matrix-blue text-white px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
           >
-            Explore Solutions
+            {t('home.hero.cta1')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
@@ -236,7 +237,7 @@ export function Hero({ slideImages = [], stats = {} }: HeroProps) {
             href="/case-studies"
             className="inline-flex items-center gap-2 px-7 py-4 font-dm font-semibold text-[14px] uppercase tracking-[0.04em] rounded-xs border btn-ghost-dark"
           >
-            Our Case Studies
+            {t('home.hero.cta2')}
           </Link>
         </div>
 

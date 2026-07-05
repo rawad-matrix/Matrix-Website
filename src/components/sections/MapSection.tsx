@@ -1,13 +1,15 @@
 import { SectionHeader } from '@/components/ui/SectionHeader'
+import { makeTx } from '@/lib/site-text'
 
-export function MapSection() {
+export function MapSection({ texts }: { texts?: Record<string, string> }) {
+  const t = makeTx(texts)
   return (
     <section className="bg-white">
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 pt-14 pb-6">
         <SectionHeader
-          label="Find Us"
-          title="Matrix Energy & Automation"
-          subtitle="3rd Floor, MUC University Bldg, Khaldeh Round About, Beirut — Lebanon"
+          label={t('home.map.label')}
+          title={t('home.map.title')}
+          subtitle={t('home.map.subtitle')}
           className="mb-0"
         />
       </div>
