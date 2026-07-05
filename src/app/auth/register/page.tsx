@@ -8,7 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
 import { safeRedirect } from '@/lib/utils'
-import { COUNTRIES, DEFAULT_DIAL, flagEmoji } from '@/lib/country-codes'
+import { DEFAULT_DIAL } from '@/lib/country-codes'
+import { CountryCodeSelect } from '@/components/ui/CountryCodeSelect'
 import { Turnstile, TURNSTILE_ENABLED } from '@/components/ui/Turnstile'
 
 const schema = z.object({
@@ -56,7 +57,7 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [captchaToken, setCaptchaToken] = useState('')
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { terms: false, countryCode: DEFAULT_DIAL },
   })
@@ -235,18 +236,11 @@ function RegisterPage() {
                 Phone
               </label>
               <div className="flex gap-2">
-                <select
-                  {...register('countryCode')}
-                  style={{ ...fieldStyle(!!errors.countryCode), width: '145px', flexShrink: 0, paddingLeft: '10px', paddingRight: '6px' }}
-                  onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
-                  onBlur={(e) => (e.target.style.borderColor = errors.countryCode ? '#DC2626' : '#E2E8F0')}
-                >
-                  {COUNTRIES.map((c) => (
-                    <option key={c.iso} value={c.dial}>
-                      {flagEmoji(c.iso)} {c.name} ({c.dial})
-                    </option>
-                  ))}
-                </select>
+                <CountryCodeSelect
+                  value={watch('countryCode')}
+                  onChange={(dial) => setValue('countryCode', dial, { shouldValidate: true })}
+                  error={!!errors.countryCode}
+                />
                 <input
                   type="tel"
                   inputMode="tel"
