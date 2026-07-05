@@ -1,42 +1,55 @@
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
 import { TrainingSubPage } from '@/components/sections/TrainingSubPage'
+import { createClient } from '@/lib/supabase/server'
+import { textOverridesFrom, makeTx } from '@/lib/site-text'
 
 export const metadata = { title: 'Academic Training — Matrix Energy & Automation' }
 
-export default function AcademicTrainingPage() {
+async function getSiteSettings(): Promise<Record<string, string>> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from('site_settings').select('key, value')
+    return Object.fromEntries((data ?? []).filter(r => r.value).map(r => [r.key, r.value as string]))
+  } catch {
+    return {}
+  }
+}
+
+export default async function AcademicTrainingPage() {
+  const t = makeTx(textOverridesFrom(await getSiteSettings()))
+
   return (
     <TrainingSubPage
       crumb="Academic"
-      titleLine1="Academic"
-      titleAccent="Training."
-      subtitle="Face-to-face cohort programs at the Matrix facility. Structured curriculum, working PLC hardware, and instructors who commission real systems for a living."
+      titleLine1={t('tacademic.hero.title1')}
+      titleAccent={t('tacademic.hero.accent')}
+      subtitle={t('tacademic.hero.subtitle')}
       stats={[
-        { label: 'Format', value: 'In-person · Beirut' },
-        { label: 'Cohort Size', value: '8–12 students' },
-        { label: 'Duration', value: '4–12 weeks' },
-        { label: 'Schedule', value: 'Weekdays · 09:00–13:00' },
-        { label: 'Certificate', value: 'Matrix EA' },
-        { label: 'Next Intake', value: 'Sept 2026' },
+        { label: 'Format', value: t('tacademic.stat1.value') },
+        { label: 'Cohort Size', value: t('tacademic.stat2.value') },
+        { label: 'Duration', value: t('tacademic.stat3.value') },
+        { label: 'Schedule', value: t('tacademic.stat4.value') },
+        { label: 'Certificate', value: t('tacademic.stat5.value') },
+        { label: 'Next Intake', value: t('tacademic.stat6.value') },
       ]}
-      sectionLabel="Curriculum"
-      sectionTitle="What You'll Learn."
-      modules={[
-        { num: '01', title: 'PLC Fundamentals', desc: 'Ladder logic, function blocks, structured text. Hands-on wiring from day one using Siemens S7-1200 and Delta DVP hardware.' },
-        { num: '02', title: 'Siemens TIA Portal', desc: 'Full TIA Portal workflow — project setup, I/O configuration, program download, online diagnostics, and safety basics.' },
-        { num: '03', title: 'HMI Design', desc: 'Siemens WinCC Comfort and Unified panels. Screen navigation, alarms, trends, and user management for industrial UIs.' },
-        { num: '04', title: 'SCADA Architecture', desc: 'Data acquisition, historian, OPC-UA connectivity, and building supervisory dashboards using industry-standard platforms.' },
-        { num: '05', title: 'Drives & Motors', desc: 'VFD commissioning with Danfoss and Veichi drives, motor protection relay settings, and energy optimisation routines.' },
-        { num: '06', title: 'Capstone Project', desc: 'A full mini-automation system designed, wired, programmed, and presented by each team. Assessed by senior engineers.' },
-      ]}
-      whoLabel="Who It's For"
-      whoTitle="Ideal Candidates."
-      whoCards={[
-        { title: 'Fresh Engineering Grads', desc: 'EE, ME, or mechatronics graduates who need hands-on industrial experience before entering the workforce.' },
-        { title: 'Career Switchers', desc: 'Professionals from IT, maintenance, or general engineering who want to move into industrial automation roles.' },
-        { title: 'Final-Year Students', desc: 'University students who want to complete a technical internship with a verifiable capstone project and certificate.' },
-      ]}
-      ctaTitle="Ready to Enroll?"
-      ctaDesc="Next cohort starts September 2026. Limited to 12 seats. Apply early to secure your place."
-      ctaButton="Request Application Form"
+      sectionLabel={t('tacademic.modules.label')}
+      sectionTitle={t('tacademic.modules.title')}
+      modules={[1, 2, 3, 4, 5, 6].map((n) => ({
+        num: String(n).padStart(2, '0'),
+        title: t(`tacademic.module${n}.title`),
+        desc: t(`tacademic.module${n}.desc`),
+      }))}
+      whoLabel={t('tacademic.who.label')}
+      whoTitle={t('tacademic.who.title')}
+      whoCards={[1, 2, 3].map((n) => ({
+        title: t(`tacademic.who${n}.title`),
+        desc: t(`tacademic.who${n}.desc`),
+      }))}
+      ctaTitle={t('tacademic.cta.title')}
+      ctaDesc={t('tacademic.cta.desc')}
+      ctaButton={t('tacademic.cta.button')}
     />
   )
 }

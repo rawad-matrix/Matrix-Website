@@ -1,40 +1,55 @@
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
 import { TrainingSubPage } from '@/components/sections/TrainingSubPage'
+import { createClient } from '@/lib/supabase/server'
+import { textOverridesFrom, makeTx } from '@/lib/site-text'
 
 export const metadata = { title: 'On-the-Job Training — Matrix Energy & Automation' }
 
-export default function OnTheJobTrainingPage() {
+async function getSiteSettings(): Promise<Record<string, string>> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from('site_settings').select('key, value')
+    return Object.fromEntries((data ?? []).filter(r => r.value).map(r => [r.key, r.value as string]))
+  } catch {
+    return {}
+  }
+}
+
+export default async function OnTheJobTrainingPage() {
+  const t = makeTx(textOverridesFrom(await getSiteSettings()))
+
   return (
     <TrainingSubPage
       crumb="On-the-Job"
-      titleLine1="On-the-Job"
-      titleAccent="Training."
-      subtitle="We come to your facility. Real plant, real machines, real problems — your team learns by doing, not by watching slides in a classroom."
+      titleLine1={t('tjob.hero.title1')}
+      titleAccent={t('tjob.hero.accent')}
+      subtitle={t('tjob.hero.subtitle')}
       stats={[
-        { label: 'Format', value: 'On-site · Client facility' },
-        { label: 'Group Size', value: '3–20 trainees' },
-        { label: 'Duration', value: 'Custom · 1–8 weeks' },
-        { label: 'Delivery', value: 'Lecture + lab + shadow' },
-        { label: 'Certification', value: 'Matrix + brand-specific' },
-        { label: 'Lead Time', value: '3–4 weeks' },
+        { label: 'Format', value: t('tjob.stat1.value') },
+        { label: 'Group Size', value: t('tjob.stat2.value') },
+        { label: 'Duration', value: t('tjob.stat3.value') },
+        { label: 'Delivery', value: t('tjob.stat4.value') },
+        { label: 'Certification', value: t('tjob.stat5.value') },
+        { label: 'Lead Time', value: t('tjob.stat6.value') },
       ]}
-      sectionLabel="How It Works"
-      sectionTitle="The Four Phases."
-      modules={[
-        { num: '01', title: 'Skills Audit', desc: 'We interview your team, review your equipment list, and audit current skill gaps before writing a single training objective.' },
-        { num: '02', title: 'Curriculum Design', desc: 'A tailored program is drafted around your specific PLCs, drives, and control systems — no generic off-the-shelf content.' },
-        { num: '03', title: 'On-Site Delivery', desc: 'Matrix instructors arrive on-site. Morning theory sessions, afternoon live-machine exercises, and shadowing on your actual control panels.' },
-        { num: '04', title: 'Assessment & Handoff', desc: 'Trainees complete a practical assessment on your equipment. We deliver a skills matrix report and recommend next steps.' },
-      ]}
-      whoLabel="Who It's For"
-      whoTitle="Best Fit Scenarios."
-      whoCards={[
-        { title: 'Maintenance Teams', desc: 'Technicians who maintain PLCs and drives daily but have never had formal training on the specific brands installed at their site.' },
-        { title: 'Universities & Institutes', desc: 'Technical colleges seeking industrial-grade instruction delivered by practising engineers, not academic lecturers alone.' },
-        { title: 'Post-EPC Clients', desc: 'Companies that just took over a Matrix-commissioned system and need their operations team trained on the exact hardware we installed.' },
-      ]}
-      ctaTitle="Build a Program for Your Team."
-      ctaDesc="Tell us about your facility and team size. We'll come back with a scoped proposal in 5 business days."
-      ctaButton="Request a Program"
+      sectionLabel={t('tjob.modules.label')}
+      sectionTitle={t('tjob.modules.title')}
+      modules={[1, 2, 3, 4].map((n) => ({
+        num: String(n).padStart(2, '0'),
+        title: t(`tjob.module${n}.title`),
+        desc: t(`tjob.module${n}.desc`),
+      }))}
+      whoLabel={t('tjob.who.label')}
+      whoTitle={t('tjob.who.title')}
+      whoCards={[1, 2, 3].map((n) => ({
+        title: t(`tjob.who${n}.title`),
+        desc: t(`tjob.who${n}.desc`),
+      }))}
+      ctaTitle={t('tjob.cta.title')}
+      ctaDesc={t('tjob.cta.desc')}
+      ctaButton={t('tjob.cta.button')}
     />
   )
 }

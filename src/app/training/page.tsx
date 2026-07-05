@@ -7,6 +7,7 @@ import { PageHero } from '@/components/sections/PageHero'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import { createClient } from '@/lib/supabase/server'
+import { textOverridesFrom, makeTx } from '@/lib/site-text'
 import Link from 'next/link'
 
 export const metadata: Metadata = { title: 'Training' }
@@ -68,18 +69,21 @@ const LEVEL_COLOR: Record<string, string> = {
 }
 
 export default async function TrainingPage() {
-  let bannerImage: string | null = null
+  let settings: Record<string, string> = {}
   try {
     const supabase = await createClient()
-    const { data } = await supabase.from('site_settings').select('value').eq('key', 'training_banner_image').single()
-    bannerImage = data?.value ?? null
-  } catch { /* use default */ }
+    const { data } = await supabase.from('site_settings').select('key, value')
+    settings = Object.fromEntries((data ?? []).filter(r => r.value).map(r => [r.key, r.value as string]))
+  } catch { /* use defaults */ }
+  const bannerImage = settings.training_banner_image ?? null
+  const texts = textOverridesFrom(settings)
+  const t = makeTx(texts)
 
   return (
     <>
       <PageHero
-        title="Training Programs"
-        subtitle="Hands-on automation training delivered by engineers who deploy these systems every week."
+        title={t('training.hero.title')}
+        subtitle={t('training.hero.subtitle')}
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Training' }]}
         bannerImage={bannerImage}
       />
@@ -87,7 +91,7 @@ export default async function TrainingPage() {
       {/* Track cards */}
       <section className="bg-white py-27.5 max-[768px]:py-18">
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
-          <SectionHeader label="Learning Tracks" title="Three Ways to Learn." />
+          <SectionHeader label={t('training.tracks.label')} title={t('training.tracks.title')} />
           <div className="flex justify-center mb-12">
             <Image
               src="/images/logo-academy.jpeg"
@@ -98,7 +102,7 @@ export default async function TrainingPage() {
             />
           </div>
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
-            {TRACKS.map(({ n, title, desc, meta, alt }) => (
+            {TRACKS.map(({ n, meta, alt }, ti) => (
               <div
                 key={n}
                 className="relative flex flex-col min-h-60 md:min-h-96 lg:min-h-120 p-12 rounded-xs overflow-hidden"
@@ -133,13 +137,13 @@ export default async function TrainingPage() {
                     className="font-barlow font-extrabold text-[36px] uppercase mb-4 leading-none"
                     style={{ color: alt ? '#2A2F3A' : '#fff' }}
                   >
-                    {title}
+                    {t(`training.track${ti + 1}.title`)}
                   </h3>
                   <p
                     className="font-dm text-[15px] leading-[1.7] mb-auto"
                     style={{ color: alt ? '#64748B' : 'rgba(255,255,255,.72)' }}
                   >
-                    {desc}
+                    {t(`training.track${ti + 1}.desc`)}
                   </p>
                   <div className="mt-8 flex flex-col gap-3">
                     {meta.map(({ k, v }) => (
@@ -179,7 +183,7 @@ export default async function TrainingPage() {
       {/* Curriculum grid */}
       <section id="courses-catalog" className="bg-matrix-off py-27.5 max-[768px]:py-18">
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
-          <SectionHeader label="Course Catalog" title="Available Courses." />
+          <SectionHeader label={t('training.catalog.label')} title={t('training.catalog.title')} />
           <div
             className="grid overflow-hidden rounded-xs"
             style={{ gridTemplateColumns: 'repeat(2, 1fr)', border: '1px solid #E2E8F0', background: '#E2E8F0', gap: '1px' }}
@@ -215,13 +219,13 @@ export default async function TrainingPage() {
               href="/courses"
               className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
             >
-              Browse All Courses
+              {t('training.catalog.cta')}
             </Link>
           </div>
         </div>
       </section>
 
-      <ContactStrip />
+      <ContactStrip texts={texts} />
     </>
   )
 }
