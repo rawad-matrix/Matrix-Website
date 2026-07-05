@@ -26,7 +26,11 @@ export default function ContactPage() {
                 {[
                   {
                     icon: <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>,
-                    label: '3rd Floor, MUC University Bldg, Khaldeh Round About, Beirut — Lebanon',
+                    label: 'Khaldeh Branch — 3rd Floor, MUC University Bldg, Khaldeh Round About, Beirut',
+                  },
+                  {
+                    icon: <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>,
+                    label: 'Sarba Branch — Sarba Highway, Jounieh — Lebanon',
                   },
                   {
                     icon: <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>,
@@ -78,18 +82,44 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Maps embed */}
-      <div className="overflow-hidden rounded-xs" style={{ height: '400px' }}>
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3316.8!2d35.5004!3d33.7853!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151f17bdf20b4d03%3A0x7e7b8a3adf5bdf7f!2sKhaldeh%2C%20Lebanon!5e0!3m2!1sen!2s!4v1"
-          width="100%"
-          height="400"
-          style={{ border: 0 }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Matrix EA Location"
-        />
+      {/* Maps embed — both branches */}
+      <div className="grid grid-cols-2 max-[900px]:grid-cols-1">
+        <div className="relative">
+          <span
+            className="absolute top-3 left-3 z-10 font-dm font-semibold text-[11.5px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-xs"
+            style={{ background: '#2A2F3A', color: '#fff' }}
+          >
+            Khaldeh — Beirut
+          </span>
+          <iframe
+            src="https://maps.google.com/maps?q=Matrixea%20Automation%20Academy%2C%20Khaldeh%2C%20Beirut&z=16&output=embed"
+            width="100%"
+            height="400"
+            style={{ border: 0, display: 'block' }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Matrix EA — Khaldeh, Beirut"
+          />
+        </div>
+        <div className="relative">
+          <span
+            className="absolute top-3 left-3 z-10 font-dm font-semibold text-[11.5px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-xs"
+            style={{ background: '#2A2F3A', color: '#fff' }}
+          >
+            Sarba — Jounieh
+          </span>
+          <iframe
+            src="https://maps.google.com/maps?q=33.980071,35.626639&z=16&output=embed"
+            width="100%"
+            height="400"
+            style={{ border: 0, display: 'block' }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Matrix EA — Sarba, Jounieh"
+          />
+        </div>
       </div>
     </>
   )

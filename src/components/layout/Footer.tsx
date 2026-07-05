@@ -67,7 +67,6 @@ export function Footer() {
                 { href: '/courses', label: 'Courses' },
                 { href: '/case-studies', label: 'Case Studies' },
                 { href: '/about', label: 'About Us' },
-                { href: '/dashboard', label: 'Dashboard' },
                 { href: '/contact', label: 'Contact' },
               ].map(({ href, label }) => (
                 <li key={href}>
@@ -88,8 +87,13 @@ export function Footer() {
               {[
                 {
                   icon: <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>,
-                  label: 'Address',
-                  value: '3rd Floor, MUC University Bldg, Khaldeh Round About, Beirut — Lebanon',
+                  label: 'Branches',
+                  value: (
+                    <>
+                      <span className="block">Khaldeh — Beirut: 3rd Floor, MUC University Bldg, Khaldeh Round About</span>
+                      <span className="block mt-1">Sarba — Jounieh: Sarba Highway, Jounieh — Lebanon</span>
+                    </>
+                  ),
                   href: undefined,
                 },
                 {
