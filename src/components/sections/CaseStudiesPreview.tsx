@@ -27,7 +27,7 @@ export async function CaseStudiesPreview() {
 
   return (
     <section
-      className="py-[clamp(48px,6vh,80px)] relative min-h-screen flex items-center"
+      className="py-[clamp(48px,6vh,80px)] relative min-h-[calc(100vh-72px)] flex items-center"
       style={{ background: '#0A0A12' }}
     >
       {/* Subtle circuit overlay */}

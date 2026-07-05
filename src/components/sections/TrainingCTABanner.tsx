@@ -40,7 +40,7 @@ export function TrainingCTABanner({ texts }: { texts?: Record<string, string> })
   const t = makeTx(texts)
   return (
     <section
-      className="relative overflow-hidden min-h-screen flex items-center py-[clamp(48px,6vh,80px)]"
+      className="relative overflow-hidden min-h-[calc(100vh-72px)] flex items-center py-[clamp(48px,6vh,80px)]"
       style={{ background: '#F8F9FB', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
     >
       <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="relative max-w-7xl mx-auto px-8 max-[640px]:px-5 w-full">

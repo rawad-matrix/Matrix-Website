@@ -65,7 +65,7 @@ export function BrandsRow({ texts }: { texts?: Record<string, string> }) {
   const t = makeTx(texts)
   return (
     <section
-      className="bg-white min-h-screen flex items-center"
+      className="bg-white min-h-[calc(100vh-72px)] flex items-center"
       style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}
     >
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 py-[clamp(32px,4vh,56px)] w-full">

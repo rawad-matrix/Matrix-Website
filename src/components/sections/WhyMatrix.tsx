@@ -13,7 +13,7 @@ export function WhyMatrix({ imageUrl, texts }: { imageUrl?: string | null; texts
   const t = makeTx(texts)
   return (
     <section
-      className="relative overflow-hidden min-h-screen flex items-center py-[clamp(48px,7vh,96px)]"
+      className="relative overflow-hidden min-h-[calc(100vh-72px)] flex items-center py-[clamp(48px,7vh,96px)]"
       style={{ background: '#2A2F3A', color: '#fff' }}
     >
       {/* Circuit overlay */}

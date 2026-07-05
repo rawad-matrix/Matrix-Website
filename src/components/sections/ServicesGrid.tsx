@@ -80,7 +80,7 @@ export function ServicesGrid({ texts }: { texts?: Record<string, string> }) {
   const { ref: gridRef, inView } = useInView()
   const t = makeTx(texts)
   return (
-    <section className="bg-white min-h-screen flex items-center py-[clamp(36px,5vh,72px)]">
+    <section className="bg-white min-h-[calc(100vh-72px)] flex items-center py-[clamp(36px,5vh,72px)]">
       <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 w-full">
         <div className="mb-12">
           <SectionHeader label={t('home.services.label')} title={t('home.services.title')} className="mb-0" />

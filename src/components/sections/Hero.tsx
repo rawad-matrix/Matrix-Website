@@ -64,7 +64,7 @@ export function Hero({ slideImages = [], stats = {}, texts }: HeroProps) {
 
   return (
     <header
-      className="relative min-h-screen flex items-center"
+      className="relative min-h-[calc(100vh-108px)] flex items-center"
       style={{ background: '#0A0A12' }}
     >
       {/* Base gradient layers */}
