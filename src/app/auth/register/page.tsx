@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
 import { safeRedirect } from '@/lib/utils'
+import { COUNTRIES, DEFAULT_DIAL, flagEmoji } from '@/lib/country-codes'
 
 const schema = z.object({
   firstName: z.string().min(1, 'Required'),
@@ -15,6 +16,8 @@ const schema = z.object({
   email: z.string().email('Enter a valid email'),
   company: z.string().min(1, 'Required'),
   role: z.string().min(1, 'Select your role'),
+  countryCode: z.string().min(1, 'Required'),
+  phone: z.string().min(4, 'Enter your phone number'),
   password: z.string().min(8, 'At least 8 characters'),
   confirmPassword: z.string(),
   terms: z.boolean().refine((v) => v, 'You must agree to the terms'),
@@ -53,7 +56,7 @@ function RegisterPage() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { terms: false },
+    defaultValues: { terms: false, countryCode: DEFAULT_DIAL },
   })
 
   const onSubmit = async (data: FormData) => {
@@ -61,12 +64,15 @@ function RegisterPage() {
     setServerError('')
     const supabase = createClient()
     const fullName = `${data.firstName} ${data.lastName}`.trim()
+    // Combine dial code + local number (strip non-digits and any leading zero).
+    const localNumber = data.phone.replace(/\D/g, '').replace(/^0+/, '')
+    const fullPhone = `${data.countryCode}${localNumber}`
 
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
-        data: { full_name: fullName, company: data.company, role: data.role },
+        data: { full_name: fullName, company: data.company, role: data.role, phone: fullPhone },
         emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
       },
     })
@@ -75,6 +81,15 @@ function RegisterPage() {
       setServerError(error.message)
       setLoading(false)
       return
+    }
+
+    // The signup trigger only stores full_name, so persist phone + company
+    // to the profile ourselves (best-effort — never blocks the redirect).
+    if (signUpData.user) {
+      await supabase
+        .from('profiles')
+        .update({ phone: fullPhone, company: data.company })
+        .eq('id', signUpData.user.id)
     }
 
     router.push(redirect)
@@ -205,6 +220,37 @@ function RegisterPage() {
                 onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
                 onBlur={(e) => (e.target.style.borderColor = errors.company ? '#DC2626' : '#E2E8F0')} />
               {errors.company && <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '4px' }}>{errors.company.message}</p>}
+            </div>
+
+            {/* Phone */}
+            <div className="mb-4">
+              <label className="block mb-2 font-dm font-semibold uppercase" style={{ fontSize: '11px', letterSpacing: '.18em', color: '#64748B' }}>
+                Phone
+              </label>
+              <div className="flex gap-2">
+                <select
+                  {...register('countryCode')}
+                  style={{ ...fieldStyle(!!errors.countryCode), width: '145px', flexShrink: 0, paddingLeft: '10px', paddingRight: '6px' }}
+                  onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
+                  onBlur={(e) => (e.target.style.borderColor = errors.countryCode ? '#DC2626' : '#E2E8F0')}
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c.iso} value={c.dial}>
+                      {flagEmoji(c.iso)} {c.name} ({c.dial})
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="70 123 456"
+                  {...register('phone')}
+                  style={fieldStyle(!!errors.phone)}
+                  onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
+                  onBlur={(e) => (e.target.style.borderColor = errors.phone ? '#DC2626' : '#E2E8F0')}
+                />
+              </div>
+              {errors.phone && <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '4px' }}>{errors.phone.message}</p>}
             </div>
 
             {/* Role */}
