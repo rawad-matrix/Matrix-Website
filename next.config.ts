@@ -6,10 +6,9 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-  {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
-  },
+  // No includeSubDomains/preload: the mail.* subdomain is on Bluehost and we
+  // don't want to force HSTS on it. Applies to the web hosts that send it.
+  { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
 ]
 
 const nextConfig: NextConfig = {

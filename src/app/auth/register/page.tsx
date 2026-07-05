@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
+import { safeRedirect } from '@/lib/utils'
 
 const schema = z.object({
   firstName: z.string().min(1, 'Required'),
@@ -46,7 +47,7 @@ const fieldStyle = (error?: boolean) => ({
 function RegisterPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/user/dashboard'
+  const redirect = safeRedirect(searchParams.get('redirect'), '/user/dashboard')
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
 

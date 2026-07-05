@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
+import { safeRedirect } from '@/lib/utils'
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -17,7 +18,7 @@ type FormData = z.infer<typeof schema>
 function SignInPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/dashboard'
+  const redirect = safeRedirect(searchParams.get('redirect'), '/dashboard')
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
 

@@ -2,13 +2,14 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { safeRedirect } from '@/lib/utils'
 
 export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const redirect = searchParams.get('redirect') || '/user/dashboard'
+  const redirect = safeRedirect(searchParams.get('redirect'), '/user/dashboard')
 
   if (code) {
     const cookieStore = await cookies()
