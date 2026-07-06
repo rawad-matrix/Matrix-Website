@@ -92,7 +92,7 @@ export default function ContactPage() {
             Khaldeh — Beirut
           </span>
           <iframe
-            src="https://maps.google.com/maps?q=Matrixea%20Automation%20Academy%2C%20Khaldeh%2C%20Beirut&z=16&output=embed"
+            src="https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1sMatrixea+Automation+Academy,+Khaldeh,+Beirut!6i16"
             width="100%"
             height="400"
             style={{ border: 0, display: 'block' }}
@@ -110,7 +110,7 @@ export default function ContactPage() {
             Sarba — Jounieh
           </span>
           <iframe
-            src="https://maps.google.com/maps?q=33.980071,35.626639&z=16&output=embed"
+            src="https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s33.980071,35.626639!6i16"
             width="100%"
             height="400"
             style={{ border: 0, display: 'block' }}

@@ -6,13 +6,13 @@ export const BRANCH_EMBEDS = [
   {
     nameKey: 'home.map.branch1.name',
     addressKey: 'home.map.branch1.address',
-    embed: 'https://maps.google.com/maps?q=Matrixea%20Automation%20Academy%2C%20Khaldeh%2C%20Beirut&z=16&output=embed',
+    embed: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1sMatrixea+Automation+Academy,+Khaldeh,+Beirut!6i16',
     title: 'Matrix EA — Khaldeh, Beirut',
   },
   {
     nameKey: 'home.map.branch2.name',
     addressKey: 'home.map.branch2.address',
-    embed: 'https://maps.google.com/maps?q=33.980071,35.626639&z=16&output=embed',
+    embed: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s33.980071,35.626639!6i16',
     title: 'Matrix EA — Sarba, Jounieh',
   },
 ]

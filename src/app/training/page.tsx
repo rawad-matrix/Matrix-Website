@@ -185,8 +185,8 @@ export default async function TrainingPage() {
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label={t('training.catalog.label')} title={t('training.catalog.title')} />
           <div
-            className="grid overflow-hidden rounded-xs"
-            style={{ gridTemplateColumns: 'repeat(2, 1fr)', border: '1px solid #E2E8F0', background: '#E2E8F0', gap: '1px' }}
+            className="grid grid-cols-2 max-[700px]:grid-cols-1 overflow-hidden rounded-xs"
+            style={{ border: '1px solid #E2E8F0', background: '#E2E8F0', gap: '1px' }}
           >
             {COURSES.map(({ slug, num, title, level, hours, category }) => (
               <Link
