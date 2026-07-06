@@ -228,6 +228,12 @@ export default function AdminCaseStudiesPage() {
     set('image_urls', form.image_urls.filter(u => u !== url))
   }
 
+  // Move an image to the front — it becomes the main card photo and the
+  // first image shown in the gallery.
+  const makeMain = (url: string) => {
+    set('image_urls', [url, ...form.image_urls.filter(u => u !== url)])
+  }
+
   const addSystem = () => {
     const val = systemInput.trim().replace(/,$/, '')
     if (val && !form.systems_used.includes(val)) {
@@ -566,15 +572,32 @@ export default function AdminCaseStudiesPage() {
               {uploading ? 'Uploading…' : '+ Upload Photos'}
             </button>
             <p className="font-dm text-[11px] text-[#64748B] mt-1">
-              Images are uploaded to Supabase Storage. First image becomes the main card photo.
+              The photo marked MAIN is shown on the card and first in the gallery. Click any other photo to make it the main one.
             </p>
             {form.image_urls.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
                 {form.image_urls.map((url, i) => (
                   <div key={url} className="relative group flex-shrink-0" style={{ width: 80, height: 56 }}>
-                    <div className="relative w-full h-full rounded-[2px] overflow-hidden" style={{ border: i === 0 ? '2px solid #1B6FCC' : '1px solid #E2E8F0' }}>
+                    <button
+                      onClick={() => i !== 0 && makeMain(url)}
+                      title={i === 0 ? 'Main photo' : 'Set as main photo'}
+                      className="relative w-full h-full rounded-[2px] overflow-hidden block p-0"
+                      style={{
+                        border: i === 0 ? '2px solid #1B6FCC' : '1px solid #E2E8F0',
+                        cursor: i === 0 ? 'default' : 'pointer',
+                        background: 'none',
+                      }}
+                    >
                       <Image src={url} alt={`Photo ${i + 1}`} fill style={{ objectFit: 'cover' }} sizes="80px" />
-                    </div>
+                      {i !== 0 && (
+                        <span
+                          className="absolute inset-0 flex items-center justify-center font-mono text-[8px] text-white uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ background: 'rgba(27,111,204,.55)' }}
+                        >
+                          Set main
+                        </span>
+                      )}
+                    </button>
                     <button
                       onClick={() => removeImage(url)}
                       className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center text-white text-[9px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

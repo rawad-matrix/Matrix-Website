@@ -64,7 +64,7 @@ export default async function CaseStudiesPage() {
                         src={image_url}
                         alt={title}
                         fill
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'contain' }}
                         sizes="(max-width: 600px) 100vw, (max-width: 980px) 50vw, 33vw"
                       />
                     ) : (

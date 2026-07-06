@@ -25,7 +25,7 @@ export function CaseStudyGallery({ images, title }: { images: string[]; title: s
           src={images[selected]}
           alt={title}
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'contain' }}
           priority
           sizes="(max-width: 900px) 100vw, 60vw"
         />

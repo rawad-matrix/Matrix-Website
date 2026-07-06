@@ -61,7 +61,7 @@ export async function CaseStudiesPreview() {
                 {/* Image or gradient */}
                 <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
                   {c.image_url ? (
-                    <Image src={c.image_url} alt={c.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 900px) 100vw, 33vw" />
+                    <Image src={c.image_url} alt={c.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 900px) 100vw, 33vw" />
                   ) : (
                     <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #2a4a70 0%, #2A2F3A 90%)' }} />
                   )}
