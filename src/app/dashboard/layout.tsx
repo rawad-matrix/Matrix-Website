@@ -1,12 +1,12 @@
-import { Topbar } from '@/components/layout/Topbar'
-import { Navbar } from '@/components/layout/Navbar'
+import { redirect } from 'next/navigation'
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Topbar />
-      <Navbar />
-      {children}
-    </>
-  )
+// Monitoring dashboard is hidden for now. This server-side redirect can't be
+// cached, so it reliably sends every visitor to /courses (middleware also
+// redirects as a first line). To re-enable monitoring, restore the original
+// layout that rendered <Topbar /> <Navbar /> {children}.
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+
+export default function DashboardLayout() {
+  redirect('/courses')
 }
