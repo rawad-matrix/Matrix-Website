@@ -8,27 +8,26 @@ export function CaseStudyGallery({ images, title }: { images: string[]; title: s
   if (images.length === 0) {
     return (
       <div
-        className="w-full rounded-[2px] self-start"
+        className="w-full rounded-[2px]"
         style={{ aspectRatio: '16/10', background: 'linear-gradient(160deg, #2a4a70 0%, #1a2a44 90%)', border: '1px solid #E2E8F0' }}
       />
     )
   }
 
   return (
-    <div className="self-start w-full">
-      {/* Main image — box hugs the photo's own aspect ratio (capped in height)
-          instead of forcing a fixed shape, so there's no letterboxing beyond
-          what the photo's own proportions require. */}
+    <div>
+      {/* Main image */}
       <div
-        className="relative w-full rounded-[2px] overflow-hidden flex items-center justify-center"
-        style={{ border: '1px solid #E2E8F0', background: '#0A0A12' }}
+        className="relative w-full rounded-[2px] overflow-hidden"
+        style={{ aspectRatio: '16/10', border: '1px solid #E2E8F0', background: '#0A0A12' }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          key={images[selected]}
+        <Image
           src={images[selected]}
           alt={title}
-          style={{ display: 'block', width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '640px' }}
+          fill
+          style={{ objectFit: 'cover' }}
+          priority
+          sizes="(max-width: 900px) 100vw, 60vw"
         />
       </div>
 
