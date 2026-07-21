@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { PageHero } from '@/components/sections/PageHero'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import { CaseStudyGallery } from '@/components/sections/CaseStudyGallery'
+import { toYouTubeEmbedUrl } from '@/lib/youtube'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -117,7 +118,7 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
                 style={{ position: 'relative', paddingBottom: '56.25%', height: 0, border: '1px solid #E2E8F0', boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
               >
                 <iframe
-                  src={cs.video_url}
+                  src={toYouTubeEmbedUrl(cs.video_url)}
                   title={`${cs.title} — project video`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

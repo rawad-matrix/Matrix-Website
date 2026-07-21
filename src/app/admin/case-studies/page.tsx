@@ -616,7 +616,7 @@ export default function AdminCaseStudiesPage() {
 
           {/* Video URL */}
           <div>
-            <Label text="YouTube Embed URL" />
+            <Label text="YouTube Video URL" />
             <input
               className={inputCls}
               style={focusedField === 'video_url' ? { ...inputStyle, ...inputFocus } : inputStyle}
@@ -624,9 +624,9 @@ export default function AdminCaseStudiesPage() {
               onBlur={() => setFocusedField(null)}
               value={form.video_url}
               onChange={e => set('video_url', e.target.value)}
-              placeholder="https://www.youtube.com/embed/VIDEO_ID"
+              placeholder="Paste any YouTube link — watch, share, or Shorts"
             />
-            <p className="font-dm text-[11px] text-[#64748B] mt-1">YouTube → Share → Embed → copy only the src URL.</p>
+            <p className="font-dm text-[11px] text-[#64748B] mt-1">Paste the link straight from YouTube&apos;s address bar or Share button — watch, youtu.be, or Shorts links all work.</p>
           </div>
 
           {/* Toggles row */}
