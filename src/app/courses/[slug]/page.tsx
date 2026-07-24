@@ -194,19 +194,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
                 </div>
               ))}
 
-              {/* Price */}
-              <div
-                className="flex items-center gap-3 py-4 mt-2"
-                style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}
-              >
-                <span className="font-mono text-[32px] text-white font-medium leading-none">
-                  {c.price > 0 ? `$${c.price}` : 'TBA'}
-                </span>
-                {c.price > 0 && (
-                  <span className="font-dm text-[12px] text-white/50 uppercase tracking-widest">USD</span>
-                )}
-              </div>
-
               {/* CTA buttons */}
               <div className="mt-4 flex flex-col gap-3">
                 <Link

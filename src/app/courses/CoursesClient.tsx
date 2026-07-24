@@ -203,18 +203,13 @@ export default function CoursesClient({ courses }: { courses: Course[] }) {
                     </p>
 
                     <div
-                      className="flex items-center justify-between pt-3"
+                      className="flex items-center gap-3 pt-3"
                       style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[11px] text-white/50">{course.duration_hours}h</span>
-                        {course.category && (
-                          <span className="font-mono text-[11px] text-white/50">{course.category}</span>
-                        )}
-                      </div>
-                      <span className="font-mono text-[18px] font-medium" style={{ color: LEVEL_COLOR }}>
-                        {course.price > 0 ? `$${course.price}` : 'TBA'}
-                      </span>
+                      <span className="font-mono text-[11px] text-white/50">{course.duration_hours}h</span>
+                      {course.category && (
+                        <span className="font-mono text-[11px] text-white/50">{course.category}</span>
+                      )}
                     </div>
                   </div>
                 </Link>

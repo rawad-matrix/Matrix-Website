@@ -135,7 +135,7 @@ export default function UserDashboardPage() {
                       <h3 className="font-barlow font-bold uppercase text-[20px] text-[#1F2330] leading-tight mb-2">
                         {course.title}
                       </h3>
-                      <div className="font-mono text-[12px] text-[#64748B]">{course.duration_hours}h · ${course.price}</div>
+                      <div className="font-mono text-[12px] text-[#64748B]">{course.duration_hours}h</div>
                     </div>
 
                     {/* Status & CTA */}
