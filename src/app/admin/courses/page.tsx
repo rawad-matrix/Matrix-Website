@@ -298,7 +298,7 @@ export default function AdminCoursesPage() {
                 <table className="w-full border-collapse text-[13.5px]">
                   <thead>
                     <tr>
-                      {['Title', 'Level', 'Duration', 'Price', 'Status', 'Published', 'Actions'].map(h => (
+                      {['Title', 'Level', 'Duration', 'Status', 'Published', 'Actions'].map(h => (
                         <th key={h} className="text-left px-6 py-3 text-[10.5px] tracking-[.18em] uppercase text-matrix-muted font-semibold bg-matrix-off">{h}</th>
                       ))}
                     </tr>
@@ -319,7 +319,6 @@ export default function AdminCoursesPage() {
                           </span>
                         </td>
                         <td className="px-6 py-3 font-mono text-[12.5px] text-matrix-muted">{course.duration_hours}h</td>
-                        <td className="px-6 py-3 font-mono text-[13px] text-matrix-ink font-medium">${course.price}</td>
                         <td className="px-6 py-3">
                           <span
                             className="inline-block text-[10.5px] px-2 py-1 font-semibold tracking-widest uppercase rounded-xs"
@@ -401,7 +400,7 @@ export default function AdminCoursesPage() {
                     ))}
                     {courses.length === 0 && (
                       <tr>
-                        <td colSpan={7} className="px-6 py-10 text-center text-matrix-muted text-[14px]">
+                        <td colSpan={6} className="px-6 py-10 text-center text-matrix-muted text-[14px]">
                           No courses yet — click <strong>Add Course</strong> to create your first one.
                         </td>
                       </tr>
