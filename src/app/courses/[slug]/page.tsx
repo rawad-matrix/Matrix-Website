@@ -140,21 +140,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5 grid grid-cols-[1.5fr_1fr] gap-14 items-start max-[900px]:grid-cols-1">
 
-          {/* Left col: About + Modules */}
+          {/* Left col: Modules */}
           <div>
-            {/* Featured image */}
-            {c.featured_image && (
-              <div className="mb-8 rounded-xs overflow-hidden border border-matrix-border">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.featured_image} alt={c.title} className="w-full object-cover max-h-64" />
-              </div>
-            )}
-
-            <h2 className="font-barlow font-bold text-[28px] uppercase text-matrix-ink mb-4">About This Course</h2>
-            <p className="font-dm text-[15.5px] text-matrix-muted leading-[1.75] mb-8">
-              {c.description ?? c.short_description ?? ''}
-            </p>
-
             {modules.length > 0 && (
               <>
                 <h2 className="font-barlow font-bold text-[28px] uppercase text-matrix-ink mb-5">Course Modules</h2>
@@ -229,12 +216,15 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
                   Enroll Now
                 </Link>
                 <a
-                  href={`https://wa.me/96178800274?text=Hi%20Matrix%20—%20I'd%20like%20to%20enquire%20about%20the%20${encodeURIComponent(c.title)}%20course.`}
+                  href={`https://wa.me/96178800274?text=${encodeURIComponent(`Hi Matrix — I'd like to enquire about the ${c.title} course.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center bg-transparent text-white py-3 font-dm font-semibold text-[12px] uppercase tracking-[0.04em] rounded-xs border border-white/30 hover:border-matrix-wa hover:text-matrix-wa transition-all duration-150"
+                  className="flex items-center justify-center gap-2 w-full text-center bg-matrix-wa text-white py-3.5 font-dm font-semibold text-[12.5px] uppercase tracking-[0.04em] rounded-xs hover:brightness-110 hover:-translate-y-px transition-all duration-150"
                 >
-                  Ask on WhatsApp
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1-1.3-.5-2.4-1.5c-.9-.8-1.5-1.8-1.7-2.1s0-.5.1-.6c.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5s0-.4 0-.5-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3 2.1 3.2 5 4.4c.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.8-.7 2-1.4s.2-1.3.2-1.4c-.1-.2-.3-.3-.6-.5zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/>
+                  </svg>
+                  Chat on WhatsApp
                 </a>
               </div>
             </div>
