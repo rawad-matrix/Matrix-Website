@@ -3,65 +3,153 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../AdminSidebar'
-import { SITE_TEXT_PAGES, TEXT_DEFAULTS, TEXT_PREFIX, type TextBlock } from '@/lib/site-text'
+import { SITE_TEXT_PAGES, TEXT_PREFIX, type TextBlock, type TextSection } from '@/lib/site-text'
 
-const inputStyle = {
+// ── Classify each field by its role on the real page, so the editor can ─────
+// mirror page structure (label → title → paragraph → small values) without
+// needing a custom layout per page. No design/images — text only.
+type FieldKind = 'label' | 'title' | 'paragraph' | 'item'
+
+function classify(block: TextBlock): FieldKind {
+  const seg = block.key.split('.').pop() ?? ''
+  if (seg === 'label') return 'label'
+  if (seg.startsWith('title') || seg === 'accent' || seg.endsWith('accent') || seg === 'headline') return 'title'
+  if (block.multiline) return 'paragraph'
+  if (/^(subtitle|lead|desc|summary|p\d+)$/.test(seg)) return 'paragraph'
+  return 'item'
+}
+
+type Group = { type: 'single'; block: TextBlock; kind: FieldKind } | { type: 'row'; blocks: TextBlock[] }
+
+function groupBlocks(blocks: TextBlock[]): Group[] {
+  const groups: Group[] = []
+  let buffer: TextBlock[] = []
+  const flush = () => { if (buffer.length) { groups.push({ type: 'row', blocks: buffer }); buffer = [] } }
+  for (const b of blocks) {
+    const kind = classify(b)
+    if (kind === 'item') {
+      buffer.push(b)
+    } else {
+      flush()
+      groups.push({ type: 'single', block: b, kind })
+    }
+  }
+  flush()
+  return groups
+}
+
+// Required: every title, plus the first paragraph in each section (its
+// opening description). Everything else may be left blank and falls back
+// to the built-in default.
+function requiredKeysForSection(section: TextSection): Set<string> {
+  const req = new Set<string>()
+  let paragraphClaimed = false
+  for (const b of section.blocks) {
+    const kind = classify(b)
+    if (kind === 'title') req.add(b.key)
+    else if (kind === 'paragraph' && !paragraphClaimed) { req.add(b.key); paragraphClaimed = true }
+  }
+  return req
+}
+
+const inputBase = {
   width: '100%',
-  padding: '10px 14px',
   border: '1px solid #E2E8F0',
   borderRadius: '2px',
-  fontSize: '14px',
-  color: '#1F2330',
   outline: 'none',
   fontFamily: 'inherit',
   background: '#fff',
-  lineHeight: 1.5,
+  color: '#1F2330',
 } as const
 
-function TextField({
-  block, value, onChange,
+function FieldLabel({ text, required }: { text: string; required?: boolean }) {
+  return (
+    <label className="flex items-center gap-1.5 mb-1.5 font-dm font-semibold uppercase text-[10.5px] tracking-[.14em] text-matrix-muted">
+      {text}
+      {required && <span style={{ color: '#DC2626' }}>*</span>}
+    </label>
+  )
+}
+
+function TextFieldRow({
+  block, kind, value, required, invalid, onChange,
 }: {
   block: TextBlock
+  kind: FieldKind
   value: string
+  required: boolean
+  invalid: boolean
   onChange: (v: string) => void
 }) {
-  const isDefault = value === TEXT_DEFAULTS[block.key]
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-1.5">
-        <label className="font-dm font-semibold uppercase text-[11px] tracking-[.14em] text-matrix-muted">
-          {block.label}
-        </label>
-        {!isDefault && (
-          <button
-            type="button"
-            onClick={() => onChange(TEXT_DEFAULTS[block.key])}
-            className="font-mono text-[10px] uppercase tracking-widest"
-            style={{ background: 'none', border: 'none', color: '#1B6FCC', cursor: 'pointer', padding: 0 }}
-          >
-            Reset to default
-          </button>
-        )}
-      </div>
-      {block.multiline ? (
-        <textarea
-          value={value}
-          rows={3}
-          onChange={(e) => onChange(e.target.value)}
-          style={{ ...inputStyle, resize: 'vertical', minHeight: '72px' }}
-          onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
-          onBlur={(e) => (e.target.style.borderColor = '#E2E8F0')}
-        />
-      ) : (
+  const borderColor = invalid ? '#DC2626' : '#E2E8F0'
+  const focusColor = '#1B6FCC'
+
+  if (kind === 'title') {
+    return (
+      <div>
+        <FieldLabel text={block.label} required={required} />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          style={inputStyle}
-          onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
+          className="font-barlow font-bold uppercase"
+          style={{ ...inputBase, fontSize: '21px', padding: '11px 14px', borderColor }}
+          onFocus={(e) => (e.target.style.borderColor = focusColor)}
+          onBlur={(e) => (e.target.style.borderColor = borderColor)}
+        />
+        {invalid && <p className="mt-1 font-dm text-[11.5px]" style={{ color: '#DC2626' }}>This field is required.</p>}
+      </div>
+    )
+  }
+
+  if (kind === 'paragraph') {
+    return (
+      <div>
+        <FieldLabel text={block.label} required={required} />
+        <textarea
+          value={value}
+          rows={3}
+          onChange={(e) => onChange(e.target.value)}
+          className="font-dm"
+          style={{ ...inputBase, fontSize: '15px', lineHeight: 1.65, padding: '11px 14px', minHeight: '76px', resize: 'vertical', borderColor }}
+          onFocus={(e) => (e.target.style.borderColor = focusColor)}
+          onBlur={(e) => (e.target.style.borderColor = borderColor)}
+        />
+        {invalid && <p className="mt-1 font-dm text-[11.5px]" style={{ color: '#DC2626' }}>This field is required.</p>}
+      </div>
+    )
+  }
+
+  if (kind === 'label') {
+    return (
+      <div style={{ maxWidth: '340px' }}>
+        <FieldLabel text={block.label} />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="font-dm uppercase"
+          style={{ ...inputBase, fontSize: '12px', letterSpacing: '.12em', padding: '9px 12px' }}
+          onFocus={(e) => (e.target.style.borderColor = focusColor)}
           onBlur={(e) => (e.target.style.borderColor = '#E2E8F0')}
         />
-      )}
+      </div>
+    )
+  }
+
+  // item — compact value used within a wrapping row
+  return (
+    <div style={{ flex: '1 1 200px', minWidth: '160px' }}>
+      <FieldLabel text={block.label} />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="font-dm"
+        style={{ ...inputBase, fontSize: '13px', padding: '8px 11px' }}
+        onFocus={(e) => (e.target.style.borderColor = focusColor)}
+        onBlur={(e) => (e.target.style.borderColor = '#E2E8F0')}
+      />
     </div>
   )
 }
@@ -72,6 +160,7 @@ export default function TextsPage() {
   const [openPage, setOpenPage] = useState<string>(SITE_TEXT_PAGES[0].page)
   const [saving, setSaving] = useState<string | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
+  const [invalidKeys, setInvalidKeys] = useState<Set<string>>(new Set())
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -81,26 +170,49 @@ export default function TextsPage() {
       ;(data ?? []).forEach((r: { key: string; value: string | null }) => {
         if (r.key.startsWith(TEXT_PREFIX) && r.value) overrides[r.key.slice(TEXT_PREFIX.length)] = r.value
       })
-      // Initialize every field: override if present, else registry default
       const init: Record<string, string> = {}
-      for (const [key, def] of Object.entries(TEXT_DEFAULTS)) {
-        init[key] = overrides[key] ?? def
+      for (const page of SITE_TEXT_PAGES) {
+        for (const section of page.sections) {
+          for (const b of section.blocks) init[b.key] = overrides[b.key] ?? b.def
+        }
       }
       setValues(init)
       setLoading(false)
     })
   }, [])
 
+  function setValue(key: string, v: string) {
+    setValues(prev => ({ ...prev, [key]: v }))
+    if (invalidKeys.has(key) && v.trim()) {
+      setInvalidKeys(prev => { const n = new Set(prev); n.delete(key); return n })
+    }
+  }
+
   async function savePage(pageName: string) {
+    const page = SITE_TEXT_PAGES.find(p => p.page === pageName)!
+
+    // Validate: every required key (titles + each section's first paragraph) must be non-empty.
+    const missing = new Set<string>()
+    for (const section of page.sections) {
+      for (const key of requiredKeysForSection(section)) {
+        if (!values[key]?.trim()) missing.add(key)
+      }
+    }
+    if (missing.size > 0) {
+      setInvalidKeys(missing)
+      setError('Please fill in the required fields highlighted below before saving.')
+      return
+    }
+
+    setInvalidKeys(new Set())
     setSaving(pageName)
     setError('')
     try {
       const supabase = createClient()
-      const page = SITE_TEXT_PAGES.find(p => p.page === pageName)!
       const rows = page.sections.flatMap(s =>
         s.blocks.map(b => ({
           key: TEXT_PREFIX + b.key,
-          // Storing the default is harmless; empty fields fall back to default on the site
+          // Storing the default is harmless; empty optional fields fall back to default on the site
           value: values[b.key]?.trim() ? values[b.key] : null,
         }))
       )
@@ -140,8 +252,9 @@ export default function TextsPage() {
           <div className="mb-6">
             <h1 className="font-barlow font-bold uppercase text-[32px] text-matrix-ink">Page Text</h1>
             <p className="text-matrix-muted text-[14px] mt-1">
-              Edit the text of each page. Layout and design stay fixed — only the words change.
-              Empty fields fall back to the built-in default. Changes go live immediately after saving.
+              Fields are laid out in the same order and weight as the real page — heading, then paragraph, then small
+              details — text only, no layout or images to worry about. Titles and each section&apos;s opening paragraph
+              (marked *) are required; everything else falls back to the built-in default when left blank.
             </p>
           </div>
 
@@ -179,24 +292,48 @@ export default function TextsPage() {
 
                   {isOpen && (
                     <div className="border-t border-matrix-border">
-                      {page.sections.map(section => (
-                        <div key={section.section} className="px-6 py-5 border-b border-matrix-border">
-                          <h3 className="font-dm font-bold uppercase text-[12.5px] tracking-[.16em] text-matrix-blue mb-4">
-                            {section.section}
-                          </h3>
-                          <div className="grid grid-cols-2 gap-x-6 gap-y-5 max-[900px]:grid-cols-1">
-                            {section.blocks.map(block => (
-                              <div key={block.key} className={block.multiline ? 'col-span-2 max-[900px]:col-span-1' : ''}>
-                                <TextField
-                                  block={block}
-                                  value={values[block.key] ?? ''}
-                                  onChange={(v) => setValues(prev => ({ ...prev, [block.key]: v }))}
-                                />
-                              </div>
-                            ))}
+                      {page.sections.map(section => {
+                        const required = requiredKeysForSection(section)
+                        return (
+                          <div key={section.section} className="px-6 py-5 border-b border-matrix-border">
+                            <h3 className="font-dm font-bold uppercase text-[12.5px] tracking-[.16em] text-matrix-blue mb-4">
+                              {section.section}
+                            </h3>
+                            <div className="flex flex-col gap-4 max-w-165">
+                              {groupBlocks(section.blocks).map((group, gi) => {
+                                if (group.type === 'row') {
+                                  return (
+                                    <div key={gi} className="flex flex-wrap gap-3">
+                                      {group.blocks.map(b => (
+                                        <TextFieldRow
+                                          key={b.key}
+                                          block={b}
+                                          kind="item"
+                                          value={values[b.key] ?? ''}
+                                          required={false}
+                                          invalid={invalidKeys.has(b.key)}
+                                          onChange={(v) => setValue(b.key, v)}
+                                        />
+                                      ))}
+                                    </div>
+                                  )
+                                }
+                                return (
+                                  <TextFieldRow
+                                    key={group.block.key}
+                                    block={group.block}
+                                    kind={group.kind}
+                                    value={values[group.block.key] ?? ''}
+                                    required={required.has(group.block.key)}
+                                    invalid={invalidKeys.has(group.block.key)}
+                                    onChange={(v) => setValue(group.block.key, v)}
+                                  />
+                                )
+                              })}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
 
                       {/* Save bar */}
                       <div className="px-6 py-4 flex items-center gap-4" style={{ background: '#F8F9FB' }}>
