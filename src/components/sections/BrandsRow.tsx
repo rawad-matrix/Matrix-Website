@@ -4,9 +4,13 @@ import Image from 'next/image'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { makeTx } from '@/lib/site-text'
 
-const BRANDS = [
+// imageSrc is optional — brands without a logo file fall back to a styled
+// text wordmark (see BrandGrid) so a new brand can be added before its
+// logo asset is uploaded to /public/images/brands.
+const BRANDS: { name: string; imageSrc?: string }[] = [
   { name: 'Siemens', imageSrc: '/images/brands/logo_siemens.png' },
   { name: 'ABB', imageSrc: '/images/brands/ABB_logo.png' },
+  { name: 'Allen-Bradley' },
   { name: 'Delta', imageSrc: '/images/brands/delta_logo.png' },
   { name: 'Veichi', imageSrc: '/images/brands/veichi_logo.png' },
   { name: 'Danfoss', imageSrc: '/images/brands/Danfoss-Logo.jpg' },
@@ -45,14 +49,23 @@ function BrandGrid({ cols, cellHeight, logoHeight, padding }: {
             onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#F8F9FB' }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '' }}
           >
-            <div className="relative w-full" style={{ height: logoHeight }}>
-              <Image
-                src={imageSrc}
-                alt={name}
-                fill
-                className="object-contain"
-                sizes={cols === 5 ? '(max-width: 1280px) 20vw, 256px' : '33vw'}
-              />
+            <div className="relative w-full flex items-center justify-center" style={{ height: logoHeight }}>
+              {imageSrc ? (
+                <Image
+                  src={imageSrc}
+                  alt={name}
+                  fill
+                  className="object-contain"
+                  sizes={cols === 5 ? '(max-width: 1280px) 20vw, 256px' : '33vw'}
+                />
+              ) : (
+                <span
+                  className="font-barlow font-extrabold uppercase text-center"
+                  style={{ fontSize: 'clamp(15px, 1.6vw, 20px)', color: '#1F2330', letterSpacing: '0.01em' }}
+                >
+                  {name}
+                </span>
+              )}
             </div>
           </div>
         )

@@ -64,22 +64,6 @@ export function AnnouncementBar() {
 
         <span style={{ color: 'rgba(255,255,255,.35)', fontSize: '13px', flexShrink: 0 }}>·</span>
 
-        {/* Discount badge */}
-        <span style={{
-          background: 'rgba(255,178,0,.18)',
-          border: '1px solid rgba(255,178,0,.50)',
-          color: '#FFB200',
-          fontSize: '12px',
-          fontWeight: 700,
-          fontFamily: 'var(--font-dm-sans, DM Sans, sans-serif)',
-          padding: '2px 10px',
-          borderRadius: '2px',
-          flexShrink: 0,
-          whiteSpace: 'nowrap',
-        }}>
-          Opening Offer: 25% Off All Courses
-        </span>
-
         {/* Google Maps link */}
         <a
           href={MAPS_URL}

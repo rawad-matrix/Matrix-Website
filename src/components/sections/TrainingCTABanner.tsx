@@ -14,6 +14,7 @@ const TRACKS = [
     ),
     label: 'Academic Training',
     desc: 'Structured courses with lab sessions and certification.',
+    href: '/training/academic',
   },
   {
     icon: (
@@ -21,8 +22,9 @@ const TRACKS = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
       </svg>
     ),
-    label: 'On-the-Job Training',
+    label: 'In-House Training',
     desc: 'Delivered on your plant floor using your live equipment.',
+    href: '/training/on-the-job',
   },
   {
     icon: (
@@ -32,6 +34,7 @@ const TRACKS = [
     ),
     label: 'Hybrid Learning',
     desc: 'Self-paced theory combined with intensive hands-on lab days.',
+    href: '/training/hybrid',
   },
 ]
 
@@ -80,9 +83,10 @@ export function TrainingCTABanner({ texts }: { texts?: Record<string, string> })
           {/* Right: track types */}
           <div className="flex flex-col gap-4">
             {TRACKS.map((track, i) => (
-              <div
+              <Link
                 key={track.label}
-                className={`reveal ${inView ? 'in-view' : ''}`}
+                href={track.href}
+                className={`block no-underline reveal ${inView ? 'in-view' : ''}`}
                 style={{ transitionDelay: inView ? '0ms' : `${80 + i * 80}ms` }}
               >
               <div
@@ -104,7 +108,7 @@ export function TrainingCTABanner({ texts }: { texts?: Record<string, string> })
                   <span className="font-dm text-[15px] text-matrix-muted">{t(`home.training.track${i + 1}.desc`)}</span>
                 </div>
               </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

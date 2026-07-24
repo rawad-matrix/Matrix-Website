@@ -5,7 +5,7 @@ import { TrainingSubPage } from '@/components/sections/TrainingSubPage'
 import { createClient } from '@/lib/supabase/server'
 import { textOverridesFrom, makeTx } from '@/lib/site-text'
 
-export const metadata = { title: 'On-the-Job Training — Matrix Energy & Automation' }
+export const metadata = { title: 'In-House Training — Matrix Energy & Automation' }
 
 async function getSiteSettings(): Promise<Record<string, string>> {
   try {
@@ -22,7 +22,7 @@ export default async function OnTheJobTrainingPage() {
 
   return (
     <TrainingSubPage
-      crumb="On-the-Job"
+      crumb="In-House"
       titleLine1={t('tjob.hero.title1')}
       titleAccent={t('tjob.hero.accent')}
       subtitle={t('tjob.hero.subtitle')}

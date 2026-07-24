@@ -16,7 +16,7 @@ const NAV_LINKS: NavItem[] = [
     children: [
       { href: '/training',            label: 'MatrixEA — Overview' },
       { href: '/training/academic',   label: 'Academic Training' },
-      { href: '/training/on-the-job', label: 'On-the-Job Training' },
+      { href: '/training/on-the-job', label: 'In-House Training' },
       { href: '/training/hybrid',     label: 'Hybrid Learning' },
     ],
   },

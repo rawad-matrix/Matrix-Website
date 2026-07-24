@@ -23,11 +23,11 @@ const TRACKS = [
       { k: 'Cohort', v: '8–14 trainees' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training',
+    href: '/training/academic',
   },
   {
     n: '02',
-    title: 'On-the-Job Training',
+    title: 'In-House Training',
     desc: 'Training delivered on your own plant floor, on your live equipment and your actual processes. No travel, no downtime — skills transfer immediately.',
     meta: [
       { k: 'Format', v: 'Site-based' },
@@ -35,7 +35,7 @@ const TRACKS = [
       { k: 'Equipment', v: 'Your system' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training',
+    href: '/training/on-the-job',
     alt: true,
   },
   {
@@ -48,7 +48,7 @@ const TRACKS = [
       { k: 'Labs', v: 'Monthly intensive' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training',
+    href: '/training/hybrid',
   },
 ]
 
@@ -102,7 +102,7 @@ export default async function TrainingPage() {
             />
           </div>
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
-            {TRACKS.map(({ n, meta, alt }, ti) => (
+            {TRACKS.map(({ n, meta, alt, href }, ti) => (
               <div
                 key={n}
                 className="relative flex flex-col min-h-60 md:min-h-96 lg:min-h-120 p-12 rounded-xs overflow-hidden"
@@ -168,7 +168,7 @@ export default async function TrainingPage() {
                     ))}
                   </div>
                   <Link
-                    href="/courses"
+                    href={href}
                     className="mt-6 inline-flex items-center gap-2 font-dm font-semibold text-[12px] uppercase tracking-[0.16em] text-matrix-blue hover:gap-3 transition-all"
                   >
                     Explore Track →

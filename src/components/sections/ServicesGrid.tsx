@@ -26,7 +26,7 @@ const SERVICES = [
     ),
     title: 'Academic Training',
     desc: 'Face-to-face programs at the Matrix facility for students and fresh graduates. PLC, SCADA, TIA Portal and beyond.',
-    href: '/training',
+    href: '/training/academic',
   },
   {
     icon: (
@@ -34,9 +34,9 @@ const SERVICES = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
       </svg>
     ),
-    title: 'On-the-Job Training',
+    title: 'In-House Training',
     desc: 'Customized curriculum delivered at your facility or university. Built around your processes, your team.',
-    href: '/training',
+    href: '/training/on-the-job',
   },
   {
     icon: (
@@ -46,21 +46,7 @@ const SERVICES = [
     ),
     title: 'Hybrid Training',
     desc: 'Online sessions paired with in-person labs. Flexible scheduling for distributed teams who need real hands-on practice.',
-    href: '/training',
-  },
-  {
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/>
-        <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
-        <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
-        <line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/>
-        <line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
-      </svg>
-    ),
-    title: 'PLC & SCADA Courses',
-    desc: 'Structured tracks on Siemens TIA Portal, Allen Bradley, Delta and Veichi — beginner to advanced, with certified outcomes.',
-    href: '/courses',
+    href: '/training/hybrid',
   },
   {
     icon: (

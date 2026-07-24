@@ -19,7 +19,7 @@ const NAV_LINKS: NavItem[] = [
     children: [
       { href: '/training',             label: 'MatrixEA',            desc: 'Overview — all training types & courses' },
       { href: '/training/academic',    label: 'Academic Training',   desc: 'Structured classroom programs in Beirut' },
-      { href: '/training/on-the-job',  label: 'On-the-Job Training', desc: 'Learn on real-site installations' },
+      { href: '/training/on-the-job',  label: 'In-House Training',   desc: 'Learn on real-site installations' },
       { href: '/training/hybrid',      label: 'Hybrid Learning',     desc: 'Blended online + on-site track' },
     ],
   },
