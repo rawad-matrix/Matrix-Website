@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Verification failed' }, { status: 403 })
   }
 
-  if (!name || !subject || !message) {
+  if (!name || !subject || !message || !phone) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 

@@ -11,7 +11,7 @@ const schema = z.object({
   name: z.string().min(2, 'Name is required'),
   company: z.string().optional(),
   subject: z.string().min(3, 'Subject is required'),
-  phone: z.string().optional(),
+  phone: z.string().min(6, 'Phone number is required'),
   email: z.string().email('Valid email required'),
   message: z.string().min(10, 'Message must be at least 10 characters'),
   // Honeypot — must stay empty. Bots fill it; humans never see it.
@@ -115,8 +115,9 @@ export function ContactForm() {
           <input {...register('company')} placeholder="Company name" className={inputCls} />
         </div>
         <div>
-          <label className={labelCls}>Phone</label>
+          <label className={labelCls}>Phone *</label>
           <input {...register('phone')} placeholder="+961 xx xxx xxx" className={inputCls} />
+          {errors.phone && <span className="text-[12px] text-[#DC2626] mt-1 block">{errors.phone.message}</span>}
         </div>
       </div>
 
