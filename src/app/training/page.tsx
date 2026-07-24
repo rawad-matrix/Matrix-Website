@@ -23,7 +23,6 @@ const TRACKS = [
       { k: 'Cohort', v: '8–14 trainees' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training/academic',
   },
   {
     n: '02',
@@ -35,7 +34,6 @@ const TRACKS = [
       { k: 'Equipment', v: 'Your system' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training/on-the-job',
     alt: true,
   },
   {
@@ -48,7 +46,6 @@ const TRACKS = [
       { k: 'Labs', v: 'Monthly intensive' },
       { k: 'Certificate', v: 'Matrix EA' },
     ],
-    href: '/training/hybrid',
   },
 ]
 
@@ -102,7 +99,7 @@ export default async function TrainingPage() {
             />
           </div>
           <div className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-1">
-            {TRACKS.map(({ n, meta, alt, href }, ti) => (
+            {TRACKS.map(({ n, meta, alt }, ti) => (
               <div
                 key={n}
                 className="relative flex flex-col min-h-60 md:min-h-96 lg:min-h-120 p-12 rounded-xs overflow-hidden"
@@ -121,18 +118,13 @@ export default async function TrainingPage() {
                     }}
                   />
                 )}
-                <span
-                  className="font-mono absolute top-6 right-8 leading-none"
-                  style={{
-                    fontSize: '54px',
-                    opacity: 0.4,
-                    color: alt ? '#1B6FCC' : '#fff',
-                    fontWeight: 500,
-                  }}
-                >
-                  {n}
-                </span>
                 <div className="relative flex flex-col flex-1">
+                  <span
+                    className="font-mono text-[11px] tracking-widest leading-none mb-4 block"
+                    style={{ opacity: 0.55, color: alt ? '#1B6FCC' : 'rgba(255,255,255,.6)' }}
+                  >
+                    {n}
+                  </span>
                   <h3
                     className="font-barlow font-extrabold text-[36px] uppercase mb-4 leading-none"
                     style={{ color: alt ? '#2A2F3A' : '#fff' }}
@@ -167,15 +159,20 @@ export default async function TrainingPage() {
                       </div>
                     ))}
                   </div>
-                  <Link
-                    href={href}
-                    className="mt-6 inline-flex items-center gap-2 font-dm font-semibold text-[12px] uppercase tracking-[0.16em] text-matrix-blue hover:gap-3 transition-all"
-                  >
-                    Explore Track →
-                  </Link>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-matrix-blue text-white px-5.5 py-3 font-dm font-semibold text-[13.5px] uppercase tracking-[0.04em] rounded-xs hover:bg-matrix-blue-dark hover:-translate-y-px transition-all duration-150"
+            >
+              Contact Us
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
