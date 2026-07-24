@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../AdminSidebar'
+import { DEFAULT_INDUSTRIES, INDUSTRIES_SETTINGS_KEY, type IndustryItem } from '@/lib/industries'
 
 type Settings = Record<string, string>
 
@@ -124,6 +125,110 @@ function ImageSlot({
   )
 }
 
+function IndustryCard({
+  item, onTitleChange, onUpload, onRemoveImage, onDelete, uploading,
+}: {
+  item: IndustryItem
+  onTitleChange: (id: string, title: string) => void
+  onUpload: (id: string, file: File) => void
+  onRemoveImage: (id: string) => void
+  onDelete: (id: string) => void
+  uploading: string | null
+}) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const isUploading = uploading === item.id
+
+  return (
+    <div className="bg-white border border-matrix-border rounded-xs overflow-hidden">
+      <div className="relative" style={{ height: '140px', background: '#0A0A12' }}>
+        {item.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+        ) : (
+          <div
+            className="w-full h-full flex flex-col items-center justify-center gap-2"
+            style={{ background: 'linear-gradient(160deg,#1a2a3a 0%,#0a1a28 90%)' }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" strokeWidth="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,.3)' }}>
+              No image set
+            </span>
+          </div>
+        )}
+        {isUploading && (
+          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,.55)' }}>
+            <span className="font-mono text-[10px] text-white uppercase tracking-widest">Uploading...</span>
+          </div>
+        )}
+        <button
+          onClick={() => onDelete(item.id)}
+          title="Remove this card"
+          className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center text-white text-[11px] rounded-full"
+          style={{ background: 'rgba(220,38,38,.85)', border: 'none', cursor: 'pointer' }}
+        >
+          ✕
+        </button>
+      </div>
+      <div className="p-3 flex flex-col gap-2">
+        <input
+          type="text"
+          value={item.title}
+          onChange={(e) => onTitleChange(item.id, e.target.value)}
+          placeholder="Industry name…"
+          className="font-dm font-semibold text-[13px] text-matrix-ink w-full"
+          style={{ padding: '7px 9px', border: '1px solid #E2E8F0', borderRadius: '2px', outline: 'none' }}
+          onFocus={(e) => (e.target.style.borderColor = '#1B6FCC')}
+          onBlur={(e) => (e.target.style.borderColor = '#E2E8F0')}
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={isUploading}
+            style={{
+              flex: 1, background: '#1B6FCC', color: '#fff', border: 'none',
+              borderRadius: '2px', padding: '7px 0',
+              fontFamily: 'inherit', fontWeight: 600, fontSize: '10.5px',
+              letterSpacing: '.1em', textTransform: 'uppercase',
+              cursor: isUploading ? 'not-allowed' : 'pointer',
+              opacity: isUploading ? 0.6 : 1,
+            }}
+          >
+            {item.imageUrl ? 'Replace' : 'Upload'}
+          </button>
+          {item.imageUrl && (
+            <button
+              onClick={() => onRemoveImage(item.id)}
+              style={{
+                background: 'transparent', border: '1px solid rgba(220,38,38,.3)',
+                color: '#DC2626', borderRadius: '2px', padding: '7px 10px',
+                fontFamily: 'inherit', fontWeight: 600, fontSize: '10.5px',
+                letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer',
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) onUpload(item.id, f) }}
+        className="hidden"
+      />
+    </div>
+  )
+}
+
+function makeIndustryId(): string {
+  return Math.random().toString(36).slice(2, 10)
+}
+
 export default function ContentPage() {
   const [settings, setSettings] = useState<Settings>({})
   const [loading, setLoading] = useState(true)
@@ -131,6 +236,10 @@ export default function ContentPage() {
   const [statValues, setStatValues] = useState<Record<string, string>>({})
   const [statsSaving, setStatsSaving] = useState(false)
   const [statsSaved, setStatsSaved] = useState(false)
+  const [industries, setIndustries] = useState<IndustryItem[]>(DEFAULT_INDUSTRIES)
+  const [industryUploading, setIndustryUploading] = useState<string | null>(null)
+  const [industriesSaving, setIndustriesSaving] = useState(false)
+  const [industriesSaved, setIndustriesSaved] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -145,6 +254,13 @@ export default function ContentPage() {
         const statMap: Record<string, string> = {}
         STAT_FIELDS.forEach(f => { statMap[f.key] = map[f.key] ?? f.placeholder })
         setStatValues(statMap)
+        const rawIndustries = map[INDUSTRIES_SETTINGS_KEY]
+        if (rawIndustries) {
+          try {
+            const parsed = JSON.parse(rawIndustries)
+            if (Array.isArray(parsed) && parsed.length > 0) setIndustries(parsed)
+          } catch { /* keep defaults */ }
+        }
       }
       setLoading(false)
     })
@@ -189,6 +305,60 @@ export default function ContentPage() {
       setError('Failed to save statistics.')
     }
     setStatsSaving(false)
+  }
+
+  function addIndustry() {
+    setIndustries(prev => [...prev, { id: makeIndustryId(), title: '', imageUrl: null }])
+  }
+
+  function updateIndustryTitle(id: string, title: string) {
+    setIndustries(prev => prev.map(it => it.id === id ? { ...it, title } : it))
+  }
+
+  function deleteIndustry(id: string) {
+    setIndustries(prev => prev.filter(it => it.id !== id))
+  }
+
+  function removeIndustryImage(id: string) {
+    setIndustries(prev => prev.map(it => it.id === id ? { ...it, imageUrl: null } : it))
+  }
+
+  async function uploadIndustryImage(id: string, file: File) {
+    if (file.size > 10 * 1024 * 1024) { setError('Image must be under 10 MB.'); return }
+    setIndustryUploading(id)
+    setError('')
+    try {
+      const supabase = createClient()
+      const ext = file.name.split('.').pop()
+      const path = `si-industries/${id}-${Date.now()}.${ext}`
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('site-images').upload(path, file, { upsert: true })
+      if (uploadError) { setError(`Upload failed: ${uploadError.message}`); setIndustryUploading(null); return }
+      const { data: { publicUrl } } = supabase.storage.from('site-images').getPublicUrl(uploadData.path)
+      setIndustries(prev => prev.map(it => it.id === id ? { ...it, imageUrl: publicUrl } : it))
+    } catch {
+      setError('Upload failed. Please try again.')
+    }
+    setIndustryUploading(null)
+  }
+
+  async function saveIndustries() {
+    setIndustriesSaving(true)
+    setError('')
+    try {
+      const supabase = createClient()
+      const cleaned = industries.filter(it => it.title.trim().length > 0)
+      await supabase.from('site_settings').upsert(
+        { key: INDUSTRIES_SETTINGS_KEY, value: JSON.stringify(cleaned) },
+        { onConflict: 'key' }
+      )
+      setIndustries(cleaned)
+      setIndustriesSaved(true)
+      setTimeout(() => setIndustriesSaved(false), 2500)
+    } catch {
+      setError('Failed to save industries.')
+    }
+    setIndustriesSaving(false)
   }
 
   const panelStyle = { background: '#F4F6FA', minHeight: 'calc(100vh - 108px)' }
@@ -365,6 +535,70 @@ export default function ContentPage() {
                   }}
                 >
                   {statsSaved ? 'Saved' : statsSaving ? 'Saving...' : 'Save Statistics'}
+                </button>
+              </div>
+            </section>
+
+            {/* ── Industries We Serve ─────────────────────────────────── */}
+            <section className="bg-white border border-matrix-border rounded-xs">
+              <div className="px-6 py-4 border-b border-matrix-border">
+                <h2 className="font-barlow font-bold uppercase text-[18px] text-matrix-ink">
+                  Industries We Serve — System Integrator Page
+                </h2>
+                <p className="font-dm text-[13px] text-matrix-muted mt-0.5">
+                  Cards shown in the &quot;Industries We Serve&quot; grid. Add, remove or edit cards, then click Save.
+                  Recommended photo size: 800 x 600 px.
+                </p>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-4 gap-4 mb-5 max-[1100px]:grid-cols-3 max-[800px]:grid-cols-2 max-[500px]:grid-cols-1">
+                  {industries.map(item => (
+                    <IndustryCard
+                      key={item.id}
+                      item={item}
+                      onTitleChange={updateIndustryTitle}
+                      onUpload={uploadIndustryImage}
+                      onRemoveImage={removeIndustryImage}
+                      onDelete={deleteIndustry}
+                      uploading={industryUploading}
+                    />
+                  ))}
+                  <button
+                    onClick={addIndustry}
+                    className="flex flex-col items-center justify-center gap-2"
+                    style={{
+                      minHeight: '220px',
+                      border: '1px dashed #1B6FCC',
+                      borderRadius: '2px',
+                      background: 'rgba(27,111,204,.04)',
+                      color: '#1B6FCC',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span className="font-mono text-[22px] leading-none">+</span>
+                    <span className="font-dm font-semibold uppercase text-[11px] tracking-[.1em]">Add Industry</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={saveIndustries}
+                  disabled={industriesSaving}
+                  style={{
+                    background: industriesSaved ? '#22C55E' : industriesSaving ? '#64748B' : '#1B6FCC',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '2px',
+                    padding: '11px 28px',
+                    fontFamily: 'inherit',
+                    fontWeight: 600,
+                    fontSize: '13px',
+                    letterSpacing: '.04em',
+                    textTransform: 'uppercase',
+                    cursor: industriesSaving ? 'not-allowed' : 'pointer',
+                    transition: 'background .2s',
+                  }}
+                >
+                  {industriesSaved ? 'Saved' : industriesSaving ? 'Saving...' : 'Save Industries'}
                 </button>
               </div>
             </section>

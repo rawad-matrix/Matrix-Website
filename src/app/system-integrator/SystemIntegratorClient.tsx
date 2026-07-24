@@ -6,6 +6,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader'
 import { ContactStrip } from '@/components/sections/ContactStrip'
 import { useInView } from '@/hooks/useInView'
 import { makeTx } from '@/lib/site-text'
+import type { IndustryItem } from '@/lib/industries'
 
 const EPC_LETTERS = [
   { letter: 'E', k: 'e' },
@@ -13,10 +14,19 @@ const EPC_LETTERS = [
   { letter: 'C', k: 'c' },
 ]
 
-export function SystemIntegratorClient({ texts }: { texts?: Record<string, string> }) {
+type Stats = { projects?: number; years?: number; satisfaction?: number }
+
+export function SystemIntegratorClient({
+  texts, stats = {}, industries = [],
+}: {
+  texts?: Record<string, string>
+  stats?: Stats
+  industries?: IndustryItem[]
+}) {
   const { ref: epcRef, inView: epcInView } = useInView()
-  const { ref: processRef, inView: processInView } = useInView()
+  const { ref: industriesRef, inView: industriesInView } = useInView()
   const t = makeTx(texts)
+  const { projects = 1200, years = 21, satisfaction = 99 } = stats
 
   return (
     <>
@@ -39,7 +49,7 @@ export function SystemIntegratorClient({ texts }: { texts?: Record<string, strin
                 {t('si.intro.p2')}
               </p>
               <div className="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-matrix-border">
-                {[['1200+', 'Projects'], ['21', 'Years'], ['99%', 'Satisfaction']].map(([n, l]) => (
+                {[[`${projects}+`, 'Projects'], [`${years}`, 'Years'], [`${satisfaction}%`, 'Satisfaction']].map(([n, l]) => (
                   <div key={l}>
                     <span className="font-mono text-[clamp(28px,3vw,40px)] text-matrix-blue font-medium leading-none block">{n}</span>
                     <span className="font-dm text-[12px] uppercase tracking-[0.18em] text-matrix-muted mt-1 block">{l}</span>
@@ -119,7 +129,7 @@ export function SystemIntegratorClient({ texts }: { texts?: Record<string, strin
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label={t('si.services.label')} title={t('si.services.title')} />
           <div className="grid grid-cols-3 gap-6 max-[980px]:grid-cols-2 max-[600px]:grid-cols-1">
-            {[1, 2, 3, 4, 5, 6].map((n) => (
+            {[1, 2, 3].map((n) => (
               <div
                 key={n}
                 className="bg-white rounded-xs p-[28px_24px]"
@@ -133,50 +143,40 @@ export function SystemIntegratorClient({ texts }: { texts?: Record<string, strin
         </div>
       </section>
 
-      {/* Industries */}
+      {/* Industries — admin-managed cards: title above, photo below */}
       <section className="bg-matrix-off py-27.5 max-[768px]:py-18">
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label={t('si.industries.label')} title={t('si.industries.title')} />
-          <div
-            className="grid grid-cols-3 max-[600px]:grid-cols-1 max-[900px]:grid-cols-2 rounded-xs overflow-hidden"
-            style={{ border: '1px solid #E2E8F0', gap: '1px', background: '#E2E8F0' }}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+          <div ref={industriesRef as React.RefObject<HTMLDivElement>} className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
+            {industries.map((ind, i) => (
               <div
-                key={n}
-                className="bg-matrix-off p-[32px_28px] font-barlow font-bold text-[20px] uppercase text-matrix-navy transition-colors hover:bg-white"
-              >
-                {t(`si.industries.item${n}`)}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process Timeline */}
-      <section className="bg-white py-27.5 max-[768px]:py-18">
-        <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
-          <SectionHeader label={t('si.process.label')} title={t('si.process.title')} centered />
-          <div ref={processRef as React.RefObject<HTMLDivElement>} className="grid grid-cols-3 gap-6 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
-            {[1, 2, 3, 4, 5, 6].map((n, i) => (
-              <div
-                key={n}
-                className={`reveal ${processInView ? 'in-view' : ''}`}
-                style={{ transitionDelay: processInView ? '0ms' : `${i * 60}ms` }}
+                key={ind.id}
+                className={`reveal ${industriesInView ? 'in-view' : ''}`}
+                style={{ transitionDelay: industriesInView ? '0ms' : `${i * 50}ms` }}
               >
                 <div
-                  className="bg-matrix-off rounded-xs p-[28px_26px] h-full transition-all duration-200 hover:-translate-y-0.5"
-                  style={{
-                    border: '1px solid #E2E8F0',
-                    borderTop: '3px solid transparent',
-                    backgroundClip: 'padding-box',
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderTopColor = '#1B6FCC' }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderTopColor = 'transparent' }}
+                  className="bg-white rounded-xs overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(10,10,18,.25)]"
+                  style={{ border: '1px solid #E2E8F0', borderTop: '3px solid #1B6FCC' }}
                 >
-                <span className="font-mono text-[13px] text-matrix-blue font-medium block mb-3">{String(n).padStart(2, '0')}</span>
-                <h4 className="font-barlow font-bold text-[20px] uppercase text-matrix-navy mb-2">{t(`si.process.step${n}.title`)}</h4>
-                <p className="font-dm text-[14px] text-matrix-muted leading-[1.6] m-0">{t(`si.process.step${n}.desc`)}</p>
+                  <h4 className="font-barlow font-bold text-[18px] uppercase text-matrix-navy px-5 pt-5 pb-4">
+                    {ind.title}
+                  </h4>
+                  <div className="relative w-full" style={{ aspectRatio: '4/3', background: '#0A0A12' }}>
+                    {ind.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={ind.imageUrl} alt={ind.title} className="absolute inset-0 w-full h-full object-cover" />
+                    ) : (
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `
+                            repeating-linear-gradient(110deg,rgba(255,255,255,.04) 0 2px,transparent 2px 14px),
+                            linear-gradient(160deg,#1a2a3a 0%,#0a1a28 90%)
+                          `,
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
