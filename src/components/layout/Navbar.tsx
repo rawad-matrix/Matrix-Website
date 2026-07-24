@@ -23,7 +23,19 @@ const NAV_LINKS: NavItem[] = [
       { href: '/training/hybrid',      label: 'Hybrid Learning',     desc: 'Blended online + on-site track' },
     ],
   },
-  { href: '/courses', label: 'Courses' },
+  {
+    href: '/courses',
+    label: 'Courses',
+    children: [
+      { href: '/courses',                          label: 'All Courses',    desc: 'Browse the full course catalog' },
+      { href: '/courses?brand=SCADA',               label: 'SCADA',          desc: 'SCADA & HMI development courses' },
+      { href: '/courses?brand=Siemens',              label: 'Siemens',       desc: 'TIA Portal, STEP 7, S7-1200/1500' },
+      { href: '/courses?brand=Delta',                label: 'Delta',         desc: 'Delta PLC & VFD programming' },
+      { href: '/courses?brand=Classic%20Control',    label: 'Classic Control', desc: 'MCC design, motor protection & EPLAN' },
+      { href: '/courses?brand=IoT',                  label: 'IoT',           desc: 'Industrial IoT & remote monitoring' },
+      { href: '/courses?brand=Other',                label: 'Other',         desc: 'Mechanical, CAD & specialist topics' },
+    ],
+  },
   { href: '/about', label: 'About' },
   { href: '/case-studies', label: 'Case Studies' },
   { href: '/contact', label: 'Contact' },
@@ -33,7 +45,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [showSignIn, setShowSignIn] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+  // Tracks which dropdown (by href) is open — a single boolean would open
+  // every dropdown at once now that there's more than one (Training, Courses).
+  const [openDropdownHref, setOpenDropdownHref] = useState<string | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname()
   const { user, loading, isAdmin } = useAuth()
@@ -45,7 +59,7 @@ export function Navbar() {
   }, [])
 
   useEffect(() => {
-    setDropdownOpen(false)
+    setOpenDropdownHref(null)
     setShowSignIn(false)
   }, [pathname])
 
@@ -55,12 +69,12 @@ export function Navbar() {
     }
   }, [])
 
-  function openDropdown() {
+  function openDropdown(href: string) {
     if (closeTimer.current) clearTimeout(closeTimer.current)
-    setDropdownOpen(true)
+    setOpenDropdownHref(href)
   }
   function scheduleClose() {
-    closeTimer.current = setTimeout(() => setDropdownOpen(false), 150)
+    closeTimer.current = setTimeout(() => setOpenDropdownHref(null), 150)
   }
 
   return (
@@ -87,11 +101,12 @@ export function Navbar() {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
 
               if (link.children) {
+                const isThisOpen = openDropdownHref === link.href
                 return (
                   <div
                     key={link.href}
                     className="relative self-stretch flex items-center"
-                    onMouseEnter={openDropdown}
+                    onMouseEnter={() => openDropdown(link.href)}
                     onMouseLeave={scheduleClose}
                   >
                     <Link
@@ -104,7 +119,7 @@ export function Navbar() {
                       <svg
                         width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                         className="transition-transform duration-200 mt-px"
-                        style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }}
+                        style={{ transform: isThisOpen ? 'rotate(180deg)' : 'rotate(0)' }}
                       >
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
@@ -124,9 +139,9 @@ export function Navbar() {
                         borderTop: '2px solid #1B6FCC',
                         boxShadow: '0 12px 40px rgba(0,0,0,.50)',
                         borderRadius: '0 0 2px 2px',
-                        opacity: dropdownOpen ? 1 : 0,
-                        transform: dropdownOpen ? 'translateY(0)' : 'translateY(-5px)',
-                        pointerEvents: dropdownOpen ? 'auto' : 'none',
+                        opacity: isThisOpen ? 1 : 0,
+                        transform: isThisOpen ? 'translateY(0)' : 'translateY(-5px)',
+                        pointerEvents: isThisOpen ? 'auto' : 'none',
                       }}
                     >
                       {link.children.map((child, i) => {

@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 type Course = {
   slug: string
@@ -32,7 +33,7 @@ const DEFAULT_GRADIENT = 'linear-gradient(160deg,#1a2a3a 0%,#0a1a28 90%)'
 
 // ── Filter definitions ────────────────────────────────────────────────────────
 const LEVEL_FILTERS = ['All', 'Bundle', 'Advanced', 'Pro', 'Basic'] as const
-const BRAND_FILTERS = ['All Types', 'Siemens', 'Delta', 'IoT', 'SCADA', 'Other'] as const
+const BRAND_FILTERS = ['All Courses', 'SCADA', 'Siemens', 'Delta', 'Classic Control', 'IoT', 'Other'] as const
 
 function matchesCourse(course: Course, level: string | null, brand: string): boolean {
   // Level check — null means show all levels
@@ -45,7 +46,7 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
   }
 
   // Brand check
-  if (brand === 'All Types') return true
+  if (brand === 'All Courses') return true
   if (brand === 'Siemens') {
     return (
       course.slug.startsWith('s7-') ||
@@ -56,6 +57,7 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
     )
   }
   if (brand === 'Delta') return course.slug.startsWith('delta-')
+  if (brand === 'Classic Control') return course.slug === 'classic-control'
   if (brand === 'IoT') return (course.category ?? '') === 'IoT'
   if (brand === 'SCADA') return (course.category ?? '') === 'SCADA'
   if (brand === 'Other') {
@@ -63,6 +65,7 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
       course.slug.startsWith('s7-') || course.slug.startsWith('si-') ||
       course.slug.startsWith('scada-wincc') || course.slug === 'pam-c' ||
       course.slug === 'par-c' || course.slug.startsWith('delta-') ||
+      course.slug === 'classic-control' ||
       (course.category ?? '') === 'IoT' || (course.category ?? '') === 'SCADA'
     )
   }
@@ -70,8 +73,18 @@ function matchesCourse(course: Course, level: string | null, brand: string): boo
 }
 
 export default function CoursesClient({ courses }: { courses: Course[] }) {
+  const searchParams = useSearchParams()
   const [levelFilter, setLevelFilter] = useState<string | null>(null)
-  const [brandFilter, setBrandFilter] = useState<string>('All Types')
+  const [brandFilter, setBrandFilter] = useState<string>('All Courses')
+
+  // Deep-link support: header dropdown links to /courses?brand=Siemens etc.
+  // Re-syncs whenever the query string changes (initial load and subsequent
+  // in-page navigations), without clobbering manual on-page filter clicks.
+  useEffect(() => {
+    const b = searchParams.get('brand')
+    if (b && (BRAND_FILTERS as readonly string[]).includes(b)) setBrandFilter(b)
+    else if (!b) setBrandFilter('All Courses')
+  }, [searchParams])
 
   const filtered = courses.filter(c => matchesCourse(c, levelFilter, brandFilter))
 

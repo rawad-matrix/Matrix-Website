@@ -1,5 +1,6 @@
 // Server component — always fetches fresh data from Supabase on every request.
 // No client-side caching; changes made in the admin panel are immediately visible.
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { PageHero } from '@/components/sections/PageHero'
 import { ContactStrip } from '@/components/sections/ContactStrip'
@@ -24,7 +25,9 @@ export default async function CoursesPage() {
         subtitle="Hands-on automation courses taught by working engineers."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Courses' }]}
       />
-      <CoursesClient courses={courses ?? []} />
+      <Suspense fallback={null}>
+        <CoursesClient courses={courses ?? []} />
+      </Suspense>
       <ContactStrip />
     </>
   )
