@@ -313,6 +313,8 @@ export const SITE_TEXT_PAGES: TextPage[] = [
           { key: 'tacademic.who2.desc', label: 'Card 2 — description', multiline: true, def: 'Professionals from IT, maintenance, or general engineering who want to move into industrial automation roles.' },
           { key: 'tacademic.who3.title', label: 'Card 3 — title', def: 'Final-Year Students' },
           { key: 'tacademic.who3.desc', label: 'Card 3 — description', multiline: true, def: 'University students who want to complete a technical internship with a verifiable capstone project and certificate.' },
+          { key: 'tacademic.who4.title', label: 'Card 4 — title', def: 'Working Professionals' },
+          { key: 'tacademic.who4.desc', label: 'Card 4 — description', multiline: true, def: 'Employees upskilling on live equipment while keeping their current role and schedule.' },
           { key: 'tacademic.cta.title', label: 'CTA title', def: 'Ready to Enroll?' },
           { key: 'tacademic.cta.desc', label: 'CTA description', multiline: true, def: 'Next cohort starts September 2026. Limited to 12 seats. Apply early to secure your place.' },
           { key: 'tacademic.cta.button', label: 'CTA button', def: 'Request Application Form' },

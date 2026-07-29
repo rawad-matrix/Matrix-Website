@@ -43,7 +43,7 @@ export default async function AcademicTrainingPage() {
       }))}
       whoLabel={t('tacademic.who.label')}
       whoTitle={t('tacademic.who.title')}
-      whoCards={[1, 2, 3].map((n) => ({
+      whoCards={[1, 2, 3, 4].map((n) => ({
         title: t(`tacademic.who${n}.title`),
         desc: t(`tacademic.who${n}.desc`),
       }))}

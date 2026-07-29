@@ -146,7 +146,11 @@ export function TrainingSubPage({
       <section className="py-20 bg-matrix-off">
         <div className="max-w-7xl mx-auto px-8 max-[640px]:px-5">
           <SectionHeader label={whoLabel} title={whoTitle} />
-          <div className="grid grid-cols-3 gap-4 max-[760px]:grid-cols-1">
+          <div
+            className={`grid gap-4 max-[760px]:grid-cols-1 ${
+              whoCards.length === 4 ? 'grid-cols-2' : 'grid-cols-3'
+            }`}
+          >
             {whoCards.map((card) => (
               <div
                 key={card.title}
