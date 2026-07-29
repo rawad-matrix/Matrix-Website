@@ -66,8 +66,12 @@ export function TrainingSubPage({
             <span className="text-matrix-blue">{crumb}</span>
           </nav>
 
-          <div className="grid grid-cols-[1.4fr_1fr] gap-12 items-center max-[900px]:grid-cols-1 max-[900px]:gap-8">
-            <div>
+          <div
+            className={`grid gap-12 items-center max-[900px]:grid-cols-1 max-[900px]:gap-8 ${
+              visibleStats.length > 0 ? 'grid-cols-[1.4fr_1fr]' : 'grid-cols-1'
+            }`}
+          >
+            <div className={visibleStats.length > 0 ? '' : 'max-w-3xl'}>
               <h1
                 className="font-barlow font-extrabold uppercase text-white mb-3.5"
                 style={{ fontSize: 'clamp(36px, 5vw, 58px)', lineHeight: '0.97', letterSpacing: '-0.005em' }}
@@ -78,25 +82,27 @@ export function TrainingSubPage({
               <p className="font-dm text-[16px] text-white/72 max-w-135 leading-[1.65]">{subtitle}</p>
             </div>
 
-            {/* Stats card */}
-            <div
-              className="rounded-xs p-6"
-              style={{
-                background: 'rgba(255,255,255,.05)',
-                border: '1px solid rgba(27,111,204,.22)',
-              }}
-            >
-              {visibleStats.map((row, i) => (
-                <div
-                  key={row.label}
-                  className="flex justify-between items-center py-2.5"
-                  style={{ borderBottom: i < visibleStats.length - 1 ? '1px solid rgba(255,255,255,.08)' : undefined }}
-                >
-                  <span className="font-dm text-[11px] uppercase tracking-widest text-white/50 font-medium">{row.label}</span>
-                  <span className="font-mono text-[13.5px] text-matrix-blue font-medium">{row.value}</span>
-                </div>
-              ))}
-            </div>
+            {/* Stats card — omitted entirely when every stat has been cleared in admin */}
+            {visibleStats.length > 0 && (
+              <div
+                className="rounded-xs p-6"
+                style={{
+                  background: 'rgba(255,255,255,.05)',
+                  border: '1px solid rgba(27,111,204,.22)',
+                }}
+              >
+                {visibleStats.map((row, i) => (
+                  <div
+                    key={row.label}
+                    className="flex justify-between items-center py-2.5"
+                    style={{ borderBottom: i < visibleStats.length - 1 ? '1px solid rgba(255,255,255,.08)' : undefined }}
+                  >
+                    <span className="font-dm text-[11px] uppercase tracking-widest text-white/50 font-medium">{row.label}</span>
+                    <span className="font-mono text-[13.5px] text-matrix-blue font-medium">{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
