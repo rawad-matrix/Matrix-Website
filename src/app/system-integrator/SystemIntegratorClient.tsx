@@ -69,15 +69,18 @@ export function SystemIntegratorClient({
                 {t('si.whyepc.title')}
               </h3>
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                {[1, 2, 3, 4].map((n) => (
-                  <li
-                    key={n}
-                    className="font-dm text-[15px] text-white/80 py-3 flex gap-3 items-start"
-                    style={{ borderLeft: '2px solid rgba(27,111,204,.55)', paddingLeft: '14px' }}
-                  >
-                    {t(`si.whyepc.item${n}`)}
-                  </li>
-                ))}
+                {[1, 2, 3, 4]
+                  .map((n) => t(`si.whyepc.item${n}`))
+                  .filter((text) => text.trim())
+                  .map((text) => (
+                    <li
+                      key={text}
+                      className="font-dm text-[15px] text-white/80 py-3 flex gap-3 items-start"
+                      style={{ borderLeft: '2px solid rgba(27,111,204,.55)', paddingLeft: '14px' }}
+                    >
+                      {text}
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>

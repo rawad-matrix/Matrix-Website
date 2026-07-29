@@ -29,6 +29,8 @@ export function TrainingSubPage({
   ctaTitle, ctaDesc, ctaButton,
 }: TrainingSubPageProps) {
   const waLink = `https://wa.me/96178800274?text=Hi%20Matrix%20%E2%80%94%20I%20am%20interested%20in%20the%20${encodeURIComponent(titleLine1 + ' ' + titleAccent)}%20program.`
+  // A stat cleared to blank in the admin is omitted entirely, not shown as an empty row.
+  const visibleStats = stats.filter((row) => row.value.trim())
 
   return (
     <>
@@ -84,11 +86,11 @@ export function TrainingSubPage({
                 border: '1px solid rgba(27,111,204,.22)',
               }}
             >
-              {stats.map((row, i) => (
+              {visibleStats.map((row, i) => (
                 <div
                   key={row.label}
                   className="flex justify-between items-center py-2.5"
-                  style={{ borderBottom: i < stats.length - 1 ? '1px solid rgba(255,255,255,.08)' : undefined }}
+                  style={{ borderBottom: i < visibleStats.length - 1 ? '1px solid rgba(255,255,255,.08)' : undefined }}
                 >
                   <span className="font-dm text-[11px] uppercase tracking-widest text-white/50 font-medium">{row.label}</span>
                   <span className="font-mono text-[13.5px] text-matrix-blue font-medium">{row.value}</span>

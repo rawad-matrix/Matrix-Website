@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AdminSidebar } from '../AdminSidebar'
-import { SITE_TEXT_PAGES, TEXT_PREFIX, type TextBlock, type TextSection } from '@/lib/site-text'
+import { SITE_TEXT_PAGES, TEXT_PREFIX, EMPTY_TEXT_SENTINEL, type TextBlock, type TextSection } from '@/lib/site-text'
 
 // ── Classify each field by its role on the real page, so the editor can ─────
 // mirror page structure (label → title → paragraph → small values) without
@@ -173,7 +173,11 @@ export default function TextsPage() {
       const init: Record<string, string> = {}
       for (const page of SITE_TEXT_PAGES) {
         for (const section of page.sections) {
-          for (const b of section.blocks) init[b.key] = overrides[b.key] ?? b.def
+          for (const b of section.blocks) {
+            const ov = overrides[b.key]
+            // A deliberately-cleared field shows as blank, not the sentinel or the default.
+            init[b.key] = ov === EMPTY_TEXT_SENTINEL ? '' : ov ?? b.def
+          }
         }
       }
       setValues(init)
@@ -209,13 +213,16 @@ export default function TextsPage() {
     setError('')
     try {
       const supabase = createClient()
-      const rows = page.sections.flatMap(s =>
-        s.blocks.map(b => ({
-          key: TEXT_PREFIX + b.key,
-          // Storing the default is harmless; empty optional fields fall back to default on the site
-          value: values[b.key]?.trim() ? values[b.key] : null,
-        }))
-      )
+      const rows = page.sections.flatMap(s => {
+        const required = requiredKeysForSection(s)
+        return s.blocks.map(b => {
+          const trimmed = values[b.key]?.trim()
+          // Optional field, deliberately cleared: persist the sentinel so it
+          // stays hidden instead of quietly reverting to the built-in default.
+          const value = trimmed ? values[b.key] : required.has(b.key) ? null : EMPTY_TEXT_SENTINEL
+          return { key: TEXT_PREFIX + b.key, value }
+        })
+      })
       const { error: upsertError } = await supabase
         .from('site_settings')
         .upsert(rows, { onConflict: 'key' })
@@ -254,7 +261,8 @@ export default function TextsPage() {
             <p className="text-matrix-muted text-[14px] mt-1">
               Fields are laid out in the same order and weight as the real page — heading, then paragraph, then small
               details — text only, no layout or images to worry about. Titles and each section&apos;s opening paragraph
-              (marked *) are required; everything else falls back to the built-in default when left blank.
+              (marked *) are required. Everything else is optional — leave it as-is to keep the built-in default, or
+              clear it and save to remove that line from the page entirely.
             </p>
           </div>
 

@@ -42,7 +42,7 @@ export const SITE_TEXT_PAGES: TextPage[] = [
           { key: 'home.services.card3.desc', label: 'Card 3 — description', multiline: true, def: 'Customized curriculum delivered at your facility or university. Built around your processes, your team.' },
           { key: 'home.services.card4.title', label: 'Card 4 — title', def: 'Hybrid Training' },
           { key: 'home.services.card4.desc', label: 'Card 4 — description', multiline: true, def: 'Online sessions paired with in-person labs. Flexible scheduling for distributed teams who need real hands-on practice.' },
-          { key: 'home.services.card5.title', label: 'Card 5 — title (Coming Soon)', def: 'Online Education Platform' },
+          { key: 'home.services.card5.title', label: 'Card 5 — title (Coming Soon)', def: 'Online Learning Platform' },
           { key: 'home.services.card5.desc', label: 'Card 5 — description', multiline: true, def: 'A dedicated digital learning portal — self-paced modules, lab simulations, and certification tracks. Details to follow.' },
         ],
       },
@@ -445,6 +445,13 @@ export const TEXT_DEFAULTS: Record<string, string> = Object.fromEntries(
   SITE_TEXT_PAGES.flatMap(p => p.sections.flatMap(s => s.blocks.map(b => [b.key, b.def])))
 )
 
+// A saved-but-intentionally-blank override. Lets an optional field be
+// deleted (renders as '', so list/bullet renderers can omit it entirely)
+// instead of always falling back to the built-in default when cleared.
+// Must be a non-empty string so it survives the truthy-value filters each
+// page's site_settings fetch already applies.
+export const EMPTY_TEXT_SENTINEL = '[[__CLEARED__]]'
+
 // Extract text overrides from a raw site_settings map (strips the `text:` prefix).
 export function textOverridesFrom(settings: Record<string, string>): Record<string, string> {
   const out: Record<string, string> = {}
@@ -455,6 +462,12 @@ export function textOverridesFrom(settings: Record<string, string>): Record<stri
 }
 
 // Lookup helper: override → registry default → empty string.
+// An override equal to EMPTY_TEXT_SENTINEL resolves to '' (deliberately
+// deleted), distinct from no override at all (falls back to default).
 export function makeTx(overrides?: Record<string, string>) {
-  return (key: string): string => overrides?.[key] ?? TEXT_DEFAULTS[key] ?? ''
+  return (key: string): string => {
+    const v = overrides?.[key]
+    if (v === EMPTY_TEXT_SENTINEL) return ''
+    return v ?? TEXT_DEFAULTS[key] ?? ''
+  }
 }
