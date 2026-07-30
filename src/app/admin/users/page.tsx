@@ -202,9 +202,13 @@ export default function AdminUsersPage() {
             {/* Footer note */}
             {!loading && !error && users.length > 0 && (
               <div className="px-6 py-3 border-t border-matrix-border bg-matrix-off text-[11.5px] text-matrix-muted font-dm">
-                To change a user&apos;s role to admin, run the SQL command in Supabase:&nbsp;
-                <code className="font-mono bg-white px-1 py-0.5 rounded border border-matrix-border text-[11px]">
-                  UPDATE profiles SET role = &apos;admin&apos; WHERE id = &apos;&lt;user-id&gt;&apos;;
+                To change a user&apos;s role to admin, run this in the Supabase SQL Editor (swap in their email). A
+                security trigger blocks role changes made without an admin session, so it must be disabled for this
+                one statement, then re-enabled immediately after:&nbsp;
+                <code className="font-mono bg-white px-1 py-0.5 rounded border border-matrix-border text-[11px] block mt-1.5 whitespace-pre-wrap">
+                  {'ALTER TABLE profiles DISABLE TRIGGER trg_prevent_role_change;\n\n'}
+                  {"UPDATE profiles SET role = 'admin' WHERE id = (SELECT id FROM auth.users WHERE email = 'user@example.com');\n\n"}
+                  {'ALTER TABLE profiles ENABLE TRIGGER trg_prevent_role_change;'}
                 </code>
               </div>
             )}
